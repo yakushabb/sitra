@@ -1,0 +1,9 @@
+<gresources>
+    <gresource prefix="/io/github/ronniedroid/sitra">
+      <file>fonts/myserif.ttf</file>
+      <file>fonts/mysans.ttf</file>
+      <file>fonts/myhandwriting.ttf</file>
+      <file>fonts/mydisplay.ttf</file>
+    </gresource>
+</gresources>
+

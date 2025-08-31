@@ -1,0 +1,253 @@
+using Gtk 4.0;
+using Adw 1;
+
+template $SitraWindow: Adw.ApplicationWindow {
+  title: _("Sitra");
+  default-width: 800;
+  default-height: 600;
+
+  Adw.Breakpoint {
+    condition ("max-width: 500sp")
+
+    setters {
+      split_view.collapsed: true;
+    }
+  }
+
+  content: Adw.NavigationSplitView split_view {
+    min-sidebar-width: 300.0;
+
+    sidebar: Adw.NavigationPage {
+      title: _("Sitra");
+      tag: "sidebar";
+
+      child: Adw.ToolbarView {
+        [top]
+        Adw.HeaderBar {
+          show-title: true;
+
+          [end]
+          MenuButton {
+            icon-name: "open-menu-symbolic";
+            tooltip-text: _("Main Menu");
+            primary: true;
+            menu-model: window_menu;
+          }
+        }
+
+        content: Box {
+          orientation: vertical;
+          margin-top: 12;
+          margin-bottom: 12;
+          margin-start: 12;
+          margin-end: 12;
+          valign: start;
+          spacing: 12;
+
+          FlowBox {
+            orientation: horizontal;
+            row-spacing: 6;
+            column-spacing: 6;
+            homogeneous: true;
+            max-children-per-line: 2;
+            min-children-per-line: 1;
+            selection-mode: none;
+
+            Adw.Bin {
+              width-request: 40;
+              height-request: 40;
+
+              ToggleButton serifToggle {
+                vexpand: true;
+                hexpand: true;
+                active: false;
+                label: _("Serif");
+              }
+
+              styles [
+                "card",
+                "toggle-card",
+                "card-serif",
+              ]
+            }
+
+            Adw.Bin {
+              width-request: 40;
+              height-request: 40;
+
+              ToggleButton sansToggle {
+                vexpand: true;
+                hexpand: true;
+                label: _("Sans");
+              }
+
+              styles [
+                "card",
+                "toggle-card",
+                "card-sans",
+              ]
+            }
+
+            Adw.Bin {
+              width-request: 40;
+              height-request: 40;
+
+              ToggleButton displayToggle {
+                vexpand: true;
+                hexpand: true;
+                label: _("Display");
+              }
+
+              styles [
+                "card",
+                "toggle-card",
+                "card-display",
+              ]
+            }
+
+            Adw.Bin {
+              width-request: 40;
+              height-request: 40;
+
+              ToggleButton monospaceToggle {
+                vexpand: true;
+                hexpand: true;
+                label: _("Monospace");
+              }
+
+              styles [
+                "card",
+                "toggle-card",
+                "card-monospace",
+              ]
+            }
+
+            Adw.Bin {
+              width-request: 40;
+              height-request: 40;
+
+              ToggleButton handwritingToggle {
+                vexpand: true;
+                hexpand: true;
+                label: _("Handwriting");
+              }
+
+              styles [
+                "card",
+                "toggle-card",
+                "card-handwriting",
+              ]
+            }
+
+            Adw.Bin {
+              width-request: 40;
+              height-request: 40;
+
+              ToggleButton otherToggle {
+                vexpand: true;
+                hexpand: true;
+                label: _("Other");
+              }
+
+              styles [
+                "card",
+                "toggle-card",
+                "card-other",
+              ]
+            }
+          }
+
+          ListBox {
+            selection-mode: none;
+
+            styles [
+              "boxed-list",
+            ]
+
+            Adw.SwitchRow variableSwitch {
+              title: _("Show only variable fonts");
+
+              styles [
+                "variable-switch-row",
+              ]
+            }
+          }
+
+          Box {
+            orientation: vertical;
+            valign: start;
+            spacing: 12;
+
+            SearchEntry searchEntry {
+              search-delay: 100;
+              placeholder-text: _("Search fonts");
+              width-request: 80;
+              margin-top: 12;
+              margin-start: 12;
+              margin-end: 12;
+            }
+
+            ScrolledWindow {
+              hscrollbar-policy: never;
+              propagate-natural-height: true;
+              valign: start;
+
+              ListView list_box {
+                factory: BuilderListItemFactory {
+                  template ListItem {
+                    child: Gtk.Box {
+                      Gtk.Label {
+                        label: bind template.item as <StringObject>.string;
+                        height-request: 40;
+                        margin-start: 12;
+                        margin-end: 12;
+                      }
+                    };
+                  }
+                };
+                styles ["navigation-sidebar"]
+              }
+            }
+          }
+        };
+      };
+    };
+
+    content: Adw.NavigationPage content_page {
+      title: "Font Preview";
+      tag: "content";
+
+      child: Adw.ToolbarView content_view {
+        [top]
+        Adw.HeaderBar {
+          show-title: true;
+        }
+
+        content: Box {
+          margin-top: 18;
+          orientation: vertical;
+          halign: center;
+
+          LinkButton {
+            label: _("Human Interface Guidelines");
+            uri: "https://developer.gnome.org/hig/patterns/feedback/placeholders.html";
+          }
+        };
+      };
+    };
+  };
+}
+
+menu window_menu {
+  section {
+    item {
+      label: _("Keyboard Shortcuts");
+      action: "app.shortcuts";
+    }
+
+    item {
+      label: _("About App");
+      action: "app.about";
+    }
+  }
+}

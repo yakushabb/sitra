@@ -1,0 +1,65 @@
+.toggle-card {
+    --card-bg: @accent_bg_color;
+    --card-fg: @accent_color;
+    box-shadow: none;
+    background-color: var(--color-bg);
+    color: var(--card-fg);
+}
+
+.card-serif {
+    --card-bg: @blue_1;
+    --card-fg: @blue_5;
+    font-family: "noto serif";
+}
+
+.card-sans {
+    --card-bg: @success_bg_color;
+    --card-fg: @success_color;
+    font-family: "inter";
+}
+
+.card-display {
+    --card-bg: @yellow_1;
+    --card-fg: @yellow_5;
+    font-family: "museomoderno";
+}
+
+.card-monospace {
+    --card-bg: @purple_1;
+    --card-fg: @purple_5;
+    font-family: "iosevka";
+}
+
+.card-handwriting {
+    --card-bg: @error_bg_color;
+    --card-fg: @error_color;
+    font-family: "kalam";
+}
+
+.card-other {
+    --card-bg: @orange_1;
+    --card-fg: @orange_5;
+    font-family: "dseg14 classic";
+}
+
+@media (prefers-color-scheme: dark) {
+    .card-serif {
+        --card-bg: @blue_5;
+        --card-fg: @blue_1;
+    }
+    .card-display {
+        --card-bg: @yellow_1;
+        --card-fg: @yellow_5;
+    }
+
+    .card-monospace {
+        --card-bg: @purple_5;
+        --card-fg: @purple_1;
+    }
+}
+
+.variable-switch-row {
+    box-shadow: none;
+    background-color: alpha(@accent_bg_color, 0.15);
+    color: @accent_color;
+}

@@ -1,0 +1,10 @@
+[Desktop Entry]
+Name=sitra
+Exec=sitra
+Icon=io.github.ronniedroid.sitra
+Terminal=false
+Type=Application
+Categories=Utility;
+Keywords=GTK;
+StartupNotify=true
+DBusActivatable=true

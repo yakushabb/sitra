@@ -1,0 +1,8 @@
+# List of source files containing translatable strings.
+# Please keep this file sorted alphabetically.
+data/io.github.ronniedroid.sitra.desktop.in
+data/io.github.ronniedroid.sitra.metainfo.xml.in
+data/io.github.ronniedroid.sitra.gschema.xml
+src/main.vala
+src/window.vala
+src/window.blp
