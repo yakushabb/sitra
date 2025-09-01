@@ -8,6 +8,9 @@ sitra_deps = [
   config_dep,
   dependency('gtk4'),
   dependency('libadwaita-1', version: '>= 1.4'),
+  dependency('json-glib-1.0'),
+  dependency('libsoup-3.0'),
+  dependency('gio-2.0'),
 ]
 
 blueprints = custom_target('blueprints',
