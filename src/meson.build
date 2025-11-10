@@ -2,20 +2,27 @@ sitra_sources = [
   'main.vala',
   'application.vala',
   'window.vala',
+  'preview_manager.vala',
+  'font_info.vala',
+  'font_loader.vala',
+  'font_filter.vala',
 ]
 
 sitra_deps = [
   config_dep,
+  dependency('glib-2.0'),
+  dependency('gobject-2.0'),
   dependency('gtk4'),
   dependency('libadwaita-1', version: '>= 1.4'),
-  dependency('json-glib-1.0'),
+  dependency('webkitgtk-6.0'),
+  dependency('gee-0.8'),
   dependency('libsoup-3.0'),
-  dependency('gio-2.0'),
+  dependency('json-glib-1.0'),
 ]
 
 blueprints = custom_target('blueprints',
   input: files(
-    'gtk/help-overlay.blp',
+    'shortcuts-dialog.blp',
     'window.blp',
   ),
   output: '.',

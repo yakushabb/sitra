@@ -1,0 +1,65 @@
+/* font_info.vala
+ *
+ * Copyright 2025 Ronnie Nissan Yousif
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ *
+ * SPDX-License-Identifier: GPL-3.0-or-later
+ */
+
+using Gee;
+
+public class Sitra.FontInfo : Object {
+    public string family { get; set; }
+    public string category { get; set; }
+    public bool variable { get; set; }
+    public Gee.List<int> weights { get; set; default = new Gee.ArrayList<int> (); }
+    public Gee.List<string> subsets { get; set; default = new Gee.ArrayList<string> (); }
+    public string url { get; set; }
+
+    public FontInfo (string family, string category, bool variable, Gee.List<int> weights, Gee.List<string> subsets) {
+        this.family = family;
+        this.category = category;
+        this.variable = variable;
+        this.weights = weights;
+        this.subsets = subsets;
+
+        string font_slug = family.down ().replace (" ", "-");
+        if (variable)
+            this.url = "https://cdn.jsdelivr.net/fontsource/fonts/%s:vf@latest/latin-wght-normal.woff2".printf (font_slug);
+        else
+            this.url = "https://cdn.jsdelivr.net/fontsource/fonts/%s@latest/latin-400-normal.woff2".printf (font_slug);
+    }
+
+    // Helper to construct from Json.Object
+    public static FontInfo from_json (Json.Object obj) {
+        string family = obj.get_string_member ("family");
+        string category = obj.get_string_member ("category");
+        bool variable = obj.get_boolean_member ("variable");
+        var weights_array = obj.get_array_member ("weights");
+        var subsets_array = obj.get_array_member ("subsets");
+
+        var weights = new Gee.ArrayList<int> ();
+        foreach (var node in weights_array.get_elements ()) {
+            weights.add ((int) node.get_int ());
+        }
+
+        var subsets = new Gee.ArrayList<string> ();
+        foreach (var node in subsets_array.get_elements ()) {
+            subsets.add ((string) node.get_string ());
+        }
+
+        return new FontInfo (family, category, variable, weights, subsets);
+    }
+}

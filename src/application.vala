@@ -30,7 +30,6 @@ public class Sitra.Application : Adw.Application {
     construct {
         ActionEntry[] action_entries = {
             { "about", this.on_about_action },
-            { "preferences", this.on_preferences_action },
             { "quit", this.quit }
         };
         this.add_action_entries (action_entries, this);
@@ -56,9 +55,5 @@ public class Sitra.Application : Adw.Application {
         };
 
         about.present (this.active_window);
-    }
-
-    private void on_preferences_action () {
-        message ("app.preferences action activated");
     }
 }

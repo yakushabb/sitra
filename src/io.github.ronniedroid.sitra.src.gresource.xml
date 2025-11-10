@@ -3,6 +3,6 @@
   <gresource prefix="/io/github/ronniedroid/sitra">
     <file alias="style.css">gtk/style.css</file>
     <file preprocess="xml-stripblanks">window.ui</file>
-    <file preprocess="xml-stripblanks">gtk/help-overlay.ui</file>
+    <file preprocess="xml-stripblanks">shortcuts-dialog.ui</file>
   </gresource>
 </gresources>

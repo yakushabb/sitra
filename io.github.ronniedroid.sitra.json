@@ -1,50 +1,68 @@
 {
     "id" : "io.github.ronniedroid.sitra",
     "runtime" : "org.gnome.Platform",
-    "runtime-version" : "master",
+    "runtime-version" : "49",
     "sdk" : "org.gnome.Sdk",
     "sdk-extensions" : [
-        "org.freedesktop.Sdk.Extension.vala"
+	"org.freedesktop.Sdk.Extension.vala"
     ],
     "command" : "sitra",
     "finish-args" : [
-        "--share=network",
-        "--share=ipc",
-        "--socket=fallback-x11",
-        "--device=dri",
-        "--socket=wayland"
+	"--share=network",
+	"--share=ipc",
+	"--socket=fallback-x11",
+	"--device=dri",
+	"--socket=wayland"
     ],
     "build-options" : {
-        "append-path" : "/usr/lib/sdk/vala/bin",
-        "prepend-ld-library-path" : "/usr/lib/sdk/vala/lib",
-        "env" : {        }
+	"append-path" : "/usr/lib/sdk/vala/bin",
+	"prepend-ld-library-path" : "/usr/lib/sdk/vala/lib",
+	"env" : {        }
     },
     "cleanup" : [
-        "/include",
-        "/lib/pkgconfig",
-        "/man",
-        "/share/doc",
-        "/share/gtk-doc",
-        "/share/man",
-        "/share/pkgconfig",
-        "/share/vala",
-        "*.la",
-        "*.a"
+	"/include",
+	"/lib/pkgconfig",
+	"/man",
+	"/share/doc",
+	"/share/gtk-doc",
+	"/share/man",
+	"/share/pkgconfig",
+	"/share/vala",
+	"*.la",
+	"*.a"
     ],
     "modules" : [
-        {
-            "name" : "sitra",
-            "builddir" : true,
-            "buildsystem" : "meson",
-            "sources" : [
-                {
-                    "type" : "git",
-                    "url" : "file:///var/home/ronnie/Projects"
-                }
-            ],
-            "config-opts" : [
-                "--libdir=lib"
-            ]
-        }
+    	{
+     	 "name": "libgee",
+      	"buildsystem": "autotools",
+      	"config-opts": [
+		"--disable-introspection"
+      	],
+      	"sources": [
+		{
+		  "type": "archive",
+	  	"url": "https://download.gnome.org/sources/libgee/0.20/libgee-0.20.8.tar.xz",
+	  	"sha256": "189815ac143d89867193b0c52b7dc31f3aa108a15f04d6b5dca2b6adfad0b0ee",
+	  	"x-checker-data": {
+	    	"type": "gnome",
+	    	"name": "libgee"
+	  	}
+		}
+      	]
+    	},
+	{
+	    "name" : "sitra",
+	    "builddir" : true,
+	    "buildsystem" : "meson",
+	    "sources" : [
+		{
+		    "type" : "git",
+		    "url" : "file:///var/home/ronnie/Projects"
+		}
+	    ],
+	    "config-opts" : [
+		"--libdir=lib"
+	    ]
+	}
     ]
 }
