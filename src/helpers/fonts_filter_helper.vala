@@ -20,16 +20,17 @@
 
 using Gee;
 
-public class Sitra.FontFilter : Object {
+public class Sitra.Helpers.FontsFilterHelper : Object {
     public Gtk.CustomFilter filter { get; private set; }
 
-    private Gee.Map<string, Sitra.FontInfo> fonts_map;
+    private Gee.Map<string, Sitra.Modals.FontInfo> fonts_map;
     private Gtk.SearchEntry search_entry;
     private Gee.HashMap<string, Gtk.ToggleButton> category_toggles;
 
-    public FontFilter (Gee.Map<string, Sitra.FontInfo> fonts_map,
+    public FontsFilterHelper (Gee.Map<string, Sitra.Modals.FontInfo> fonts_map,
         Gtk.SearchEntry search_entry,
         Gee.HashMap<string, Gtk.ToggleButton> category_toggles) {
+
         this.fonts_map = fonts_map;
         this.search_entry = search_entry;
         this.category_toggles = category_toggles;

@@ -1,12 +1,13 @@
-sitra_sources = [
+sitra_sources += files(
   'main.vala',
   'application.vala',
   'window.vala',
-  'preview_manager.vala',
-  'font_info.vala',
-  'font_loader.vala',
-  'font_filter.vala',
-]
+)
+
+# Subdirectories
+subdir('managers')
+subdir('helpers')
+subdir('modals')
 
 sitra_deps = [
   config_dep,

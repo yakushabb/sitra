@@ -40,39 +40,15 @@ public class Sitra.Window : Adw.ApplicationWindow {
     [GtkChild]
     private unowned Gtk.Box web_container;
     private WebView web_view;
-    private Gee.Map<string, FontInfo> fonts_map;
     private Gee.HashMap<string, Gtk.ToggleButton> category_toggles;
     private Gtk.CustomFilter filter;
+    private Sitra.Managers.FontsManager fonts_manager;
+    private Sitra.Managers.PreviewManager preview_manager;
 
     public Window (Adw.Application app) {
         Object (application: app);
 
-        category_toggles = new Gee.HashMap<string, Gtk.ToggleButton> ();
-
-        string[] categories_list = {
-            "sans-serif", "display", "serif", "handwriting",
-            "monospace", "icons", "variable", "Other"
-        };
-
-        foreach (string category in categories_list) {
-            var button_label = category == "sans-serif" ? "sans serif" : category;
-            var toggle = new Gtk.ToggleButton.with_label (button_label);
-            toggle.set_css_classes ({ "category", category });
-            categories.append (toggle);
-            category_toggles.set (category, toggle);
-            toggle.toggled.connect (() => {
-                this.filter.changed (Gtk.FilterChange.DIFFERENT);
-            });
-        }
-
-        this.web_view = new WebView ();
-        web_view.vexpand = true;
-        web_view.hexpand = true;
-        web_container.append (this.web_view);
-
-        var color = Gdk.RGBA ();
-        color.parse ("rgba(0,0,0,0)");
-        web_view.set_background_color (color);
+        this.preview_manager = new Sitra.Managers.PreviewManager ();
 
         // --- JSON font data ---
         string json_data = """
@@ -108,46 +84,61 @@ public class Sitra.Window : Adw.ApplicationWindow {
         ]
         """;
 
+        // --- Setup WebView ---
+        this.web_view = new WebView ();
+        web_view.vexpand = true;
+        web_view.hexpand = true;
+        web_container.append (this.web_view);
+
+        var color = Gdk.RGBA ();
+        color.parse ("rgba(0,0,0,0)");
+        web_view.set_background_color (color);
+
+        // --- Setup categories ---
+        category_toggles = new Gee.HashMap<string, Gtk.ToggleButton> ();
+
+        string[] categories_list = {
+            "sans-serif", "display", "serif", "handwriting",
+            "monospace", "icons", "variable", "Other"
+        };
+
+        foreach (string category in categories_list) {
+            var button_label = category == "sans-serif" ? "sans serif" : category;
+            var toggle = new Gtk.ToggleButton.with_label (button_label);
+            toggle.set_css_classes ({ "category", category });
+            categories.append (toggle);
+            this.category_toggles.set (category, toggle);
+            toggle.toggled.connect (() => {
+                this.filter.changed (Gtk.FilterChange.DIFFERENT);
+            });
+        }
+
+        // --- Setup fonts list/preview ---
+
+        this.fonts_manager = new Sitra.Managers.FontsManager ();
+
         try {
-            fonts_map = Sitra.FontLoader.load_from_json (json_data);
+            fonts_manager.load_from_json (json_data);
         } catch (Error e) {
             warning ("Failed to load fonts: %s", e.message);
         }
 
-        var font_keys = fonts_map.keys;
-        string[] font_names_temp = font_keys.to_array ();
-        font_names_temp += null;
-        var font_names = new Gtk.StringList (font_names_temp);
+        var font_names = new Gtk.StringList (fonts_manager.get_font_names_array ());
 
-        var font_filter = new Sitra.FontFilter (fonts_map, search_entry, category_toggles);
-        this.filter = font_filter.filter;
+        var fonts_filter = new Sitra.Helpers.FontsFilterHelper (fonts_manager.get_all_fonts (), search_entry, category_toggles);
+        this.filter = fonts_filter.filter;
 
         var filtered_fonts_model = new Gtk.FilterListModel (font_names, filter);
         var fonts_model = new Gtk.SingleSelection (filtered_fonts_model);
 
-        if (font_names.get_n_items () > 0)
-            preview_page.set_title (font_names.get_string (0));
-        var preview_font = fonts_map.get (font_names.get_string (0));
-        if (preview_font.url == null || preview_font.url.strip() == "") {
-            warning("Font '%s' has no URL", preview_font.family);
-            return;
+        if (font_names.get_n_items () > 0) {
+            this.update_preview (font_names.get_string (0));
         }
-
-        var html = PreviewManager.build_html (preview_font, preview_font.url);
-        web_view.load_html (html, null);
 
         fonts_model.selection_changed.connect (() => {
             if (!split_view.get_collapsed () && fonts_model.selected_item != null) {
                 var string_object = (Gtk.StringObject) fonts_model.selected_item;
-                preview_page.set_title (string_object.string);
-                preview_font = fonts_map.get (string_object.string);
-                if (preview_font.url == null || preview_font.url.strip() == "") {
-                    warning("Font '%s' has no URL", preview_font.family);
-                    return;
-                }
-
-                html = PreviewManager.build_html (preview_font, preview_font.url);
-                web_view.load_html (html, null);
+                this.update_preview (string_object.string);
             }
         });
 
@@ -155,15 +146,7 @@ public class Sitra.Window : Adw.ApplicationWindow {
             var item = fonts_model.get_item (position);
             if (item != null) {
                 var string_object = (Gtk.StringObject) item;
-                preview_page.set_title (string_object.string);
-                preview_font = fonts_map.get (string_object.string);
-                if (preview_font.url == null || preview_font.url.strip() == "") {
-                    warning("Font '%s' has no URL", preview_font.family);
-                    return;
-                }
-
-                html = PreviewManager.build_html (preview_font, preview_font.url);
-                web_view.load_html (html, null);
+                this.update_preview (string_object.string);
 
                 if (split_view.get_collapsed ())
                     split_view.set_show_content (true);
@@ -183,5 +166,15 @@ public class Sitra.Window : Adw.ApplicationWindow {
         search_button.clicked.connect (() => {
             search_bar.search_mode_enabled = !search_bar.search_mode_enabled;
         });
+    }
+
+    private void update_preview (string family_name) {
+        var preview_font = fonts_manager.get_font (family_name);
+        if (preview_font == null)
+            return;
+
+        preview_page.set_title (family_name);
+        var html = this.preview_manager.build_html (preview_font, preview_font.url);
+        web_view.load_html (html, null);
     }
 }

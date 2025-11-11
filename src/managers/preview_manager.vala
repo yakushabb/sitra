@@ -20,9 +20,13 @@
 
 using GLib;
 
-public class Sitra.PreviewManager : Object {
+public class Sitra.Managers.PreviewManager : Object {
 
-    private const string SAMPLE_TEXT = "Sphinx of black quartz, judge my vow.";
+    public string preview_text { get; set; }
+
+    public PreviewManager (string preview_text = "Sphinx of black quartz, judge my vow.") {
+        this.preview_text = preview_text;
+    }
 
     /**
      * Builds the HTML preview for a font.
@@ -30,7 +34,7 @@ public class Sitra.PreviewManager : Object {
      * @param font The FontInfo object (or any object with family, variable, weights).
      * @param font_url Optional remote URL for @font-face. Can be null.
      */
-    public static string build_html (FontInfo font, string? font_url = null) {
+    public string build_html (Sitra.Modals.FontInfo font, string? font_url = null) {
         var html = new StringBuilder ();
 
         // HTML header
@@ -73,20 +77,14 @@ public class Sitra.PreviewManager : Object {
         html.append ("</style></head><body>\n");
 
         // Generate sample text lines
-        if (font.variable) {
-            html.append_printf ("<p class='sample-text' style='font-weight: 400;'>%s</p>\n", SAMPLE_TEXT);
-        } else if (font.weights != null && font.weights.size > 0) {
-            foreach (var w in font.weights) {
+        foreach (var w in font.weights) {
                 html.append_printf ("""
                     <div>
                         <div class='weight-label'>Weight %d</div>
                         <p class='sample-text' style='font-weight: %d;'>%s</p>
                     </div>
-                """, w, w, SAMPLE_TEXT);
+                """, w, w, this.preview_text);
             }
-        } else {
-            html.append_printf ("<p class='sample-text' style='font-weight: normal;'>%s</p>\n", SAMPLE_TEXT);
-        }
 
         // Close HTML
         html.append ("</body></html>\n");

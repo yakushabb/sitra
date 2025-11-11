@@ -20,7 +20,7 @@
 
 using Gee;
 
-public class Sitra.FontInfo : Object {
+public class Sitra.Modals.FontInfo : Object {
     public string family { get; set; }
     public string category { get; set; }
     public bool variable { get; set; }

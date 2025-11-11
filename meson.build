@@ -22,7 +22,7 @@ config_inc = include_directories('.')
 
 add_project_arguments('-DGETTEXT_PACKAGE="' + meson.project_name () + '"', language: 'c')
 
-
+sitra_sources = files()
 subdir('data')
 subdir('src')
 subdir('po')
