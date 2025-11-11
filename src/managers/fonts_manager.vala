@@ -51,14 +51,19 @@ public class Sitra.Managers.FontsManager : Object {
         foreach (var key in fonts.keys) {
             names.add (key);
         }
+        names.sort ((a, b) => {
+            return a.collate (b); // locale-aware compare
+            });
         return names;
     }
 
-    public string[] get_font_names_array () {
-        var names = this.get_font_names ();
-        names.sort ((a, b) => {
-            return a.collate (b); // locale-aware compare
-        });
-        return (string[]) names.to_array ();
+    public string?[] get_font_names_array () {
+        var names = get_font_names().to_array ();
+        var result = new string?[names.length + 1];
+        for (int i = 0; i < names.length; i++) {
+            result[i] = names[i];
+        }
+        result[names.length] = null;
+        return result;
     }
 }

@@ -59,7 +59,7 @@ template $SitraWindow: Adw.ApplicationWindow {
 
         [bottom]
         ActionBar {
-            Adw.WrapBox categories {
+          Adw.WrapBox categories {
             child-spacing: 5;
             line-spacing: 10;
             margin-top: 6;
@@ -86,7 +86,9 @@ template $SitraWindow: Adw.ApplicationWindow {
                       label: bind template.item as <StringObject>.string;
                       height-request: 30;
 
-                      styles ["font_item"]
+                      styles [
+                        "font_item",
+                      ]
                     }
                   };
                 }
@@ -111,13 +113,19 @@ template $SitraWindow: Adw.ApplicationWindow {
           show-title: true;
         }
 
-        content: Box web_container {
+        content: Box {
+          margin-start: 12;
+          margin-end: 12;
+          orientation: vertical;
+
+          Gtk.Entry preview_entry {
+            placeholder-text: "Sphinx of black quartz, judge my vow.";
+          }
+
+          Box web_container {
+          margin-top: 12;
           vexpand: true;
-          hexpand: true;
-          margin-top: 6;
-          margin-start: 6;
-          margin-end: 6;
-          margin-bottom: 6;
+          }
         };
       };
     };

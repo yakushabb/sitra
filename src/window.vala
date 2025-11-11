@@ -38,6 +38,8 @@ public class Sitra.Window : Adw.ApplicationWindow {
     [GtkChild]
     private unowned Gtk.SearchEntry search_entry;
     [GtkChild]
+    private unowned Gtk.Entry preview_entry;
+    [GtkChild]
     private unowned Gtk.Box web_container;
     private WebView web_view;
     private Gee.HashMap<string, Gtk.ToggleButton> category_toggles;
@@ -50,28 +52,40 @@ public class Sitra.Window : Adw.ApplicationWindow {
 
         this.preview_manager = new Sitra.Managers.PreviewManager ();
 
+        preview_entry.changed.connect (() => {
+            // Use entry text, or fallback to default preview text if empty
+            var text = preview_entry.text.strip ();
+            if (text.length == 0)
+                text = "Sphinx of black quartz, judge my vow."; // or preview_manager.preview_text
+
+            this.preview_manager.preview_text = text;
+
+            // Get currently selected font
+            var fonts_model = (Gtk.SingleSelection) fonts_list.model;
+            if (fonts_model.selected_item != null) {
+                var string_object = (Gtk.StringObject) fonts_model.selected_item;
+                var selected_family = string_object.string;
+                var selected_font = fonts_manager.get_font (selected_family);
+                if (selected_font != null)
+                    update_preview (selected_font.family);
+            }
+        });
+
         // --- JSON font data ---
         string json_data = """
         [
             {
-                "family": "Alexandria",
-                "category": "serif",
-                "variable": false,
-                "weights": [100,200,300,400,500,600,700,800,900],
-                "subsets": ["arabic","latin","latin-ext","vietnamese"]
-            },
-            {
-                "family": "rubik",
+                "family": "Rubik",
                 "category": "sans-serif",
-                "variable": false,
-                "weights": [100,200,300,400,500,600,700,800,900],
+                "variable": true,
+                "weights": [300,400,500,600,700,800,900],
                 "subsets": ["arabic","latin","latin-ext","vietnamese"]
             },
             {
                 "family": "Roboto",
                 "category": "sans-serif",
                 "variable": true,
-                "weights": [100,300,400,500,700,900],
+                "weights": [100,200,300,400,500,600,700,800,900],
                 "subsets": ["cyrillic","cyrillic-ext","greek","greek-ext","latin","latin-ext","math","symbols","vietnamese"]
             },
             {
@@ -79,7 +93,7 @@ public class Sitra.Window : Adw.ApplicationWindow {
                 "category": "sans-serif",
                 "variable": false,
                 "weights": [100,300,400,700,900],
-                "subsets": ["latin","latin-ext"]
+                "subsets": ["latin"]
             }
         ]
         """;
@@ -170,11 +184,20 @@ public class Sitra.Window : Adw.ApplicationWindow {
 
     private void update_preview (string family_name) {
         var preview_font = fonts_manager.get_font (family_name);
-        if (preview_font == null)
+        if (preview_font == null) {
+            stderr.printf ("ERROR: Font not found: %s\n", family_name);
             return;
-
+        }
+        // Ensure at least one weight
+        if (preview_font.weights == null || preview_font.weights.size == 0) {
+            preview_font.weights = new Gee.ArrayList<int> ();
+            preview_font.weights.add (400);
+        }
         preview_page.set_title (family_name);
-        var html = this.preview_manager.build_html (preview_font, preview_font.url);
+        var html = this.preview_manager.build_html (preview_font);
+        if (html == null || html.strip ().length == 0) {
+            html = "<html><body><p>No preview available</p></body></html>";
+        }
         web_view.load_html (html, null);
     }
 }
