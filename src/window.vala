@@ -30,6 +30,12 @@ public class Sitra.Window : Adw.ApplicationWindow {
     [GtkChild]
     private unowned Adw.NavigationPage preview_page;
     [GtkChild]
+    private unowned Gtk.Stack preview_stack;
+    [GtkChild]
+    private unowned Gtk.StackPage web_page;
+    [GtkChild]
+    private unowned Gtk.StackPage status_page;
+    [GtkChild]
     private unowned Adw.WrapBox categories;
     [GtkChild]
     private unowned Gtk.ToggleButton search_button;
@@ -41,39 +47,41 @@ public class Sitra.Window : Adw.ApplicationWindow {
     private unowned Gtk.Entry preview_entry;
     [GtkChild]
     private unowned Gtk.Box web_container;
+    [GtkChild]
+    private unowned Gtk.DropDown font_size_dropdown;
+    [GtkChild]
+    private unowned Gtk.DropDown line_height_dropdown;
+    [GtkChild]
+    private unowned Gtk.DropDown letter_spacing_dropdown;
+    [GtkChild]
+    private unowned Gtk.ToggleButton italic_toggle;
+    [GtkChild]
+    private unowned Adw.Banner banner;
     private WebView web_view;
     private Gee.HashMap<string, Gtk.ToggleButton> category_toggles;
     private Gtk.CustomFilter filter;
     private Sitra.Managers.FontsManager fonts_manager;
     private Sitra.Managers.PreviewManager preview_manager;
+    private Sitra.Helpers.NetworkHelper network_helper;
 
     public Window (Adw.Application app) {
         Object (application: app);
 
         this.preview_manager = new Sitra.Managers.PreviewManager ();
 
-        preview_entry.changed.connect (() => {
-            // Use entry text, or fallback to default preview text if empty
-            var text = preview_entry.text.strip ();
-            if (text.length == 0)
-                text = "Sphinx of black quartz, judge my vow."; // or preview_manager.preview_text
-
-            this.preview_manager.preview_text = text;
-
-            // Get currently selected font
-            var fonts_model = (Gtk.SingleSelection) fonts_list.model;
-            if (fonts_model.selected_item != null) {
-                var string_object = (Gtk.StringObject) fonts_model.selected_item;
-                var selected_family = string_object.string;
-                var selected_font = fonts_manager.get_font (selected_family);
-                if (selected_font != null)
-                    update_preview (selected_font.family);
-            }
-        });
+        this.network_helper = Sitra.Helpers.NetworkHelper.get_instance ();
+        banner.set_revealed (false);
 
         // --- JSON font data ---
         string json_data = """
         [
+            {
+                "family": "Aguafina Script",
+                "category": "handwriting",
+                "variable": false,
+                "weights": [400],
+                "subsets": ["latin","latin-ext"]
+            },
             {
                 "family": "Rubik",
                 "category": "sans-serif",
@@ -145,9 +153,27 @@ public class Sitra.Window : Adw.ApplicationWindow {
         var filtered_fonts_model = new Gtk.FilterListModel (font_names, filter);
         var fonts_model = new Gtk.SingleSelection (filtered_fonts_model);
 
+
         if (font_names.get_n_items () > 0) {
-            this.update_preview (font_names.get_string (0));
+            fonts_model.set_selected (0);
+            Timeout.add (100, () => {
+                this.update_preview (font_names.get_string (0));
+                return false;
+            });
         }
+
+        this.network_helper.connectivity_changed.connect ((is_online) => {
+            if (!is_online && fonts_model.selected_item == null) {
+                // Only show banner if we haven't loaded anything yet
+                banner.set_revealed (true);
+            } else if (is_online && banner.get_revealed ()) {
+                // Connection restored, try to load preview again
+                if (fonts_model.selected_item != null) {
+                    var string_object = (Gtk.StringObject) fonts_model.selected_item;
+                    this.update_preview (string_object.string);
+                }
+            }
+        });
 
         fonts_model.selection_changed.connect (() => {
             if (!split_view.get_collapsed () && fonts_model.selected_item != null) {
@@ -155,6 +181,8 @@ public class Sitra.Window : Adw.ApplicationWindow {
                 this.update_preview (string_object.string);
             }
         });
+
+        fonts_list.model = fonts_model;
 
         fonts_list.activate.connect ((position) => {
             var item = fonts_model.get_item (position);
@@ -167,7 +195,38 @@ public class Sitra.Window : Adw.ApplicationWindow {
             }
         });
 
-        fonts_list.model = fonts_model;
+        preview_entry.changed.connect (() => {
+            var text = preview_entry.text.strip ();
+            if (text.length == 0)
+                text = this.preview_manager.DEFAULT_PREVIEW_TEXT;
+
+            this.preview_manager.preview_text = text;
+        });
+
+        this.banner.button_clicked.connect (() => {
+            if (this.network_helper.has_connectivity ()) {
+                banner.set_revealed (false);
+                if (fonts_model.selected_item != null) {
+                    var string_object = (Gtk.StringObject) fonts_model.selected_item;
+                    this.update_preview (string_object.string);
+                }
+            }
+        });
+
+        italic_toggle.bind_property ("active", preview_manager, "italic", BindingFlags.DEFAULT);
+        bind_dropdown_to_property (font_size_dropdown, preview_manager, "font-size");
+        bind_dropdown_to_property (line_height_dropdown, preview_manager, "line-height");
+        bind_dropdown_to_property (letter_spacing_dropdown, preview_manager, "letter-spacing");
+
+        this.preview_manager.notify.connect (() => {
+            if (fonts_model.selected_item != null) {
+                var string_object = (Gtk.StringObject) fonts_model.selected_item;
+                var selected_family = string_object.string;
+                var selected_font = fonts_manager.get_font (selected_family);
+                if (selected_font != null)
+                    update_preview (selected_font.family);
+            }
+        });
 
         split_view.notify["collapsed"].connect (() => {
             fonts_list.set_single_click_activate (split_view.get_collapsed ());
@@ -183,21 +242,47 @@ public class Sitra.Window : Adw.ApplicationWindow {
     }
 
     private void update_preview (string family_name) {
+        if (!this.network_helper.has_connectivity ()) {
+            banner.set_revealed (true);
+            preview_stack.set_visible_child_name ("status");
+            return;
+        }
+
+        preview_stack.set_visible_child_name ("preview");
+        banner.set_revealed (false);
+
         var preview_font = fonts_manager.get_font (family_name);
         if (preview_font == null) {
             stderr.printf ("ERROR: Font not found: %s\n", family_name);
             return;
         }
-        // Ensure at least one weight
+
         if (preview_font.weights == null || preview_font.weights.size == 0) {
             preview_font.weights = new Gee.ArrayList<int> ();
             preview_font.weights.add (400);
         }
+
         preview_page.set_title (family_name);
         var html = this.preview_manager.build_html (preview_font);
         if (html == null || html.strip ().length == 0) {
             html = "<html><body><p>No preview available</p></body></html>";
         }
         web_view.load_html (html, null);
+    }
+
+    private void bind_dropdown_to_property (Gtk.DropDown dropdown, Object target, string property_name) {
+        dropdown.bind_property (
+                                "selected-item",
+                                target,
+                                property_name,
+                                BindingFlags.DEFAULT,
+                                (binding, from_value, ref to_value) => {
+            var selected = from_value.get_object () as Gtk.StringObject;
+            if (selected != null) {
+                to_value.set_string (selected.string);
+                return true;
+            }
+            return false;
+        });
     }
 }

@@ -111,20 +111,123 @@ template $SitraWindow: Adw.ApplicationWindow {
         [top]
         Adw.HeaderBar {
           show-title: true;
-        }
 
-        content: Box {
-          margin-start: 12;
-          margin-end: 12;
-          orientation: vertical;
-
-          Gtk.Entry preview_entry {
-            placeholder-text: "Sphinx of black quartz, judge my vow.";
+          [end]
+          Button integrate_button {
+            icon-name: "application-x-addon-symbolic";
+            tooltip-text: _("Integrate");
           }
 
-          Box web_container {
-          margin-top: 12;
-          vexpand: true;
+          [end]
+          Button install_button {
+            icon-name: "folder-download-symbolic";
+            tooltip-text: _("Install");
+          }
+        }
+
+        [top]
+        Adw.Banner banner {
+          button-label: _("Reload");
+          title: _("You are not connected to the internet, font preview won't work");
+          revealed: false;
+        }
+
+        [bottom]
+        ActionBar {
+          [start]
+          Entry preview_entry {
+            placeholder-text: "Sphinx of black quartz, judge my vow.";
+            margin-start: 6;
+            hexpand: true;
+          }
+
+          [end]
+          Box {
+            DropDown font_size_dropdown {
+              model: Gtk.StringList {
+                strings [
+                  "8px",
+                  "10px",
+                  "12px",
+                  "14px",
+                  "16px",
+                  "18px",
+                  "20px",
+                  "24px",
+                  "28px",
+                  "32px",
+                  "36px",
+                  "40px",
+                  "48px",
+                  "56px",
+                  "64px",
+                ]
+              };
+
+              selected: 7;
+              tooltip-text: _("Font Size");
+            }
+
+            DropDown line_height_dropdown {
+              model: Gtk.StringList {
+                strings [
+                  "1",
+                  "1.15",
+                  "1.25",
+                  "1.5",
+                  "1.7",
+                  "2",
+                ]
+              };
+
+              tooltip-text: _("Line Height");
+            }
+
+            DropDown letter_spacing_dropdown {
+              model: Gtk.StringList {
+                strings [
+                  "-3",
+                  "-1.5",
+                  "0",
+                  "3",
+                  "6",
+                ]
+              };
+
+              selected: 2;
+              tooltip-text: _("Letter Spacing");
+            }
+
+            ToggleButton italic_toggle {
+              icon-name: "format-text-italic-symbolic";
+              tooltip-text: _("Italic");
+            }
+
+            styles [
+              "linked",
+            ]
+          }
+        }
+
+        content: Stack preview_stack {
+          StackPage web_page {
+            name: "preview";
+
+            child: Box web_container {
+              margin-start: 12;
+              margin-end: 12;
+              margin-top: 6;
+            };
+          }
+
+          StackPage status_page {
+            name: "status";
+
+            child: Adw.StatusPage {
+              title: _("No Internet connection");
+              description: _("You are not connected to the internet, font previews can't work offline.");
+              icon-name: "network-offline-symbolic";
+            };
           }
         };
       };

@@ -20,27 +20,27 @@
 
 public class Sitra.Managers.PreviewManager : Object {
 
-    // User-set preview text
-    public string preview_text { get; set; }
-
-    // Constructor with optional default text
-    public PreviewManager (string preview_text = "Sphinx of black quartz, judge my vow.") {
-        this.preview_text = preview_text;
-    }
+    public string DEFAULT_PREVIEW_TEXT {get; default = "Sphinx of black quartz, judge my vow.";}
+    public string preview_text { get; set; default = "Sphinx of black quartz, judge my vow."; }
+    public string font_size {get; set; default = "24px"; }
+    public string line_height {get; set; default = "1"; }
+    public string letter_spacing {get; set; default = "0"; }
+    public bool italic { get; set; default = false; }
 
     /**
      * Generate the remote URL for a font file.
      * - Variable fonts: only one file
      * - Non-variable fonts: one per weight
      */
-    private string get_font_url (Sitra.Modals.FontInfo font, int? weight = null) {
+    private string get_font_url (Sitra.Modals.FontInfo font, int? weight = null, bool italic = false) {
         string font_slug = font.family.down().replace(" ", "-");
 
         if (font.variable) {
             return "https://cdn.jsdelivr.net/fontsource/fonts/%s:vf@latest/latin-wght-normal.woff2".printf(font_slug);
         } else {
             int w = weight != null ? weight : 400;
-            return "https://cdn.jsdelivr.net/fontsource/fonts/%s@latest/latin-%d-normal.woff2".printf(font_slug, w);
+            string style = italic ? "italic" : "normal";
+            return "https://cdn.jsdelivr.net/fontsource/fonts/%s@latest/latin-%d-%s.woff2".printf(font_slug, w, style);
         }
     }
 
@@ -66,7 +66,7 @@ public class Sitra.Managers.PreviewManager : Object {
             """, font.family, font_url);
         } else {
             foreach (var w in font.weights) {
-                string font_url = get_font_url(font, w);
+                string font_url = get_font_url(font, w, this.italic);
                 html.append_printf ("""
                     @font-face {
                         font-family: '%s';
@@ -84,12 +84,15 @@ public class Sitra.Managers.PreviewManager : Object {
             html, body {
                 background-color: transparent;
                 color: var(--window-fg-color, #000000);
-                margin: 12px 0 0 0;
+
             }
 
             p.sample-text {
                 font-family: '%s', sans-serif;
-                font-size: 24px;
+                font-style: %s;
+                font-size: %s;
+                line-height: %s;
+                letter-spacing: %spx;
             }
 
             .weight-label {
@@ -98,7 +101,7 @@ public class Sitra.Managers.PreviewManager : Object {
                 line-height: 0;
                 margin: 0;
             }
-        """, font.family);
+        """, font.family, this.italic ? "italic" : "normal", this.font_size, this.line_height, this.letter_spacing);
 
         html.append ("</style></head><body>\n");
 
