@@ -4,5 +4,6 @@
     <file alias="style.css">gtk/style.css</file>
     <file preprocess="xml-stripblanks">window.ui</file>
     <file preprocess="xml-stripblanks">shortcuts-dialog.ui</file>
+    <file>fonts.json</file>
   </gresource>
 </gresources>

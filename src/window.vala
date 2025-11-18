@@ -32,10 +32,6 @@ public class Sitra.Window : Adw.ApplicationWindow {
     [GtkChild]
     private unowned Gtk.Stack preview_stack;
     [GtkChild]
-    private unowned Gtk.StackPage web_page;
-    [GtkChild]
-    private unowned Gtk.StackPage status_page;
-    [GtkChild]
     private unowned Adw.WrapBox categories;
     [GtkChild]
     private unowned Gtk.ToggleButton search_button;
@@ -72,39 +68,15 @@ public class Sitra.Window : Adw.ApplicationWindow {
         this.network_helper = Sitra.Helpers.NetworkHelper.get_instance ();
         banner.set_revealed (false);
 
-        // --- JSON font data ---
-        string json_data = """
-        [
-            {
-                "family": "Aguafina Script",
-                "category": "handwriting",
-                "variable": false,
-                "weights": [400],
-                "subsets": ["latin","latin-ext"]
-            },
-            {
-                "family": "Rubik",
-                "category": "sans-serif",
-                "variable": true,
-                "weights": [300,400,500,600,700,800,900],
-                "subsets": ["arabic","latin","latin-ext","vietnamese"]
-            },
-            {
-                "family": "Roboto",
-                "category": "sans-serif",
-                "variable": true,
-                "weights": [100,200,300,400,500,600,700,800,900],
-                "subsets": ["cyrillic","cyrillic-ext","greek","greek-ext","latin","latin-ext","math","symbols","vietnamese"]
-            },
-            {
-                "family": "Lato",
-                "category": "sans-serif",
-                "variable": false,
-                "weights": [100,300,400,700,900],
-                "subsets": ["latin"]
-            }
-        ]
-        """;
+        // --- Load JSON font data from resource ---
+        string json_data = "";
+        try {
+            var bytes = resources_lookup_data ("/io/github/ronniedroid/sitra/fonts.json", 0);
+            json_data = (string) bytes.get_data ();
+        } catch (Error e) {
+            warning ("Failed to load fonts.json: %s", e.message);
+            json_data = "[]";
+        }
 
         // --- Setup WebView ---
         this.web_view = new WebView ();
@@ -157,6 +129,7 @@ public class Sitra.Window : Adw.ApplicationWindow {
         if (font_names.get_n_items () > 0) {
             fonts_model.set_selected (0);
             Timeout.add (100, () => {
+                update_italic_toggle_state(fonts_model);
                 this.update_preview (font_names.get_string (0));
                 return false;
             });
@@ -164,10 +137,8 @@ public class Sitra.Window : Adw.ApplicationWindow {
 
         this.network_helper.connectivity_changed.connect ((is_online) => {
             if (!is_online && fonts_model.selected_item == null) {
-                // Only show banner if we haven't loaded anything yet
                 banner.set_revealed (true);
             } else if (is_online && banner.get_revealed ()) {
-                // Connection restored, try to load preview again
                 if (fonts_model.selected_item != null) {
                     var string_object = (Gtk.StringObject) fonts_model.selected_item;
                     this.update_preview (string_object.string);
@@ -178,6 +149,7 @@ public class Sitra.Window : Adw.ApplicationWindow {
         fonts_model.selection_changed.connect (() => {
             if (!split_view.get_collapsed () && fonts_model.selected_item != null) {
                 var string_object = (Gtk.StringObject) fonts_model.selected_item;
+                update_italic_toggle_state(fonts_model);
                 this.update_preview (string_object.string);
             }
         });
@@ -188,6 +160,7 @@ public class Sitra.Window : Adw.ApplicationWindow {
             var item = fonts_model.get_item (position);
             if (item != null) {
                 var string_object = (Gtk.StringObject) item;
+                update_italic_toggle_state(fonts_model);
                 this.update_preview (string_object.string);
 
                 if (split_view.get_collapsed ())
@@ -219,13 +192,9 @@ public class Sitra.Window : Adw.ApplicationWindow {
         bind_dropdown_to_property (letter_spacing_dropdown, preview_manager, "letter-spacing");
 
         this.preview_manager.notify.connect (() => {
-            if (fonts_model.selected_item != null) {
-                var string_object = (Gtk.StringObject) fonts_model.selected_item;
-                var selected_family = string_object.string;
-                var selected_font = fonts_manager.get_font (selected_family);
-                if (selected_font != null)
-                    update_preview (selected_font.family);
-            }
+            var selected_font = get_selected_font (fonts_model);
+            if (selected_font != null)
+                update_preview (selected_font.family);
         });
 
         split_view.notify["collapsed"].connect (() => {
@@ -240,6 +209,24 @@ public class Sitra.Window : Adw.ApplicationWindow {
             search_bar.search_mode_enabled = !search_bar.search_mode_enabled;
         });
     }
+
+    private Sitra.Modals.FontInfo get_selected_font (Gtk.SingleSelection model) {
+        var string_object = (Gtk.StringObject) model.selected_item;
+        var selected_font = string_object.string;
+        return fonts_manager.get_font (selected_font);
+    }
+
+    private void update_italic_toggle_state(Gtk.SingleSelection fonts_model) {
+    var selected_font = get_selected_font(fonts_model);
+    if (selected_font != null) {
+        bool has_italic = selected_font.styles.contains("italic");
+        italic_toggle.set_sensitive(has_italic);
+        if (!has_italic) {
+            italic_toggle.set_active(false);
+            preview_manager.italic = false;
+        }
+    }
+}
 
     private void update_preview (string family_name) {
         if (!this.network_helper.has_connectivity ()) {

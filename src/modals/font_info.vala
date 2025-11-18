@@ -4,14 +4,16 @@ public class Sitra.Modals.FontInfo : Object {
     public bool variable { get; set; }
     public Gee.List<int> weights { get; set; default = new Gee.ArrayList<int>(); }
     public Gee.List<string> subsets { get; set; default = new Gee.ArrayList<string>(); }
+    public Gee.List<string> styles {get; set; default = new Gee.ArrayList<string>();}
 
     public FontInfo(string family, string category, bool variable,
-                    Gee.List<int> weights, Gee.List<string> subsets) {
+                    Gee.List<int> weights, Gee.List<string> subsets, Gee.List<string> styles) {
         this.family = family;
         this.category = category;
         this.variable = variable;
         this.weights = weights;
         this.subsets = subsets;
+        this.styles = styles;
     }
 
     public static FontInfo from_json(Json.Object obj) {
@@ -31,7 +33,13 @@ public class Sitra.Modals.FontInfo : Object {
             subsets.add((string) node.get_string());
         }
 
-        return new FontInfo(family, category, variable, weights, subsets);
+        var styles_array = obj.get_array_member("styles");
+        var styles = new Gee.ArrayList<string>();
+        foreach (var node in styles_array.get_elements()) {
+            styles.add((string) node.get_string());
+            }
+
+        return new FontInfo(family, category, variable, weights, subsets, styles);
     }
 }
 
