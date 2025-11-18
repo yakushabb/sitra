@@ -1,3 +1,7 @@
 # sitra
 
-A description of this project.
+Install Fonts from FontSource.
+
+## Building the app
+
+Use gnome builder.
