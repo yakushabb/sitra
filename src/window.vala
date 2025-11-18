@@ -133,7 +133,7 @@ public class Sitra.Window : Adw.ApplicationWindow {
                 this.update_preview (font_names.get_string (0));
                 return false;
             });
-        }لهف
+        }
 
         this.network_helper.connectivity_changed.connect ((is_online) => {
             if (!is_online && fonts_model.selected_item == null) {
