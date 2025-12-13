@@ -11,3 +11,5 @@ install_data(
   symbolic_dir / ('@0@-symbolic.svg').format(application_id),
   install_dir: get_option('datadir') / 'icons' / symbolic_dir
 )
+
+message('we are getting here')

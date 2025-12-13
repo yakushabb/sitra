@@ -56,8 +56,8 @@
 	    "buildsystem" : "meson",
 	    "sources" : [
 		{
-		    "type" : "git",
-		    "url" : "file:///var/home/ronnie/Projects"
+		    "type" : "dir",
+		    "path" : "."
 		}
 	    ],
 	    "config-opts" : [

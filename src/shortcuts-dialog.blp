@@ -1,14 +1,14 @@
 using Gtk 4.0;
 using Adw 1;
 
-Adw.ShortcutsDialog help_overlay {
+Adw.ShortcutsDialog shortcuts_dialog {
 
-  Adw.ShortcutsSection {
-    title: "shortcuts";
+  Adw.ShortcutsSection general_section {
+    title: C_("shortcut window", "General");
 
       Adw.ShortcutsItem {
         title: C_("shortcut window", "Show Shortcuts");
-        action-name: "win.show-help-overlay";
+        action-name: "app.shortcuts";
       }
 
       Adw.ShortcutsItem {

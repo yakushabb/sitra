@@ -93,7 +93,7 @@ public class Sitra.Window : Adw.ApplicationWindow {
 
         string[] categories_list = {
             "sans-serif", "display", "serif", "handwriting",
-            "monospace", "icons", "variable", "Other"
+            "monospace", "icons", "variable", "other"
         };
 
         foreach (string category in categories_list) {

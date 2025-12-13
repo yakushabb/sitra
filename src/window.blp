@@ -9,7 +9,7 @@ template $SitraWindow: Adw.ApplicationWindow {
   height-request: 200;
 
   Adw.Breakpoint {
-    condition ("max-width: 500sp")
+    condition ("max-width: 540sp")
 
     setters {
       split_view.collapsed: true;
@@ -17,7 +17,7 @@ template $SitraWindow: Adw.ApplicationWindow {
   }
 
   content: Adw.NavigationSplitView split_view {
-    min-sidebar-width: 250;
+    min-sidebar-width: 260;
 
     sidebar: Adw.NavigationPage sidebar {
       title: _("Sitra");
@@ -113,8 +113,15 @@ template $SitraWindow: Adw.ApplicationWindow {
           show-title: true;
 
           [end]
+          MenuButton {
+            icon-name: "sitra-license-symbolic";
+            tooltip-text: _("License details");
+            popover: license_popover;
+          }
+
+          [end]
           Button integrate_button {
-            icon-name: "application-x-addon-symbolic";
+            icon-name: "sitra-integrate-symbolic";
             tooltip-text: _("Integrate");
           }
 
@@ -247,4 +254,10 @@ menu window_menu {
       action: "app.about";
     }
   }
+}
+
+Popover license_popover {
+  has-arrow: true;
+  name: "plain_popover";
+
 }

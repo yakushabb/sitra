@@ -1,9 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <gresources>
   <gresource prefix="/io/github/ronniedroid/sitra">
-    <file alias="style.css">gtk/style.css</file>
+    <file alias="style.css">assets/style.css</file>
     <file preprocess="xml-stripblanks">window.ui</file>
     <file preprocess="xml-stripblanks">shortcuts-dialog.ui</file>
-    <file>fonts.json</file>
+    <file alias="fonts.json">assets/fonts.json</file>
+  </gresource>
+  <gresource prefix="/io/github/ronniedroid/sitra/icons/scalable/actions">
+    <file preprocess="xml-stripblanks" alias="sitra-license-symbolic.svg">assets/license-symbolic.svg</file>
+    <file preprocess="xml-stripblanks" alias="sitra-integrate-symbolic.svg">assets/pull-request-new-symbolic.svg</file>
   </gresource>
 </gresources>
