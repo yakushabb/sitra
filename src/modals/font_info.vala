@@ -1,25 +1,49 @@
+/* font_info.vala
+ *
+ * Copyright 2025 Ronnie Nissan Yousif
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ *
+ * SPDX-License-Identifier: GPL-3.0-or-later
+ */
+
 public class Sitra.Modals.FontInfo : Object {
     public string family { get; set; }
     public string category { get; set; }
     public bool variable { get; set; }
+    public string license {get; set;}
     public Gee.List<int> weights { get; set; default = new Gee.ArrayList<int>(); }
     public Gee.List<string> subsets { get; set; default = new Gee.ArrayList<string>(); }
     public Gee.List<string> styles {get; set; default = new Gee.ArrayList<string>();}
 
-    public FontInfo(string family, string category, bool variable,
+    public FontInfo(string family, string category, bool variable, string license,
                     Gee.List<int> weights, Gee.List<string> subsets, Gee.List<string> styles) {
         this.family = family;
         this.category = category;
         this.variable = variable;
+        this.license = license;
         this.weights = weights;
         this.subsets = subsets;
         this.styles = styles;
+
     }
 
     public static FontInfo from_json(Json.Object obj) {
         string family = obj.get_string_member("family");
         string category = obj.get_string_member("category");
         bool variable = obj.get_boolean_member("variable");
+        string license = obj.get_string_member("license");
 
         var weights_array = obj.get_array_member("weights");
         var weights = new Gee.ArrayList<int>();
@@ -39,7 +63,7 @@ public class Sitra.Modals.FontInfo : Object {
             styles.add((string) node.get_string());
             }
 
-        return new FontInfo(family, category, variable, weights, subsets, styles);
+        return new FontInfo(family, category, variable, license, weights, subsets, styles);
     }
 }
 
