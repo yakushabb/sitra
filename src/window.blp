@@ -79,7 +79,6 @@ template $SitraWindow: Adw.ApplicationWindow {
             valign: start;
 
             ListView fonts_list {
-
               styles [
                 "navigation-sidebar",
               ]
@@ -203,6 +202,16 @@ template $SitraWindow: Adw.ApplicationWindow {
         }
 
         content: Stack preview_stack {
+          StackPage welcome_page {
+            name: "welcome";
+
+            child: Adw.StatusPage {
+              title: _("Welcome to Sitra");
+              description: _("Please select a font to preview it here");
+              icon-name: "sitra-logo";
+            };
+          }
+
           StackPage web_page {
             name: "preview";
 

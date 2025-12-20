@@ -5,9 +5,12 @@
     <file preprocess="xml-stripblanks">window.ui</file>
     <file preprocess="xml-stripblanks">shortcuts-dialog.ui</file>
     <file alias="fonts.json">assets/fonts.json</file>
+    <file alias="licenses">assets/licenses</file>
+    <file alias="licenses.svg">assets/license.svg</file>
   </gresource>
   <gresource prefix="/io/github/ronniedroid/sitra/icons/scalable/actions">
     <file preprocess="xml-stripblanks" alias="sitra-license-symbolic.svg">assets/license-symbolic.svg</file>
     <file preprocess="xml-stripblanks" alias="sitra-integrate-symbolic.svg">assets/pull-request-new-symbolic.svg</file>
+    <file preprocess="xml-stripblanks" alias="sitra-logo.svg">assets/io.github.ronniedroid.sitra.svg</file>
   </gresource>
 </gresources>
