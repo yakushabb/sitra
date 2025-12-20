@@ -47,7 +47,8 @@ public class Sitra.Window : Adw.ApplicationWindow {
     private Sitra.Managers.PreviewManager preview_manager;
     private Sitra.Helpers.NetworkHelper network_helper;
 
-    private string? last_activated_font = null;
+    private Gtk.FilterListModel filtered_model;
+    private Gtk.SingleSelection fonts_model;
 
     public Window (Adw.Application app) {
         Object (application: app);
@@ -107,22 +108,91 @@ public class Sitra.Window : Adw.ApplicationWindow {
         }
 
         var font_names = new Gtk.StringList (
-            fonts_manager.get_font_names_array ()
+                                             fonts_manager.get_font_names_array ()
         );
 
         var fonts_filter = new Sitra.Helpers.FontsFilterHelper (
-            fonts_manager.get_all_fonts (),
-            search_entry,
-            category_toggles
+                                                                fonts_manager.get_all_fonts (),
+                                                                search_entry,
+                                                                category_toggles
         );
 
         filter = fonts_filter.filter;
 
-        var filtered_model = new Gtk.FilterListModel (font_names, filter);
+        filtered_model = new Gtk.FilterListModel (font_names, filter);
 
-        var fonts_model = new Gtk.NoSelection (filtered_model);
+        fonts_model = new Gtk.SingleSelection (filtered_model);
+        fonts_model.autoselect = false;
+        fonts_model.can_unselect = true;
+
+        Idle.add (() => {
+            fonts_model.unselect_all ();
+            return false;
+        });
+
         fonts_list.model = fonts_model;
-        fonts_list.set_single_click_activate (true);
+        fonts_list.set_single_click_activate (false);
+
+        // Setup factory for rendering list items
+        var factory = new Gtk.SignalListItemFactory ();
+
+        factory.setup.connect ((obj) => {
+            var list_item = (Gtk.ListItem) obj;
+            var box = new Gtk.Box (Gtk.Orientation.VERTICAL, 0);
+            box.spacing = 6;
+            box.margin_top = 6;
+            box.margin_bottom = 6;
+
+            // Horizontal box for category and variable badge
+            var category_box = new Gtk.Box (Gtk.Orientation.HORIZONTAL, 6);
+
+            var category_label = new Gtk.Label ("");
+            category_label.set_halign (Gtk.Align.START);
+            category_label.add_css_class ("dimmed");
+            category_label.add_css_class ("caption-heading");
+            category_box.append (category_label);
+
+            var variable_badge = new Gtk.Label ("Variable");
+            variable_badge.add_css_class ("caption");
+            variable_badge.add_css_class ("variable-badge");
+            category_box.append (variable_badge);
+
+            box.append (category_box);
+
+            var family_label = new Gtk.Label ("");
+            family_label.set_halign (Gtk.Align.START);
+            box.append (family_label);
+
+            list_item.child = box;
+        });
+
+        factory.bind.connect ((obj) => {
+            var list_item = (Gtk.ListItem) obj;
+            var box = (Gtk.Box) list_item.child;
+            var category_box = (Gtk.Box) box.get_first_child ();
+            var category_label = (Gtk.Label) category_box.get_first_child ();
+            var variable_badge = (Gtk.Label) category_box.get_last_child ();
+            var family_label = (Gtk.Label) box.get_last_child ();
+
+            var string_object = (Gtk.StringObject) list_item.item;
+            var font = fonts_manager.get_font (string_object.string);
+
+            category_label.set_label (font.category);
+            family_label.set_label (font.family);
+
+            // Show badge only for variable fonts
+            variable_badge.visible = font.variable;
+        });
+        fonts_list.factory = factory;
+
+        fonts_model.selection_changed.connect (() => {
+            if (!split_view.get_collapsed () && fonts_model.selected_item != null) {
+                var string_object = (Gtk.StringObject) fonts_model.selected_item;
+                var family = string_object.string;
+                update_italic_toggle_state (family);
+                update_preview (family);
+            }
+        });
 
         fonts_list.activate.connect ((position) => {
             var item = filtered_model.get_item (position);
@@ -131,8 +201,6 @@ public class Sitra.Window : Adw.ApplicationWindow {
 
             var string_object = (Gtk.StringObject) item;
             var family = string_object.string;
-
-            last_activated_font = family;
 
             update_italic_toggle_state (family);
             update_preview (family);
@@ -144,16 +212,18 @@ public class Sitra.Window : Adw.ApplicationWindow {
         network_helper.connectivity_changed.connect ((is_online) => {
             if (!is_online) {
                 banner.set_revealed (true);
-            } else if (is_online && banner.get_revealed () && last_activated_font != null) {
+            } else if (is_online && banner.get_revealed () && fonts_model.selected_item != null) {
                 banner.set_revealed (false);
-                update_preview (last_activated_font);
+                var string_object = (Gtk.StringObject) fonts_model.selected_item;
+                update_preview (string_object.string);
             }
         });
 
         banner.button_clicked.connect (() => {
-            if (network_helper.has_connectivity () && last_activated_font != null) {
+            if (network_helper.has_connectivity () && fonts_model.selected_item != null) {
                 banner.set_revealed (false);
-                update_preview (last_activated_font);
+                var string_object = (Gtk.StringObject) fonts_model.selected_item;
+                update_preview (string_object.string);
             }
         });
 
@@ -166,10 +236,10 @@ public class Sitra.Window : Adw.ApplicationWindow {
         });
 
         italic_toggle.bind_property (
-            "active",
-            preview_manager,
-            "italic",
-            BindingFlags.DEFAULT
+                                     "active",
+                                     preview_manager,
+                                     "italic",
+                                     BindingFlags.DEFAULT
         );
 
         bind_dropdown_to_property (font_size_dropdown, preview_manager, "font-size");
@@ -177,8 +247,10 @@ public class Sitra.Window : Adw.ApplicationWindow {
         bind_dropdown_to_property (letter_spacing_dropdown, preview_manager, "letter-spacing");
 
         preview_manager.notify.connect (() => {
-            if (last_activated_font != null)
-                update_preview (last_activated_font);
+            if (fonts_model.selected_item != null) {
+                var string_object = (Gtk.StringObject) fonts_model.selected_item;
+                update_preview (string_object.string);
+            }
         });
 
         split_view.notify["collapsed"].connect (() => {
@@ -240,25 +312,21 @@ public class Sitra.Window : Adw.ApplicationWindow {
         web_view.load_html (html, null);
     }
 
-    private void bind_dropdown_to_property (
-        Gtk.DropDown dropdown,
-        Object target,
-        string property_name
-    ) {
+    private void bind_dropdown_to_property (Gtk.DropDown dropdown,
+                                            Object target,
+                                            string property_name) {
         dropdown.bind_property (
-            "selected-item",
-            target,
-            property_name,
-            BindingFlags.DEFAULT,
-            (binding, from_value, ref to_value) => {
-                var selected = from_value.get_object () as Gtk.StringObject;
-                if (selected != null) {
-                    to_value.set_string (selected.string);
-                    return true;
-                }
-                return false;
+                                "selected-item",
+                                target,
+                                property_name,
+                                BindingFlags.DEFAULT,
+                                (binding, from_value, ref to_value) => {
+            var selected = from_value.get_object () as Gtk.StringObject;
+            if (selected != null) {
+                to_value.set_string (selected.string);
+                return true;
             }
-        );
+            return false;
+        });
     }
 }
-

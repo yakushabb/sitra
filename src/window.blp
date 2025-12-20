@@ -17,7 +17,7 @@ template $SitraWindow: Adw.ApplicationWindow {
   }
 
   content: Adw.NavigationSplitView split_view {
-    min-sidebar-width: 260;
+    min-sidebar-width: 300;
 
     sidebar: Adw.NavigationPage sidebar {
       title: _("Sitra");
@@ -79,20 +79,6 @@ template $SitraWindow: Adw.ApplicationWindow {
             valign: start;
 
             ListView fonts_list {
-              factory: BuilderListItemFactory {
-                template ListItem {
-                  child: Gtk.Box {
-                    Gtk.Label {
-                      label: bind template.item as <StringObject>.string;
-                      height-request: 30;
-
-                      styles [
-                        "font_item",
-                      ]
-                    }
-                  };
-                }
-              };
 
               styles [
                 "navigation-sidebar",

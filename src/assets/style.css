@@ -30,3 +30,13 @@ font-family: "Iosevka";
 .font_item {
 text-transform: capitalize;
 }
+
+.variable-badge {
+    padding: 2px 6px;
+    border-radius: 6px;
+    background-color: alpha(currentColor, 0.08);
+}
+
+
+
+
