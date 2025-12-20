@@ -34,6 +34,7 @@ public class Sitra.Window : Adw.ApplicationWindow {
     [GtkChild] private unowned Gtk.SearchEntry search_entry;
     [GtkChild] private unowned Gtk.Entry preview_entry;
     [GtkChild] private unowned Gtk.Box web_container;
+    [GtkChild] private unowned Gtk.ActionBar bottom_action_bar;
     [GtkChild] private unowned Gtk.DropDown font_size_dropdown;
     [GtkChild] private unowned Gtk.DropDown line_height_dropdown;
     [GtkChild] private unowned Gtk.DropDown letter_spacing_dropdown;
@@ -286,11 +287,13 @@ public class Sitra.Window : Adw.ApplicationWindow {
         if (!network_helper.has_connectivity ()) {
             banner.set_revealed (true);
             preview_stack.set_visible_child_name ("status");
+            bottom_action_bar.set_visible(false);
             return;
         }
 
         preview_stack.set_visible_child_name ("preview");
         banner.set_revealed (false);
+        bottom_action_bar.set_visible(true);
 
         var preview_font = fonts_manager.get_font (family_name);
         if (preview_font == null) {

@@ -125,7 +125,8 @@ template $SitraWindow: Adw.ApplicationWindow {
         }
 
         [bottom]
-        ActionBar {
+        ActionBar bottom_action_bar {
+        visible: false;
           [start]
           Entry preview_entry {
             placeholder-text: "Sphinx of black quartz, judge my vow.";
