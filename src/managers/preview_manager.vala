@@ -19,7 +19,6 @@
  */
 
 public class Sitra.Managers.PreviewManager : Object {
-
     public string DEFAULT_PREVIEW_TEXT {get; default = "Sphinx of black quartz, judge my vow.";}
     public string preview_text { get; set; default = "Sphinx of black quartz, judge my vow."; }
     public string font_size {get; set; default = "24px"; }
@@ -28,24 +27,107 @@ public class Sitra.Managers.PreviewManager : Object {
     public bool italic { get; set; default = false; }
 
     /**
-     * Generate the remote URL for a font file.
-     * - Variable fonts: only one file
-     * - Non-variable fonts: one per weight
+     * Detect which subsets are needed based on the characters in the text
      */
-    private string get_font_url (Sitra.Modals.FontInfo font, int? weight = null, bool italic = false) {
-        string font_slug = font.family.down().replace(" ", "-");
+    private Gee.List<string> detect_needed_subsets(string text, Gee.List<string> available_subsets) {
+        var needed = new Gee.HashSet<string>();
 
+        // Scan the text for character ranges
+        for (int i = 0; i < text.length; i++) {
+            unichar c = text.get_char(i);
+
+            // Arabic
+            if ((c >= 0x0600 && c <= 0x06FF) || (c >= 0x0750 && c <= 0x077F) ||
+                (c >= 0xFB50 && c <= 0xFDFF) || (c >= 0xFE70 && c <= 0xFEFF)) {
+                if (available_subsets.contains("arabic")) needed.add("arabic");
+            }
+            // Cyrillic
+            else if (c >= 0x0400 && c <= 0x04FF) {
+                if (available_subsets.contains("cyrillic")) needed.add("cyrillic");
+                if (available_subsets.contains("cyrillic-ext")) needed.add("cyrillic-ext");
+            }
+            // Greek
+            else if ((c >= 0x0370 && c <= 0x03FF) || (c >= 0x1F00 && c <= 0x1FFF)) {
+                if (available_subsets.contains("greek")) needed.add("greek");
+                if (available_subsets.contains("greek-ext")) needed.add("greek-ext");
+            }
+            // Hebrew
+            else if ((c >= 0x0590 && c <= 0x05FF) || (c >= 0xFB1D && c <= 0xFB4F)) {
+                if (available_subsets.contains("hebrew")) needed.add("hebrew");
+            }
+            // Chinese
+            else if ((c >= 0x4E00 && c <= 0x9FFF) || (c >= 0x3400 && c <= 0x4DBF)) {
+                if (available_subsets.contains("chinese-simplified")) needed.add("chinese-simplified");
+                if (available_subsets.contains("chinese-traditional")) needed.add("chinese-traditional");
+                if (available_subsets.contains("chinese-hongkong")) needed.add("chinese-hongkong");
+            }
+            // Japanese (Hiragana, Katakana, Kanji)
+            else if ((c >= 0x3040 && c <= 0x309F) || (c >= 0x30A0 && c <= 0x30FF) ||
+                     (c >= 0x4E00 && c <= 0x9FFF)) {
+                if (available_subsets.contains("japanese")) needed.add("japanese");
+            }
+            // Korean (Hangul)
+            else if ((c >= 0xAC00 && c <= 0xD7AF) || (c >= 0x1100 && c <= 0x11FF) ||
+                     (c >= 0x3130 && c <= 0x318F)) {
+                if (available_subsets.contains("korean")) needed.add("korean");
+            }
+            // Devanagari (Hindi, Sanskrit, etc.)
+            else if (c >= 0x0900 && c <= 0x097F) {
+                if (available_subsets.contains("devanagari")) needed.add("devanagari");
+            }
+            // Vietnamese
+            else if ((c >= 0x1EA0 && c <= 0x1EF9) || c == 0x0102 || c == 0x0103 ||
+                     c == 0x0110 || c == 0x0111 || c == 0x01A0 || c == 0x01A1 ||
+                     c == 0x01AF || c == 0x01B0) {
+                if (available_subsets.contains("vietnamese")) needed.add("vietnamese");
+            }
+            // Thai
+            else if (c >= 0x0E00 && c <= 0x0E7F) {
+                if (available_subsets.contains("thai")) needed.add("thai");
+            }
+            // Latin Extended
+            else if (c >= 0x0100 && c <= 0x024F) {
+                if (available_subsets.contains("latin-ext")) needed.add("latin-ext");
+            }
+            // Basic Latin
+            else if ((c >= 0x0020 && c <= 0x007E) || (c >= 0x00A0 && c <= 0x00FF)) {
+                if (available_subsets.contains("latin")) needed.add("latin");
+            }
+        }
+
+        // Always include latin as fallback if nothing detected
+        if (needed.is_empty && available_subsets.contains("latin")) {
+            needed.add("latin");
+        }
+
+        // Convert HashSet to ArrayList for return
+        var result = new Gee.ArrayList<string>();
+        foreach (var subset in needed) {
+            result.add(subset);
+        }
+
+        return result;
+    }
+
+    /**
+     * Generate the remote URL for a font file.
+     * - Variable fonts: only one file per subset
+     * - Non-variable fonts: one per weight per subset
+     */
+    private string get_font_url (Sitra.Modals.FontInfo font, string subset, int? weight = null, bool italic = false) {
+        string font_slug = font.family.down().replace(" ", "-");
         if (font.variable) {
-            return "https://cdn.jsdelivr.net/fontsource/fonts/%s:vf@latest/latin-wght-normal.woff2".printf(font_slug);
+            return "https://cdn.jsdelivr.net/fontsource/fonts/%s:vf@latest/%s-wght-normal.woff2".printf(font_slug, subset);
         } else {
             int w = weight != null ? weight : 400;
             string style = italic ? "italic" : "normal";
-            return "https://cdn.jsdelivr.net/fontsource/fonts/%s@latest/latin-%d-%s.woff2".printf(font_slug, w, style);
+            return "https://cdn.jsdelivr.net/fontsource/fonts/%s@latest/%s-%d-%s.woff2".printf(font_slug, subset, w, style);
         }
     }
 
     /**
      * Builds the HTML preview for a font.
+     * Only loads subsets needed for the preview text.
      *
      * @param font The FontInfo object.
      */
@@ -53,53 +135,64 @@ public class Sitra.Managers.PreviewManager : Object {
         var html = new StringBuilder();
 
         // HTML header + style tag
-        html.append ("<!DOCTYPE html><html><head><meta charset='UTF-8'>\n<style>\n");
+        html.append ("<!DOCTYPE html><html><head><meta charset='UTF-8'>\n");
+        html.append ("<link rel=\"preconnect\" href=\"https://cdn.jsdelivr.net\" crossorigin>\n");
+        html.append ("<style>\n");
 
-        // @font-face declarations
+        // Detect which subsets are actually needed for the preview text
+        var needed_subsets = detect_needed_subsets(this.preview_text, font.subsets);
+
+        // @font-face declarations for ONLY the needed subsets
         if (font.variable) {
-            string font_url = get_font_url(font);
-            html.append_printf ("""
+            // For variable fonts, load one file per needed subset
+            foreach (var subset in needed_subsets) {
+                string font_url = get_font_url(font, subset);
+                html.append_printf ("""
                 @font-face {
                     font-family: '%s';
-                    src: url('%s');
+                    src: url('%s') format('woff2');
+                    font-display: swap;
                 }
-            """, font.family, font_url);
+                """, font.family, font_url);
+            }
         } else {
-            foreach (var w in font.weights) {
-                string font_url = get_font_url(font, w, this.italic);
-                html.append_printf ("""
-                    @font-face {
-                        font-family: '%s';
-                        font-weight: %d;
-                        src: url('%s');
-                    }
+            // For non-variable fonts, load one file per weight per needed subset
+            foreach (var subset in needed_subsets) {
+                foreach (var w in font.weights) {
+                    string font_url = get_font_url(font, subset, w, this.italic);
+                    html.append_printf ("""
+                @font-face {
+                    font-family: '%s';
+                    font-weight: %d;
+                    src: url('%s') format('woff2');
+                    font-display: swap;
+                }
                 """, font.family, w, font_url);
+                }
             }
         }
 
         // Body CSS
         html.append_printf("""
             :root { color-scheme: light dark; }
-
             html, body {
                 background-color: transparent;
                 color: var(--window-fg-color, #000000);
-
+                margin: 0;
+                padding: 8px;
             }
-
             p.sample-text {
                 font-family: '%s', sans-serif;
                 font-style: %s;
                 font-size: %s;
                 line-height: %s;
                 letter-spacing: %spx;
+                margin: 8px 0;
             }
-
             .weight-label {
                 font-size: 12px;
                 opacity: 0.6;
-                line-height: 0;
-                margin: 0;
+                margin: 8px 0 4px 0;
             }
         """, font.family, this.italic ? "italic" : "normal", this.font_size, this.line_height, this.letter_spacing);
 
@@ -117,7 +210,6 @@ public class Sitra.Managers.PreviewManager : Object {
 
         // Close HTML
         html.append ("</body></html>\n");
-
         return html.str;
     }
 }
