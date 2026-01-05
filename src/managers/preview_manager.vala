@@ -20,15 +20,30 @@
 
 public class Sitra.Managers.PreviewManager : Object {
     public string DEFAULT_PREVIEW_TEXT {get; default = "Sphinx of black quartz, judge my vow.";}
+    public string DEFAULT_ICON_PREVIEW {get; default = "★ ✓ ✕ ☰ ⚙ ♥ ☆ ⬆ ⬇ ⬅ ➡ ● ○ ◆ ■ □";}
     public string preview_text { get; set; default = "Sphinx of black quartz, judge my vow."; }
     public string font_size {get; set; default = "24px"; }
     public string line_height {get; set; default = "1"; }
     public string letter_spacing {get; set; default = "0"; }
     public bool italic { get; set; default = false; }
 
-    /**
-     * Detect which subsets are needed based on the characters in the text
-     */
+    private bool is_icon_font(Sitra.Modals.FontInfo font) {
+        return font.category == "icons";
+    }
+
+    private string determine_preview_text(Sitra.Modals.FontInfo font) {
+        // If user has custom preview text, always use that
+        if (this.preview_text != DEFAULT_PREVIEW_TEXT) {
+            return this.preview_text;
+        }
+
+        if (is_icon_font(font)) {
+            return DEFAULT_ICON_PREVIEW;
+        }
+
+        return DEFAULT_PREVIEW_TEXT;
+    }
+
     private Gee.List<string> detect_needed_subsets(string text, Gee.List<string> available_subsets) {
         var needed = new Gee.HashSet<string>();
 
@@ -36,6 +51,21 @@ public class Sitra.Managers.PreviewManager : Object {
         for (int i = 0; i < text.length; i++) {
             unichar c = text.get_char(i);
 
+            // Icons and Symbols (Private Use Area + common icon ranges)
+            if ((c >= 0xE000 && c <= 0xF8FF) ||   // Private Use Area
+                (c >= 0xF0000 && c <= 0xFFFFD) ||  // Supplementary Private Use Area-A
+                (c >= 0x100000 && c <= 0x10FFFD) || // Supplementary Private Use Area-B
+                (c >= 0x2190 && c <= 0x21FF) ||    // Arrows
+                (c >= 0x2300 && c <= 0x23FF) ||    // Miscellaneous Technical
+                (c >= 0x2600 && c <= 0x26FF) ||    // Miscellaneous Symbols
+                (c >= 0x2700 && c <= 0x27BF) ||    // Dingbats
+                (c >= 0x1F300 && c <= 0x1F9FF)) {  // Emoji & Pictographs
+                // Check for icon/symbol-specific subsets
+                if (available_subsets.contains("symbols")) needed.add("symbols");
+                if (available_subsets.contains("icons")) needed.add("icons");
+                // Also load latin as fallback for icon fonts
+                if (available_subsets.contains("latin")) needed.add("latin");
+            }
             // Arabic
             if ((c >= 0x0600 && c <= 0x06FF) || (c >= 0x0750 && c <= 0x077F) ||
                 (c >= 0xFB50 && c <= 0xFDFF) || (c >= 0xFE70 && c <= 0xFEFF)) {
@@ -95,12 +125,14 @@ public class Sitra.Managers.PreviewManager : Object {
             }
         }
 
-        // Always include latin as fallback if nothing detected
-        if (needed.is_empty && available_subsets.contains("latin")) {
-            needed.add("latin");
+        // if (available_subsets.contains("latin")) {
+        //     needed.add("latin");
+        // }
+
+        if (needed.is_empty && !available_subsets.is_empty) {
+            needed.add(available_subsets[0]);
         }
 
-        // Convert HashSet to ArrayList for return
         var result = new Gee.ArrayList<string>();
         foreach (var subset in needed) {
             result.add(subset);
@@ -109,11 +141,6 @@ public class Sitra.Managers.PreviewManager : Object {
         return result;
     }
 
-    /**
-     * Generate the remote URL for a font file.
-     * - Variable fonts: only one file per subset
-     * - Non-variable fonts: one per weight per subset
-     */
     private string get_font_url (Sitra.Modals.FontInfo font, string subset, int? weight = null, bool italic = false) {
         string font_slug = font.family.down().replace(" ", "-");
         if (font.variable) {
@@ -134,17 +161,15 @@ public class Sitra.Managers.PreviewManager : Object {
     public string build_html (Sitra.Modals.FontInfo font) {
         var html = new StringBuilder();
 
-        // HTML header + style tag
+        string display_text = determine_preview_text(font);
+
         html.append ("<!DOCTYPE html><html><head><meta charset='UTF-8'>\n");
         html.append ("<link rel=\"preconnect\" href=\"https://cdn.jsdelivr.net\" crossorigin>\n");
         html.append ("<style>\n");
 
-        // Detect which subsets are actually needed for the preview text
-        var needed_subsets = detect_needed_subsets(this.preview_text, font.subsets);
+        var needed_subsets = detect_needed_subsets(display_text, font.subsets);
 
-        // @font-face declarations for ONLY the needed subsets
         if (font.variable) {
-            // For variable fonts, load one file per needed subset
             foreach (var subset in needed_subsets) {
                 string font_url = get_font_url(font, subset);
                 html.append_printf ("""
@@ -156,7 +181,6 @@ public class Sitra.Managers.PreviewManager : Object {
                 """, font.family, font_url);
             }
         } else {
-            // For non-variable fonts, load one file per weight per needed subset
             foreach (var subset in needed_subsets) {
                 foreach (var w in font.weights) {
                     string font_url = get_font_url(font, subset, w, this.italic);
@@ -172,7 +196,6 @@ public class Sitra.Managers.PreviewManager : Object {
             }
         }
 
-        // Body CSS
         html.append_printf("""
             :root { color-scheme: light dark; }
             html, body {
@@ -198,17 +221,15 @@ public class Sitra.Managers.PreviewManager : Object {
 
         html.append ("</style></head><body>\n");
 
-        // Generate preview lines
         foreach (var w in font.weights) {
             html.append_printf("""
                 <div>
                     <h2 class='weight-label'>Weight %d</h2>
                     <p class='sample-text' style='font-weight: %d;'>%s</p>
                 </div>
-            """, w, w, this.preview_text);
+            """, w, w, display_text);
         }
 
-        // Close HTML
         html.append ("</body></html>\n");
         return html.str;
     }
