@@ -40,12 +40,14 @@ public class Sitra.Window : Adw.ApplicationWindow {
     [GtkChild] private unowned Gtk.DropDown letter_spacing_dropdown;
     [GtkChild] private unowned Gtk.ToggleButton italic_toggle;
     [GtkChild] private unowned Adw.Banner banner;
+    [GtkChild] private unowned Gtk.Popover license_popover;
 
     private WebView web_view;
     private Gee.HashMap<string, Gtk.ToggleButton> category_toggles;
     private Gtk.CustomFilter filter;
     private Sitra.Managers.FontsManager fonts_manager;
     private Sitra.Managers.PreviewManager preview_manager;
+    private Sitra.Managers.LicensesManager licenses_manager;
     private Sitra.Helpers.NetworkHelper network_helper;
 
     private Gtk.FilterListModel filtered_model;
@@ -55,6 +57,7 @@ public class Sitra.Window : Adw.ApplicationWindow {
         Object (application: app);
 
         preview_manager = new Sitra.Managers.PreviewManager ();
+        licenses_manager = new Sitra.Managers.LicensesManager ();
         network_helper = Sitra.Helpers.NetworkHelper.get_instance ();
 
         banner.set_revealed (false);
@@ -192,6 +195,7 @@ public class Sitra.Window : Adw.ApplicationWindow {
                 var family = string_object.string;
                 update_italic_toggle_state (family);
                 update_preview (family);
+                update_license_popover (family);
             }
         });
 
@@ -205,6 +209,7 @@ public class Sitra.Window : Adw.ApplicationWindow {
 
             update_italic_toggle_state (family);
             update_preview (family);
+            update_license_popover (family);
 
             if (split_view.get_collapsed ())
                 split_view.set_show_content (true);
@@ -331,5 +336,13 @@ public class Sitra.Window : Adw.ApplicationWindow {
             }
             return false;
         });
+    }
+
+    private void update_license_popover (string family_name) {
+        var font = fonts_manager.get_font (family_name);
+        if (font == null)
+            return;
+
+        licenses_manager.populate_popover (license_popover, font);
     }
 }

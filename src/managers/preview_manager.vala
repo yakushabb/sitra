@@ -152,7 +152,7 @@ public class Sitra.Managers.PreviewManager : Object {
         }
     }
 
-    /**
+    /**git
      * Builds the HTML preview for a font.
      * Only loads subsets needed for the preview text.
      *
