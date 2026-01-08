@@ -98,22 +98,25 @@ template $SitraWindow: Adw.ApplicationWindow {
           show-title: true;
 
           [end]
-          MenuButton {
+          MenuButton license_button {
             icon-name: "sitra-license-symbolic";
             tooltip-text: _("License details");
             popover: license_popover;
+            visible: false;
           }
 
           [end]
           Button integrate_button {
             icon-name: "sitra-integrate-symbolic";
             tooltip-text: _("Integrate");
+            visible: false;
           }
 
           [end]
           Button install_button {
             icon-name: "folder-download-symbolic";
             tooltip-text: _("Install");
+            visible: false;
           }
         }
 
@@ -257,3 +260,5 @@ Popover license_popover {
   name: "plain_popover";
 
 }
+
+

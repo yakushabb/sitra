@@ -1,0 +1,280 @@
+using Gtk 4.0;
+using Adw 1;
+
+template $SitraIntegrationDialog : Adw.Dialog {
+  title: _("Integration");
+  content-width: 500;
+  content-height: 450;
+
+  child: Adw.ToolbarView {
+
+    [top]
+    Adw.HeaderBar {
+      show-title: true;
+      title-widget: Adw.ViewSwitcherTitle {
+        stack: stack;
+        title: _("Integration");
+      };
+    }
+
+    content: Adw.ViewStack stack {
+
+      Adw.ViewStackPage {
+        name: "install";
+        title: _("Install");
+        icon-name: "system-software-install-symbolic";
+
+        child: Adw.PreferencesPage {
+
+          Adw.PreferencesGroup {
+            title: _("Install");
+            description: _("Install the font using npm or yarn");
+
+            Adw.ActionRow npm_row {
+              title: _("NPM");
+              subtitle-selectable: true;
+
+              styles [
+                "monospace",
+              ]
+
+              [suffix]
+              Button copy_npm_button {
+                icon-name: "edit-copy-symbolic";
+                valign: center;
+                tooltip-text: _("Copy to clipboard");
+
+                styles [
+                  "flat",
+                ]
+              }
+            }
+
+            Adw.ActionRow yarn_row {
+              title: _("Yarn");
+              subtitle-selectable: true;
+
+              styles [
+                "monospace",
+              ]
+
+              [suffix]
+              Button copy_yarn_button {
+                icon-name: "edit-copy-symbolic";
+                valign: center;
+                tooltip-text: _("Copy to clipboard");
+
+                styles [
+                  "flat",
+                ]
+              }
+            }
+          }
+
+          Adw.PreferencesGroup {
+            title: _("Import");
+            description: _("Import into CSS");
+
+            Adw.ActionRow css_import_row {
+              title: "@import url(...)";
+              title-selectable: true;
+
+              styles [
+                "monospace",
+              ]
+
+              [suffix]
+              Button copy_css_import_button {
+                icon-name: "edit-copy-symbolic";
+                valign: center;
+                tooltip-text: _("Copy to clipboard");
+
+                styles [
+                  "flat",
+                ]
+              }
+            }
+
+            Adw.ActionRow css_usage_row {
+              title: _("Use in CSS");
+              subtitle-selectable: true;
+
+              styles [
+                "monospace",
+              ]
+
+              [suffix]
+              Button copy_css_usage_button {
+                icon-name: "edit-copy-symbolic";
+                valign: center;
+                tooltip-text: _("Copy to clipboard");
+
+                styles [
+                  "flat",
+                ]
+              }
+            }
+          }
+        };
+      }
+
+      Adw.ViewStackPage {
+        name: "cdn";
+        title: _("CDN");
+        icon-name: "network-server-symbolic";
+
+        child: Adw.PreferencesPage {
+
+          Adw.PreferencesGroup {
+            title: _("Use directly from CDN");
+            description: _("Add the following to HTML's' head section");
+
+            Gtk.Overlay {
+              child: Gtk.ScrolledWindow {
+                hscrollbar-policy: automatic;
+                vscrollbar-policy: never;
+                styles ["card"]
+
+                child: Gtk.Label cdn_html_code_label {
+                  selectable: true;
+                  wrap: false;
+                  xalign: 0.0;
+                  margin-top: 12;
+                  margin-bottom: 12;
+                  margin-start: 12;
+                  margin-end: 12;
+                  styles ["monospace"]
+                };
+              };
+
+              [overlay]
+              Button copy_cdn_button {
+                icon-name: "edit-copy-symbolic";
+                valign: start;
+                halign: end;
+                margin-top: 6;
+                margin-end: 6;
+                tooltip-text: _("Copy to clipboard");
+                styles ["flat"]
+              }
+            }
+          }
+
+          Adw.PreferencesGroup {
+            description: _("Chose from the options below");
+
+            Adw.ComboRow cdn_subset_row {
+              title: _("Subset");
+            }
+
+            Adw.ComboRow cdn_weight_row {
+              title: _("Weight");
+            }
+
+            Adw.ComboRow cdn_style_row {
+              title: _("Style");
+              model: Gtk.StringList {
+                strings [
+                  "normal",
+                  "italic",
+                ]
+              };
+            }
+
+            Adw.ComboRow cdn_display_row {
+              title: _("Display");
+              model: Gtk.StringList {
+                strings [
+                  "swap",
+                  "auto",
+                  "block",
+                  "fallback",
+                  "optional",
+                  ]
+              };
+            }
+
+            Adw.ComboRow cdn_format_row {
+              title: _("Format");
+              model: Gtk.StringList {
+                strings [
+                  "woff2 + woff",
+                  "woff2",
+                  "woff",
+                  ]
+              };
+            }
+          }
+
+Adw.PreferencesGroup {
+  description: _("Copy below code to your global CSS");
+
+  Gtk.Overlay {
+    child: Gtk.ScrolledWindow {
+      hscrollbar-policy: automatic;
+      vscrollbar-policy: never;
+
+      styles [
+        "card",
+      ]
+
+      child: Gtk.Label cdn_css_code_label {
+        selectable: true;
+        wrap: false;
+        xalign: 0.0;
+        margin-top: 12;
+        margin-bottom: 12;
+        margin-start: 12;
+        margin-end: 12;
+
+        styles [
+          "monospace",
+        ]
+      };
+    };
+
+    [overlay]
+    Button copy_cdn_css_code_button {
+      icon-name: "edit-copy-symbolic";
+      valign: start;
+      halign: end;
+      margin-top: 6;
+      margin-end: 6;
+      tooltip-text: _("Copy to clipboard");
+
+      styles [
+        "flat",
+      ]
+    }
+  }
+}
+
+
+
+          Adw.PreferencesGroup {
+              description: _("Use in CSS");
+              Adw.ActionRow cdn_usage_row {
+                title: "font-family: …";
+                title-selectable: true;
+
+                styles [
+                  "monospace",
+                ]
+
+                [suffix]
+                Button copy_cdn_usage_button {
+                  icon-name: "edit-copy-symbolic";
+                  valign: center;
+                  tooltip-text: _("Copy to clipboard");
+
+                  styles [
+                    "flat",
+                  ]
+                }
+              }
+          }
+        };
+      }
+    };
+  };
+}

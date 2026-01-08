@@ -3,3 +3,4 @@ sitra_sources += files(
   'preview_manager.vala',
   'licenses_manager.vala',
 )
+

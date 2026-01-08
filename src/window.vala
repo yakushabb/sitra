@@ -41,6 +41,9 @@ public class Sitra.Window : Adw.ApplicationWindow {
     [GtkChild] private unowned Gtk.ToggleButton italic_toggle;
     [GtkChild] private unowned Adw.Banner banner;
     [GtkChild] private unowned Gtk.Popover license_popover;
+    [GtkChild] private unowned Gtk.MenuButton license_button;
+    [GtkChild] private unowned Gtk.Button integrate_button;
+    [GtkChild] private unowned Gtk.Button install_button;
 
     private WebView web_view;
     private Gee.HashMap<string, Gtk.ToggleButton> category_toggles;
@@ -48,6 +51,7 @@ public class Sitra.Window : Adw.ApplicationWindow {
     private Sitra.Managers.FontsManager fonts_manager;
     private Sitra.Managers.PreviewManager preview_manager;
     private Sitra.Managers.LicensesManager licenses_manager;
+    private Sitra.IntegrationDialog integration_dialog;
     private Sitra.Helpers.NetworkHelper network_helper;
 
     private Gtk.FilterListModel filtered_model;
@@ -58,6 +62,7 @@ public class Sitra.Window : Adw.ApplicationWindow {
 
         preview_manager = new Sitra.Managers.PreviewManager ();
         licenses_manager = new Sitra.Managers.LicensesManager ();
+        integration_dialog = new Sitra.IntegrationDialog ();
         network_helper = Sitra.Helpers.NetworkHelper.get_instance ();
 
         banner.set_revealed (false);
@@ -226,11 +231,9 @@ public class Sitra.Window : Adw.ApplicationWindow {
         });
 
         banner.button_clicked.connect (() => {
-            if (network_helper.has_connectivity () && fonts_model.selected_item != null) {
                 banner.set_revealed (false);
                 var string_object = (Gtk.StringObject) fonts_model.selected_item;
                 update_preview (string_object.string);
-            }
         });
 
         preview_entry.changed.connect (() => {
@@ -256,6 +259,7 @@ public class Sitra.Window : Adw.ApplicationWindow {
             if (fonts_model.selected_item != null) {
                 var string_object = (Gtk.StringObject) fonts_model.selected_item;
                 update_preview (string_object.string);
+
             }
         });
 
@@ -270,6 +274,18 @@ public class Sitra.Window : Adw.ApplicationWindow {
         search_button.clicked.connect (() => {
             search_bar.search_mode_enabled = !search_bar.search_mode_enabled;
         });
+
+        integrate_button.clicked.connect (() => {
+            if (fonts_model.selected_item != null) {
+                var string_object = (Gtk.StringObject) fonts_model.selected_item;
+                var font = fonts_manager.get_font (string_object.string);
+                if (font != null) {
+                    integration_dialog.populate (font);
+                    integration_dialog.present (this);
+                }
+            }
+        });
+
     }
 
     // --- Helpers ---
@@ -292,13 +308,13 @@ public class Sitra.Window : Adw.ApplicationWindow {
         if (!network_helper.has_connectivity ()) {
             banner.set_revealed (true);
             preview_stack.set_visible_child_name ("status");
-            bottom_action_bar.set_visible(false);
+            set_visibility(false);
             return;
         }
 
         preview_stack.set_visible_child_name ("preview");
         banner.set_revealed (false);
-        bottom_action_bar.set_visible(true);
+        set_visibility(true);
 
         var preview_font = fonts_manager.get_font (family_name);
         if (preview_font == null) {
@@ -319,6 +335,13 @@ public class Sitra.Window : Adw.ApplicationWindow {
 
         web_view.load_html (html, null);
     }
+
+    private void set_visibility (bool val) {
+                bottom_action_bar.set_visible(val);
+                install_button.set_visible(val);
+                integrate_button.set_visible(val);
+                license_button.set_visible(val);
+        }
 
     private void bind_dropdown_to_property (Gtk.DropDown dropdown,
                                             Object target,

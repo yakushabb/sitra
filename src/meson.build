@@ -2,6 +2,7 @@ sitra_sources += files(
   'main.vala',
   'application.vala',
   'window.vala',
+  'integration_dialog.vala',
 )
 
 # Subdirectories
@@ -26,6 +27,7 @@ blueprints = custom_target('blueprints',
   input: files(
     'shortcuts-dialog.blp',
     'window.blp',
+    'integration_dialog.blp',
   ),
   output: '.',
   command: [find_program('blueprint-compiler'), 'batch-compile', '@OUTPUT@', '@CURRENT_SOURCE_DIR@', '@INPUT@'],
