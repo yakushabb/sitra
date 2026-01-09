@@ -27,7 +27,6 @@ public class Sitra.IntegrationDialog : Adw.Dialog {
     [GtkChild] private unowned Adw.ActionRow yarn_row;
     [GtkChild] private unowned Adw.ActionRow css_import_row;
     [GtkChild] private unowned Adw.ActionRow css_usage_row;
-    [GtkChild] private unowned Gtk.Label cdn_html_code_label;
     [GtkChild] private unowned Gtk.Label cdn_css_code_label;
     [GtkChild] private unowned Adw.ActionRow cdn_usage_row;
     [GtkChild] private unowned Adw.ComboRow cdn_subset_row;
@@ -39,9 +38,10 @@ public class Sitra.IntegrationDialog : Adw.Dialog {
     [GtkChild] private unowned Gtk.Button copy_yarn_button;
     [GtkChild] private unowned Gtk.Button copy_css_import_button;
     [GtkChild] private unowned Gtk.Button copy_css_usage_button;
-    [GtkChild] private unowned Gtk.Button copy_cdn_button;
     [GtkChild] private unowned Gtk.Button copy_cdn_usage_button;
     [GtkChild] private unowned Gtk.Button copy_cdn_css_code_button;
+    [GtkChild] private unowned Adw.SwitchRow install_static_switch_row;
+    [GtkChild] private unowned Adw.SwitchRow cdn_static_switch_row;
 
     private Sitra.Modals.FontInfo? current_font = null;
     private string current_package_name = "";
@@ -54,14 +54,39 @@ public class Sitra.IntegrationDialog : Adw.Dialog {
         cdn_display_row.notify["selected"].connect (() => update_cdn_css_code ());
         cdn_format_row.notify["selected"].connect (() => update_cdn_css_code ());
 
-        setup_copy_buttons();
+        // Sync switches
+        install_static_switch_row.bind_property ("active", cdn_static_switch_row, "active", BindingFlags.BIDIRECTIONAL | BindingFlags.SYNC_CREATE);
+
+        install_static_switch_row.notify["active"].connect (update_instructions);
+        cdn_static_switch_row.notify["active"].connect (update_instructions);
+
+        setup_copy_buttons ();
     }
 
     public void populate (Sitra.Modals.FontInfo font) {
         current_font = font;
         current_package_name = font.family.down ().replace (" ", "-");
 
-        string scope = font.variable ? "@fontsource-variable" : "@fontsource";
+        install_static_switch_row.visible = font.variable;
+        cdn_static_switch_row.visible = font.variable;
+
+        // Reset static switch to false (always default to variable if available)
+        install_static_switch_row.active = false;
+
+        update_instructions ();
+    }
+
+    private bool is_variable_mode () {
+        return current_font != null && current_font.variable && !install_static_switch_row.active;
+    }
+
+    private void update_instructions () {
+        if (current_font == null)return;
+
+
+        var font = current_font;
+        bool variable_mode = is_variable_mode ();
+        string scope = variable_mode ? "@fontsource-variable" : "@fontsource";
 
         // NPM instruction
         npm_row.subtitle = @"npm install $(scope)/$(current_package_name)";
@@ -72,11 +97,13 @@ public class Sitra.IntegrationDialog : Adw.Dialog {
         // CSS import instruction
         css_import_row.title = @"import '$(scope)/$(current_package_name)';";
 
-        // CSS usage instruction
-        css_usage_row.subtitle = @"font-family: '$(font.family)', sans-serif;";
+        var family_name = font.family;
+        if (variable_mode) {
+            family_name += " Variable";
+        }
 
-        // CDN HTML link (using Fontsource via jsDelivr)
-        cdn_html_code_label.label = @"<link href=\"https://cdn.jsdelivr.net/npm/$(scope)/$(current_package_name)/index.min.css\" rel=\"stylesheet\" />";
+        // CSS usage instruction
+        css_usage_row.subtitle = @"font-family: '$(family_name)', sans-serif;";
 
         // Populate subset dropdown
         populate_subset_dropdown (font);
@@ -86,16 +113,18 @@ public class Sitra.IntegrationDialog : Adw.Dialog {
 
         // Disable italic style if not available
         update_style_availability (font);
-        
+
         // Disable format selection for variable fonts (always woff2)
-        if (font.variable) {
+        if (variable_mode) {
             cdn_format_row.sensitive = false;
+            cdn_weight_row.sensitive = false;
         } else {
             cdn_format_row.sensitive = true;
+            cdn_weight_row.sensitive = true;
         }
 
         // CDN CSS usage
-        cdn_usage_row.title = @"font-family: '$(font.family)', sans-serif;";
+        cdn_usage_row.title = @"font-family: '$(family_name)', sans-serif;";
 
         // Generate initial CSS code
         update_cdn_css_code ();
@@ -114,7 +143,7 @@ public class Sitra.IntegrationDialog : Adw.Dialog {
         }
 
         cdn_subset_row.model = subset_strings;
-        
+
         // Try to select 'latin' by default, otherwise first one
         int latin_index = -1;
         for (int i = 0; i < subsets.size; i++) {
@@ -123,7 +152,7 @@ public class Sitra.IntegrationDialog : Adw.Dialog {
                 break;
             }
         }
-        
+
         if (latin_index != -1) {
             cdn_subset_row.selected = latin_index;
         } else {
@@ -160,7 +189,7 @@ public class Sitra.IntegrationDialog : Adw.Dialog {
     }
 
     private void update_cdn_css_code () {
-        if (current_font == null) return;
+        if (current_font == null)return;
 
         var subset_obj = cdn_subset_row.selected_item as Gtk.StringObject;
         var weight_obj = cdn_weight_row.selected_item as Gtk.StringObject;
@@ -179,68 +208,71 @@ public class Sitra.IntegrationDialog : Adw.Dialog {
         var format = format_obj.string;
 
         var css = generate_font_face_css (
-            current_font,
-            current_package_name,
-            subset,
-            weight,
-            style,
-            display,
-            format
+                                          current_font,
+                                          current_package_name,
+                                          subset,
+                                          weight,
+                                          style,
+                                          display,
+                                          format
         );
 
         cdn_css_code_label.label = css;
     }
 
-    private string generate_font_face_css (
-        Sitra.Modals.FontInfo font,
-        string package_name,
-        string subset,
-        string weight,
-        string style,
-        string display,
-        string format
-    ) {
+    private string generate_font_face_css (Sitra.Modals.FontInfo font,
+                                           string package_name,
+                                           string subset,
+                                           string weight,
+                                           string style,
+                                           string display,
+                                           string format) {
         var css_builder = new StringBuilder ();
+        bool variable_mode = is_variable_mode ();
 
         // Comment header
-        if (font.variable) {
+        if (variable_mode) {
             css_builder.append (@"/* $(package_name)-$(subset)-wght-normal */\n");
         } else {
             css_builder.append (@"/* $(package_name)-$(subset)-$(weight)-$(style) */\n");
         }
-        
+
         css_builder.append ("@font-face {\n");
 
-        if (font.variable) {
-             css_builder.append (@"  font-family: '$(font.family) Variable';\n");
-             
-             // Calculate weight range
-             int min_weight = 100;
-             int max_weight = 900;
-             if (font.weights != null && font.weights.size > 0) {
-                 font.weights.sort();
-                 min_weight = font.weights.get(0);
-                 max_weight = font.weights.get(font.weights.size - 1);
-             }
-             css_builder.append (@"  font-weight: $(min_weight) $(max_weight);\n");
+        if (variable_mode) {
+            css_builder.append (@"  font-family: '$(font.family) Variable';\n");
+
+            // Calculate weight range
+            int min_weight = 100;
+            int max_weight = 900;
+            if (font.weights != null && font.weights.size > 0) {
+                // Create a copy to avoid mutating the original data
+                var weights_copy = new ArrayList<int> ();
+                weights_copy.add_all (font.weights);
+                weights_copy.sort ();
+                
+                min_weight = weights_copy.get (0);
+                max_weight = weights_copy.get (weights_copy.size - 1);
+            }
+            css_builder.append (@"  font-weight: $(min_weight) $(max_weight);\n");
         } else {
-             css_builder.append (@"  font-family: '$(font.family)';\n");
-             css_builder.append (@"  font-weight: $(weight);\n");
+            css_builder.append (@"  font-family: '$(font.family)';\n");
+            css_builder.append (@"  font-weight: $(weight);\n");
         }
-        
+
         css_builder.append (@"  font-style: $(style);\n");
         css_builder.append (@"  font-display: $(display);\n");
 
         // Build src based on format selection
         css_builder.append ("  src: ");
 
-        if (font.variable) {
-            // Variable Fonts URL format: 
+        if (variable_mode) {
+            // Variable Fonts URL format:
             // https://cdn.jsdelivr.net/fontsource/fonts/{id}:vf@{version}/{subset}-{axes}-{style}.woff2
             // Example: https://cdn.jsdelivr.net/fontsource/fonts/inter:vf@latest/latin-wght-normal.woff2
-            css_builder.append (@"url(https://cdn.jsdelivr.net/fontsource/fonts/$(package_name):vf@latest/$(subset)-wght-normal.woff2) format('woff2-variations');\n");
+            css_builder.append (@"url(https://cdn.jsdelivr.net/fontsource/fonts/$(package_name):vf@latest/$(subset)-wght-$(style).woff2) format('woff2-variations');\n");
         } else {
-             if (format == "woff2 + woff") {
+            if (format == "woff2 + woff") {
                 css_builder.append (@"url(https://cdn.jsdelivr.net/fontsource/fonts/$(package_name)@latest/$(subset)-$(weight)-$(style).woff2) format('woff2'), ");
                 css_builder.append (@"url(https://cdn.jsdelivr.net/fontsource/fonts/$(package_name)@latest/$(subset)-$(weight)-$(style).woff) format('woff');\n");
             } else if (format == "woff2") {
@@ -270,10 +302,6 @@ public class Sitra.IntegrationDialog : Adw.Dialog {
 
         copy_css_usage_button.clicked.connect (() => {
             copy_to_clipboard (css_usage_row.subtitle);
-        });
-
-        copy_cdn_button.clicked.connect (() => {
-            copy_to_clipboard (cdn_html_code_label.label);
         });
 
         copy_cdn_usage_button.clicked.connect (() => {

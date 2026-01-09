@@ -1,34 +1,37 @@
 using Gtk 4.0;
 using Adw 1;
 
-template $SitraIntegrationDialog : Adw.Dialog {
+template $SitraIntegrationDialog: Adw.Dialog {
   title: _("Integration");
   content-width: 500;
   content-height: 450;
 
   child: Adw.ToolbarView {
-
     [top]
-    Adw.HeaderBar {
+    Adw.HeaderBar header_bar {
       show-title: true;
-      title-widget: Adw.ViewSwitcherTitle {
+
+      title-widget: Adw.ViewSwitcher {
         stack: stack;
-        title: _("Integration");
+        policy: wide;
       };
     }
 
     content: Adw.ViewStack stack {
-
       Adw.ViewStackPage {
         name: "install";
         title: _("Install");
-        icon-name: "system-software-install-symbolic";
+        icon-name: "sitra-code-symbolic";
 
         child: Adw.PreferencesPage {
-
           Adw.PreferencesGroup {
             title: _("Install");
             description: _("Install the font using npm or yarn");
+
+            Adw.SwitchRow install_static_switch_row {
+              title: _("Use Static Version");
+              subtitle: _("Install the static version instead of variable font");
+            }
 
             Adw.ActionRow npm_row {
               title: _("NPM");
@@ -121,47 +124,16 @@ template $SitraIntegrationDialog : Adw.Dialog {
       Adw.ViewStackPage {
         name: "cdn";
         title: _("CDN");
-        icon-name: "network-server-symbolic";
+        icon-name: "sitra-globe-symbolic";
 
         child: Adw.PreferencesPage {
-
-          Adw.PreferencesGroup {
-            title: _("Use directly from CDN");
-            description: _("Add the following to HTML's' head section");
-
-            Gtk.Overlay {
-              child: Gtk.ScrolledWindow {
-                hscrollbar-policy: automatic;
-                vscrollbar-policy: never;
-                styles ["card"]
-
-                child: Gtk.Label cdn_html_code_label {
-                  selectable: true;
-                  wrap: false;
-                  xalign: 0.0;
-                  margin-top: 12;
-                  margin-bottom: 12;
-                  margin-start: 12;
-                  margin-end: 12;
-                  styles ["monospace"]
-                };
-              };
-
-              [overlay]
-              Button copy_cdn_button {
-                icon-name: "edit-copy-symbolic";
-                valign: start;
-                halign: end;
-                margin-top: 6;
-                margin-end: 6;
-                tooltip-text: _("Copy to clipboard");
-                styles ["flat"]
-              }
-            }
-          }
-
           Adw.PreferencesGroup {
             description: _("Chose from the options below");
+
+            Adw.SwitchRow cdn_static_switch_row {
+              title: _("Use Static Version");
+              subtitle: _("Use the static version instead of variable font");
+            }
 
             Adw.ComboRow cdn_subset_row {
               title: _("Subset");
@@ -173,6 +145,7 @@ template $SitraIntegrationDialog : Adw.Dialog {
 
             Adw.ComboRow cdn_style_row {
               title: _("Style");
+
               model: Gtk.StringList {
                 strings [
                   "normal",
@@ -183,6 +156,7 @@ template $SitraIntegrationDialog : Adw.Dialog {
 
             Adw.ComboRow cdn_display_row {
               title: _("Display");
+
               model: Gtk.StringList {
                 strings [
                   "swap",
@@ -190,88 +164,88 @@ template $SitraIntegrationDialog : Adw.Dialog {
                   "block",
                   "fallback",
                   "optional",
-                  ]
+                ]
               };
             }
 
             Adw.ComboRow cdn_format_row {
               title: _("Format");
+
               model: Gtk.StringList {
                 strings [
                   "woff2 + woff",
                   "woff2",
                   "woff",
-                  ]
+                ]
               };
             }
           }
 
-Adw.PreferencesGroup {
-  description: _("Copy below code to your global CSS");
-
-  Gtk.Overlay {
-    child: Gtk.ScrolledWindow {
-      hscrollbar-policy: automatic;
-      vscrollbar-policy: never;
-
-      styles [
-        "card",
-      ]
-
-      child: Gtk.Label cdn_css_code_label {
-        selectable: true;
-        wrap: false;
-        xalign: 0.0;
-        margin-top: 12;
-        margin-bottom: 12;
-        margin-start: 12;
-        margin-end: 12;
-
-        styles [
-          "monospace",
-        ]
-      };
-    };
-
-    [overlay]
-    Button copy_cdn_css_code_button {
-      icon-name: "edit-copy-symbolic";
-      valign: start;
-      halign: end;
-      margin-top: 6;
-      margin-end: 6;
-      tooltip-text: _("Copy to clipboard");
-
-      styles [
-        "flat",
-      ]
-    }
-  }
-}
-
-
-
           Adw.PreferencesGroup {
-              description: _("Use in CSS");
-              Adw.ActionRow cdn_usage_row {
-                title: "font-family: …";
-                title-selectable: true;
+            description: _("Copy below code to your global CSS");
+
+            Gtk.Overlay {
+              child: Gtk.ScrolledWindow {
+                hscrollbar-policy: automatic;
+                vscrollbar-policy: never;
 
                 styles [
-                  "monospace",
+                  "card",
                 ]
 
-                [suffix]
-                Button copy_cdn_usage_button {
-                  icon-name: "edit-copy-symbolic";
-                  valign: center;
-                  tooltip-text: _("Copy to clipboard");
+                child: Gtk.Label cdn_css_code_label {
+                  selectable: true;
+                  wrap: false;
+                  xalign: 0.0;
+                  margin-top: 12;
+                  margin-bottom: 12;
+                  margin-start: 12;
+                  margin-end: 12;
 
                   styles [
-                    "flat",
+                    "monospace",
                   ]
-                }
+                };
+              };
+
+              [overlay]
+              Button copy_cdn_css_code_button {
+                icon-name: "edit-copy-symbolic";
+                valign: start;
+                halign: end;
+                margin-top: 6;
+                margin-end: 6;
+                tooltip-text: _("Copy to clipboard");
+
+                styles [
+                  "flat",
+                ]
               }
+            }
+          }
+
+          Adw.PreferencesGroup {
+            description: _("Use in CSS");
+
+            Adw.ActionRow cdn_usage_row {
+              title: "font-family: …";
+              title-selectable: true;
+
+              styles [
+                "monospace",
+              ]
+
+              [suffix]
+              Button copy_cdn_usage_button {
+                icon-name: "edit-copy-symbolic";
+                valign: center;
+                tooltip-text: _("Copy to clipboard");
+
+                styles [
+                  "flat",
+                ]
+              }
+            }
           }
         };
       }
