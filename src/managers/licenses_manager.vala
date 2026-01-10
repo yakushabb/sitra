@@ -25,7 +25,7 @@ public class Sitra.Managers.LicensesManager : Object {
     /**
      * Populate a popover with license information for the given font
      */
-    public void populate_popover (Gtk.Popover popover, Sitra.Modals.FontInfo font) {
+    public void populate_popover (Gtk.Popover popover, Sitra.Models.FontInfo font) {
         var box = new Gtk.Box (Gtk.Orientation.VERTICAL, 4);
         box.margin_top = 12;
         box.margin_start = 24;

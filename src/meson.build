@@ -8,7 +8,7 @@ sitra_sources += files(
 # Subdirectories
 subdir('managers')
 subdir('helpers')
-subdir('modals')
+subdir('models')
 
 sitra_deps = [
   config_dep,

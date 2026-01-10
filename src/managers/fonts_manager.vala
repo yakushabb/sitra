@@ -22,10 +22,10 @@ using Gee;
 
 public class Sitra.Managers.FontsManager : Object {
 
-    private Gee.Map<string, Sitra.Modals.FontInfo> fonts;
+    private Gee.Map<string, Sitra.Models.FontInfo> fonts;
 
     public FontsManager () {
-        fonts = new Gee.HashMap<string, Sitra.Modals.FontInfo> ();
+        fonts = new Gee.HashMap<string, Sitra.Models.FontInfo> ();
     }
 
     public void load_from_json (string json_data) throws Error {
@@ -33,16 +33,16 @@ public class Sitra.Managers.FontsManager : Object {
         parser.load_from_data (json_data);
         var array = parser.get_root ().get_array ();
         foreach (var node in array.get_elements ()) {
-            var font_info = Sitra.Modals.FontInfo.from_json (node.get_object ());
+            var font_info = Sitra.Models.FontInfo.from_json (node.get_object ());
             fonts.set (font_info.family, font_info);
         }
     }
 
-    public Sitra.Modals.FontInfo? get_font (string family) {
+    public Sitra.Models.FontInfo? get_font (string family) {
         return fonts.get (family);
     }
 
-    public Gee.Map<string, Sitra.Modals.FontInfo> get_all_fonts () {
+    public Gee.Map<string, Sitra.Models.FontInfo> get_all_fonts () {
         return fonts;
     }
 

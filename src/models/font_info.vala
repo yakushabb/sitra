@@ -18,7 +18,7 @@
  * SPDX-License-Identifier: GPL-3.0-or-later
  */
 
-public class Sitra.Modals.FontInfo : Object {
+public class Sitra.Models.FontInfo : Object {
     public string family { get; set; }
     public string category { get; set; }
     public bool variable { get; set; }

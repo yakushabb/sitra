@@ -23,11 +23,11 @@ using Gee;
 public class Sitra.Helpers.FontsFilterHelper : Object {
     public Gtk.CustomFilter filter { get; private set; }
 
-    private Gee.Map<string, Sitra.Modals.FontInfo> fonts_map;
+    private Gee.Map<string, Sitra.Models.FontInfo> fonts_map;
     private Gtk.SearchEntry search_entry;
     private Gee.HashMap<string, Gtk.ToggleButton> category_toggles;
 
-    public FontsFilterHelper (Gee.Map<string, Sitra.Modals.FontInfo> fonts_map,
+    public FontsFilterHelper (Gee.Map<string, Sitra.Models.FontInfo> fonts_map,
         Gtk.SearchEntry search_entry,
         Gee.HashMap<string, Gtk.ToggleButton> category_toggles) {
 

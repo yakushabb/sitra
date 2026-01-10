@@ -27,11 +27,11 @@ public class Sitra.Managers.PreviewManager : Object {
     public string letter_spacing {get; set; default = "0"; }
     public bool italic { get; set; default = false; }
 
-    private bool is_icon_font(Sitra.Modals.FontInfo font) {
+    private bool is_icon_font(Sitra.Models.FontInfo font) {
         return font.category == "icons";
     }
 
-    private string determine_preview_text(Sitra.Modals.FontInfo font) {
+    private string determine_preview_text(Sitra.Models.FontInfo font) {
         // If user has custom preview text, always use that
         if (this.preview_text != DEFAULT_PREVIEW_TEXT) {
             return this.preview_text;
@@ -141,7 +141,7 @@ public class Sitra.Managers.PreviewManager : Object {
         return result;
     }
 
-    private string get_font_url (Sitra.Modals.FontInfo font, string subset, int? weight = null, bool italic = false) {
+    private string get_font_url (Sitra.Models.FontInfo font, string subset, int? weight = null, bool italic = false) {
         string font_slug = font.family.down().replace(" ", "-");
         if (font.variable) {
             return "https://cdn.jsdelivr.net/fontsource/fonts/%s:vf@latest/%s-wght-normal.woff2".printf(font_slug, subset);
@@ -158,7 +158,7 @@ public class Sitra.Managers.PreviewManager : Object {
      *
      * @param font The FontInfo object.
      */
-    public string build_html (Sitra.Modals.FontInfo font) {
+    public string build_html (Sitra.Models.FontInfo font) {
         var html = new StringBuilder();
 
         string display_text = determine_preview_text(font);
