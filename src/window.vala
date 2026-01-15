@@ -370,18 +370,20 @@ public class Sitra.Window : Adw.ApplicationWindow {
     }
 
     private void update_license_popover (string family_name) {
-        var font = fonts_manager.get_font (family_name);
-        if (font == null)
-            return;
-
-        licenses_manager.populate_popover (license_popover, font);
+        update_info_popover (licenses_manager, license_popover, family_name);
     }
 
-        private void update_category_popover (string family_name) {
+    private void update_category_popover (string family_name) {
+        update_info_popover (categories_manager, category_popover, family_name);
+    }
+
+    private void update_info_popover (Sitra.Managers.BaseInfoManager manager,
+                                        Gtk.Popover popover,
+                                        string family_name) {
         var font = fonts_manager.get_font (family_name);
         if (font == null)
             return;
 
-        categories_manager.populate_popover (category_popover, font);
+        manager.populate_popover (popover, font);
     }
 }

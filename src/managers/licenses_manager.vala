@@ -18,79 +18,24 @@
  * SPDX-License-Identifier: GPL-3.0-or-later
  */
 
-public class Sitra.Managers.LicensesManager : Object {
+public class Sitra.Managers.LicensesManager : Sitra.Managers.BaseInfoManager {
 
     public LicensesManager () {}
 
-    /**
-     * Populate a popover with license information for the given font
-     */
-    public void populate_popover (Gtk.Popover popover, Sitra.Models.FontInfo font) {
-        var box = new Gtk.Box (Gtk.Orientation.VERTICAL, 4);
-        box.margin_top = 12;
-        box.margin_start = 24;
-        box.margin_end = 24;
-        box.margin_bottom = 12;
-
-        var license_logo = new Gtk.Image.from_resource (
-            "/io/github/ronniedroid/sitra/licenses.svg"
-        );
-        license_logo.pixel_size = 64;
-        box.append (license_logo);
-
-        // Only one license
-        var license_box = create_license_box (
-            font.license,
-            get_description (font.license)
-        );
-        box.append (license_box);
-
-        var clamp = new Adw.Clamp ();
-        clamp.maximum_size = 200;
-        clamp.set_child (box);
-
-        popover.set_child (clamp);
+    public override string get_logo_path () {
+        return "/io/github/ronniedroid/sitra/licenses.svg";
     }
 
-    private Gtk.Box create_license_box (string id, string description) {
-
-        var box = new Gtk.Box (Gtk.Orientation.VERTICAL, 4);
-
-        var id_label = new Gtk.Label (id);
-        id_label.add_css_class ("heading");
-
-        var desc_label = new Gtk.Label (description);
-        desc_label.set_halign (Gtk.Align.START);
-        desc_label.wrap = true;
-
-        box.append (id_label);
-        box.append (desc_label);
-
-        return box;
+    public override string get_resource_path () {
+        return "/io/github/ronniedroid/sitra/licenses";
     }
 
-    private string get_description (string license_key) {
+    public override string get_group_name () {
+        return "licenses";
+    }
 
-        const string RESOURCE_PATH = "/io/github/ronniedroid/sitra/licenses";
-
-        var keyfile = new KeyFile ();
-
-        try {
-            Bytes data = resources_lookup_data (
-                RESOURCE_PATH,
-                ResourceLookupFlags.NONE
-            );
-            keyfile.load_from_bytes (data, KeyFileFlags.NONE);
-        } catch (Error e) {
-            warning (@"Failed to load $(RESOURCE_PATH): $(e.message)");
-            return _("No description available");
-        }
-
-        try {
-            return keyfile.get_string ("licenses", license_key);
-        } catch (Error e) {
-            return _("No description available");
-        }
+    public override string get_id (Sitra.Models.FontInfo font) {
+        return font.license;
     }
 }
 
