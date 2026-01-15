@@ -13,6 +13,9 @@ template $SitraWindow: Adw.ApplicationWindow {
 
     setters {
       split_view.collapsed: true;
+      preview_page_toolbar.extend-content-to-top-edge: false;
+      preview_page_titlebar.show-title: true;
+      header_font_title.visible: false;
     }
   }
 
@@ -92,32 +95,12 @@ template $SitraWindow: Adw.ApplicationWindow {
       title: _("Preview");
       tag: "preview";
 
-      child: Adw.ToolbarView {
+      child: Adw.ToolbarView preview_page_toolbar {
+        extend-content-to-top-edge: true;
+
         [top]
-        Adw.HeaderBar {
-          show-title: true;
-
-          [end]
-          MenuButton license_button {
-            icon-name: "sitra-license-symbolic";
-            tooltip-text: _("License details");
-            popover: license_popover;
-            visible: false;
-          }
-
-          [end]
-          Button integrate_button {
-            icon-name: "sitra-integrate-symbolic";
-            tooltip-text: _("Integrate");
-            visible: false;
-          }
-
-          [end]
-          Button install_button {
-            icon-name: "folder-download-symbolic";
-            tooltip-text: _("Install");
-            visible: false;
-          }
+        Adw.HeaderBar preview_page_titlebar {
+          show-title: false;
         }
 
         [top]
@@ -129,7 +112,8 @@ template $SitraWindow: Adw.ApplicationWindow {
 
         [bottom]
         ActionBar bottom_action_bar {
-        visible: false;
+          visible: false;
+
           [start]
           Entry preview_entry {
             placeholder-text: "Sphinx of black quartz, judge my vow.";
@@ -219,10 +203,80 @@ template $SitraWindow: Adw.ApplicationWindow {
           StackPage web_page {
             name: "preview";
 
-            child: Box web_container {
-              margin-start: 12;
+            child: Box container {
+              orientation: vertical;
+              margin-start: 24;
               margin-end: 12;
-              margin-top: 6;
+              margin-top: 12;
+
+              Box {
+                spacing: 6;
+                margin-bottom: 12;
+                orientation: vertical;
+
+                Box {
+                  orientation: vertical;
+                  halign: start;
+                  valign: start;
+
+                  Label header_font_title {
+                    label: "Font Name";
+                    halign: start;
+
+                    styles [
+                      "title-1",
+                    ]
+                  }
+
+                  Box {
+                    spacing: 6;
+
+                    styles [
+                      "caption",
+                    ]
+
+                    MenuButton header_font_category_button {
+                      label: "Category";
+                      popover: category_popover;
+                      valign: center;
+
+                      styles [
+                      "flat",
+                      ]
+                    }
+
+                    MenuButton header_font_license_button {
+                      label: "License";
+                      popover: license_popover;
+                      valign: center;
+
+                      styles [
+                        "flat",
+                      ]
+                    }
+                  }
+                }
+
+                Box {
+                  spacing: 6;
+                  valign: center;
+                  halign: start;
+
+                  Button install_button {
+                    label: _("Install");
+
+                    styles [
+                      "suggested-action",
+                    ]
+                  }
+
+                  Button integrate_button {
+                    label: _("Use in your app");
+                  }
+                }
+              }
+
+              Box web_container {}
             };
           }
 
@@ -258,7 +312,9 @@ menu window_menu {
 Popover license_popover {
   has-arrow: true;
   name: "plain_popover";
-
 }
 
-
+Popover category_popover {
+  has-arrow: true;
+  name: "plain_popover";
+}

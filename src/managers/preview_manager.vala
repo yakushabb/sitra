@@ -202,7 +202,6 @@ public class Sitra.Managers.PreviewManager : Object {
                 background-color: transparent;
                 color: var(--window-fg-color, #000000);
                 margin: 0;
-                padding: 8px;
             }
             p.sample-text {
                 font-family: '%s', sans-serif;

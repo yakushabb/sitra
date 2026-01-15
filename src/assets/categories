@@ -1,0 +1,8 @@
+[categories]
+sans-serif=Fonts without decorative strokes; clean and modern, commonly used for UI and body text.
+display=Decorative fonts designed for headlines and large sizes, not suitable for long text.
+serif=Fonts with decorative strokes at the ends of letters; traditional and often used in print.
+handwriting=Fonts that mimic handwritten or cursive styles; informal and expressive.
+monospace=Fonts where all characters have equal width; commonly used for code and terminals.
+icons=Symbol-based fonts containing pictograms or UI icons instead of letters.
+other=Fonts that do not fit standard categories or are highly experimental or mixed-style.

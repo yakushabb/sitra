@@ -41,9 +41,12 @@ public class Sitra.Window : Adw.ApplicationWindow {
     [GtkChild] private unowned Gtk.ToggleButton italic_toggle;
     [GtkChild] private unowned Adw.Banner banner;
     [GtkChild] private unowned Gtk.Popover license_popover;
-    [GtkChild] private unowned Gtk.MenuButton license_button;
+    [GtkChild] private unowned Gtk.Popover category_popover;
+    [GtkChild] private unowned Gtk.Label header_font_title;
+    [GtkChild] private unowned Gtk.MenuButton header_font_category_button;
+    [GtkChild] private unowned Gtk.MenuButton header_font_license_button;
     [GtkChild] private unowned Gtk.Button integrate_button;
-    [GtkChild] private unowned Gtk.Button install_button;
+    //[GtkChild] private unowned Gtk.Button install_button;
 
     private WebView web_view;
     private Gee.HashMap<string, Gtk.ToggleButton> category_toggles;
@@ -51,6 +54,7 @@ public class Sitra.Window : Adw.ApplicationWindow {
     private Sitra.Managers.FontsManager fonts_manager;
     private Sitra.Managers.PreviewManager preview_manager;
     private Sitra.Managers.LicensesManager licenses_manager;
+    private Sitra.Managers.CategoriesManager categories_manager;
     private Sitra.IntegrationDialog integration_dialog;
     private Sitra.Helpers.NetworkHelper network_helper;
 
@@ -62,6 +66,7 @@ public class Sitra.Window : Adw.ApplicationWindow {
 
         preview_manager = new Sitra.Managers.PreviewManager ();
         licenses_manager = new Sitra.Managers.LicensesManager ();
+        categories_manager = new Sitra.Managers.CategoriesManager ();
         integration_dialog = new Sitra.IntegrationDialog ();
         network_helper = Sitra.Helpers.NetworkHelper.get_instance ();
 
@@ -201,6 +206,7 @@ public class Sitra.Window : Adw.ApplicationWindow {
                 update_italic_toggle_state (family);
                 update_preview (family);
                 update_license_popover (family);
+                update_category_popover (family);
             }
         });
 
@@ -215,6 +221,7 @@ public class Sitra.Window : Adw.ApplicationWindow {
             update_italic_toggle_state (family);
             update_preview (family);
             update_license_popover (family);
+            update_category_popover (family);
 
             if (split_view.get_collapsed ())
                 split_view.set_show_content (true);
@@ -329,6 +336,10 @@ public class Sitra.Window : Adw.ApplicationWindow {
 
         preview_page.set_title (family_name);
 
+        header_font_title.label = preview_font.family;
+        header_font_category_button.label = preview_font.category;
+        header_font_license_button.label = preview_font.license;
+
         var html = preview_manager.build_html (preview_font);
         if (html == null || html.strip ().length == 0)
             html = "<html><body><p>No preview available</p></body></html>";
@@ -338,9 +349,6 @@ public class Sitra.Window : Adw.ApplicationWindow {
 
     private void set_visibility (bool val) {
                 bottom_action_bar.set_visible(val);
-                install_button.set_visible(val);
-                integrate_button.set_visible(val);
-                license_button.set_visible(val);
         }
 
     private void bind_dropdown_to_property (Gtk.DropDown dropdown,
@@ -367,5 +375,13 @@ public class Sitra.Window : Adw.ApplicationWindow {
             return;
 
         licenses_manager.populate_popover (license_popover, font);
+    }
+
+        private void update_category_popover (string family_name) {
+        var font = fonts_manager.get_font (family_name);
+        if (font == null)
+            return;
+
+        categories_manager.populate_popover (category_popover, font);
     }
 }
