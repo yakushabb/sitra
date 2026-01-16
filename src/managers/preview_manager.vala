@@ -200,8 +200,13 @@ public class Sitra.Managers.PreviewManager : Object {
             :root { color-scheme: light dark; }
             html, body {
                 background-color: transparent;
-                color: var(--window-fg-color, #000000);
+                color: black;
                 margin: 0;
+            }
+            @media (prefers-color-scheme: dark) {
+                html, body {
+                    color: white;
+                }
             }
             p.sample-text {
                 font-family: '%s', sans-serif;
