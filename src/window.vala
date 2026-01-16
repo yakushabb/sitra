@@ -43,8 +43,8 @@ public class Sitra.Window : Adw.ApplicationWindow {
     [GtkChild] private unowned Gtk.Popover license_popover;
     [GtkChild] private unowned Gtk.Popover category_popover;
     [GtkChild] private unowned Gtk.Label header_font_title;
-    [GtkChild] private unowned Gtk.MenuButton header_font_category_button;
-    [GtkChild] private unowned Gtk.MenuButton header_font_license_button;
+    [GtkChild] private unowned Adw.ButtonContent header_font_category_button_content;
+    [GtkChild] private unowned Adw.ButtonContent header_font_license_button_content;
     [GtkChild] private unowned Gtk.Button integrate_button;
     //[GtkChild] private unowned Gtk.Button install_button;
 
@@ -337,8 +337,9 @@ public class Sitra.Window : Adw.ApplicationWindow {
         preview_page.set_title (family_name);
 
         header_font_title.label = preview_font.family;
-        header_font_category_button.label = preview_font.category;
-        header_font_license_button.label = preview_font.license;
+        var header_font_category_label = preview_font.category == "sans-serif" ? "sans serif" : preview_font.category;
+        header_font_category_button_content.label = header_font_category_label;
+        header_font_license_button_content.label = preview_font.license;
 
         var html = preview_manager.build_html (preview_font);
         if (html == null || html.strip ().length == 0)

@@ -236,9 +236,16 @@ template $SitraWindow: Adw.ApplicationWindow {
                     ]
 
                     MenuButton header_font_category_button {
-                      label: "Category";
                       popover: category_popover;
-                      valign: center;
+
+                      Adw.ButtonContent header_font_category_button_content {
+                        label: "Category";
+                        icon-name: "sitra-category-symbolic";
+
+                        styles [
+                          "header-font-category-button-content",
+                        ]
+                      }
 
                       styles [
                         "flat",
@@ -246,9 +253,12 @@ template $SitraWindow: Adw.ApplicationWindow {
                     }
 
                     MenuButton header_font_license_button {
-                      label: "License";
                       popover: license_popover;
-                      valign: center;
+
+                      Adw.ButtonContent header_font_license_button_content {
+                        label: "License";
+                        icon-name: "sitra-license-symbolic";
+                      }
 
                       styles [
                         "flat",
@@ -271,7 +281,7 @@ template $SitraWindow: Adw.ApplicationWindow {
                   }
 
                   Button integrate_button {
-                    label: _("Use in your app");
+                    label: _("Use in a Project");
                   }
                 }
               }

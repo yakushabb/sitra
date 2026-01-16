@@ -13,7 +13,7 @@
   </gresource>
   <gresource prefix="/io/github/ronniedroid/sitra/icons/scalable/actions">
     <file preprocess="xml-stripblanks" alias="sitra-license-symbolic.svg">assets/license-symbolic.svg</file>
-    <file preprocess="xml-stripblanks" alias="sitra-integrate-symbolic.svg">assets/pull-request-new-symbolic.svg</file>
+    <file preprocess="xml-stripblanks" alias="sitra-category-symbolic.svg">assets/shapes-symbolic.svg</file>
     <file preprocess="xml-stripblanks" alias="sitra-logo.svg">assets/io.github.ronniedroid.sitra.svg</file>
     <file preprocess="xml-stripblanks" alias="sitra-globe-symbolic.svg">assets/globe-symbolic.svg</file>
     <file preprocess="xml-stripblanks" alias="sitra-code-symbolic.svg">assets/code-symbolic.svg</file>

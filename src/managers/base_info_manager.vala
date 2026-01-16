@@ -28,8 +28,8 @@ public abstract class Sitra.Managers.BaseInfoManager : Object {
     public void populate_popover (Gtk.Popover popover, Sitra.Models.FontInfo font) {
         var box = new Gtk.Box (Gtk.Orientation.VERTICAL, 4);
         box.margin_top = 12;
-        box.margin_start = 24;
-        box.margin_end = 24;
+        box.margin_start = 12;
+        box.margin_end = 12;
         box.margin_bottom = 12;
 
         var logo = new Gtk.Image.from_resource (get_logo_path ());
@@ -44,7 +44,7 @@ public abstract class Sitra.Managers.BaseInfoManager : Object {
         box.append (info_box);
 
         var clamp = new Adw.Clamp ();
-        clamp.maximum_size = 200;
+        clamp.maximum_size = 180;
         clamp.set_child (box);
 
         popover.set_child (clamp);
