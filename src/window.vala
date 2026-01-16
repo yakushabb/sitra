@@ -25,6 +25,7 @@ using Gee;
 public class Sitra.Window : Adw.ApplicationWindow {
 
     [GtkChild] private unowned Gtk.ListView fonts_list;
+    [GtkChild] private unowned Adw.ToastOverlay toast_overlay;
     [GtkChild] private unowned Adw.NavigationSplitView split_view;
     [GtkChild] private unowned Adw.NavigationPage preview_page;
     [GtkChild] private unowned Gtk.Stack preview_stack;
@@ -46,7 +47,7 @@ public class Sitra.Window : Adw.ApplicationWindow {
     [GtkChild] private unowned Adw.ButtonContent header_font_category_button_content;
     [GtkChild] private unowned Adw.ButtonContent header_font_license_button_content;
     [GtkChild] private unowned Gtk.Button integrate_button;
-    //[GtkChild] private unowned Gtk.Button install_button;
+    [GtkChild] private unowned Gtk.Button install_button;
 
     private WebView web_view;
     private Gee.HashMap<string, Gtk.ToggleButton> category_toggles;
@@ -293,6 +294,19 @@ public class Sitra.Window : Adw.ApplicationWindow {
             }
         });
 
+        install_button.clicked.connect (() => {
+            if (fonts_model.selected_item != null) {
+                var string_object = (Gtk.StringObject) fonts_model.selected_item;
+                var font = fonts_manager.get_font (string_object.string);
+                if (font != null) {
+                    var message = "This will install %s font".printf(font.family);
+                    var toast = new Adw.Toast (message);
+                    toast.timeout = 2;
+                    toast_overlay.add_toast (toast);
+                }
+            }
+        });
+
     }
 
     // --- Helpers ---
@@ -315,13 +329,13 @@ public class Sitra.Window : Adw.ApplicationWindow {
         if (!network_helper.has_connectivity ()) {
             banner.set_revealed (true);
             preview_stack.set_visible_child_name ("status");
-            set_visibility(false);
+            bottom_action_bar.set_visible(false);
             return;
         }
 
         preview_stack.set_visible_child_name ("preview");
         banner.set_revealed (false);
-        set_visibility(true);
+        bottom_action_bar.set_visible(true);
 
         var preview_font = fonts_manager.get_font (family_name);
         if (preview_font == null) {
@@ -347,10 +361,6 @@ public class Sitra.Window : Adw.ApplicationWindow {
 
         web_view.load_html (html, null);
     }
-
-    private void set_visibility (bool val) {
-                bottom_action_bar.set_visible(val);
-        }
 
     private void bind_dropdown_to_property (Gtk.DropDown dropdown,
                                             Object target,

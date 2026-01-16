@@ -23,6 +23,7 @@ using Gee;
 [GtkTemplate (ui = "/io/github/ronniedroid/sitra/integration_dialog.ui")]
 public class Sitra.IntegrationDialog : Adw.Dialog {
 
+    [GtkChild] private unowned Adw.ToastOverlay toast_overlay;
     [GtkChild] private unowned Adw.ActionRow npm_row;
     [GtkChild] private unowned Adw.ActionRow yarn_row;
     [GtkChild] private unowned Adw.ActionRow css_import_row;
@@ -316,5 +317,9 @@ public class Sitra.IntegrationDialog : Adw.Dialog {
     private void copy_to_clipboard (string text) {
         var clipboard = this.get_clipboard ();
         clipboard.set_text (text);
+        
+        var toast = new Adw.Toast ("Copied to clipboard");
+        toast.timeout = 2;
+        toast_overlay.add_toast (toast);
     }
 }
