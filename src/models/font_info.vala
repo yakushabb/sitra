@@ -19,6 +19,7 @@
  */
 
 public class Sitra.Models.FontInfo : Object {
+    public string id { get; set; }
     public string family { get; set; }
     public string category { get; set; }
     public bool variable { get; set; }
@@ -27,8 +28,9 @@ public class Sitra.Models.FontInfo : Object {
     public Gee.List<string> subsets { get; set; default = new Gee.ArrayList<string>(); }
     public Gee.List<string> styles {get; set; default = new Gee.ArrayList<string>();}
 
-    public FontInfo(string family, string category, bool variable, string license,
+    public FontInfo(string id, string family, string category, bool variable, string license,
                     Gee.List<int> weights, Gee.List<string> subsets, Gee.List<string> styles) {
+        this.id = id;
         this.family = family;
         this.category = category;
         this.variable = variable;
@@ -40,6 +42,7 @@ public class Sitra.Models.FontInfo : Object {
     }
 
     public static FontInfo from_json(Json.Object obj) {
+        string id = obj.get_string_member("id");
         string family = obj.get_string_member("family");
         string category = obj.get_string_member("category");
         bool variable = obj.get_boolean_member("variable");
@@ -63,7 +66,7 @@ public class Sitra.Models.FontInfo : Object {
             styles.add((string) node.get_string());
             }
 
-        return new FontInfo(family, category, variable, license, weights, subsets, styles);
+        return new FontInfo(id, family, category, variable, license, weights, subsets, styles);
     }
 }
 

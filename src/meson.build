@@ -21,6 +21,7 @@ sitra_deps = [
   dependency('gee-0.8'),
   dependency('libsoup-3.0'),
   dependency('json-glib-1.0'),
+  dependency('gnome-autoar-0')
 ]
 
 blueprints = custom_target('blueprints',
