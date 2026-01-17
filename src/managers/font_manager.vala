@@ -212,17 +212,23 @@ public class Sitra.Managers.FontManager : Object {
             SourceFunc callback = extract_font.callback;
             Error? extraction_error = null;
 
-            extractor.completed.connect (() => {
-                Idle.add ((owned) callback);
-            });
-
-            extractor.error.connect ((error) => {
-                extraction_error = error;
-                Idle.add ((owned) callback);
-            });
+            ulong cancel_id = 0;
+            if (cancellable != null) {
+                cancel_id = cancellable.connect (() => {
+                    Idle.add ((owned) callback);
+                });
+            }
 
             extractor.start (cancellable);
             yield;
+
+            if (cancel_id > 0) {
+                cancellable.disconnect (cancel_id);
+            }
+
+            if (cancellable != null && cancellable.is_cancelled ()) {
+                throw new IOError.CANCELLED ("Installation cancelled");
+            }
 
             if (extraction_error != null) {
                 throw extraction_error;
@@ -286,7 +292,10 @@ public class Sitra.Managers.FontManager : Object {
             cancellable);
 
         FileInfo? info;
-        while ((info = enumerator.next_file (null)) != null) {
+        while ((info = enumerator.next_file (cancellable)) != null) {
+            if (cancellable != null && cancellable.is_cancelled ()) {
+                throw new IOError.CANCELLED ("Installation cancelled");
+            }
             var source_child = source.get_child (info.get_name ());
             var dest_child = dest.get_child (info.get_name ());
 
@@ -303,7 +312,7 @@ public class Sitra.Managers.FontManager : Object {
         var enumerator = yield dir.enumerate_children_async (FileAttribute.STANDARD_NAME + "," + FileAttribute.STANDARD_TYPE,
             FileQueryInfoFlags.NONE,
             Priority.DEFAULT,
-            cancellable);
+            null);
 
         FileInfo? info;
         while ((info = enumerator.next_file (null)) != null) {
