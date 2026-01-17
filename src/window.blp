@@ -20,308 +20,325 @@ template $SitraWindow: Adw.ApplicationWindow {
   }
 
   content: Adw.ToastOverlay toast_overlay {
-    child: Gtk.Overlay install_overlay {
-      [overlay]
-      Gtk.ProgressBar install_progress_bar {
-        visible: false;
-        valign: start;
+    child: Adw.NavigationSplitView split_view {
+      min-sidebar-width: 300;
 
-        styles [
-          "osd",
-          "osd-progress-bar",
-        ]
-      }
+      sidebar: Adw.NavigationPage sidebar {
+        title: _("Sitra");
+        tag: "fonts";
 
-      child: Adw.NavigationSplitView split_view {
-        min-sidebar-width: 300;
+        child: Adw.ToolbarView {
+          [top]
+          Adw.HeaderBar {
+            show-title: true;
 
-        sidebar: Adw.NavigationPage sidebar {
-          title: _("Sitra");
-          tag: "fonts";
-
-          child: Adw.ToolbarView {
-            [top]
-            Adw.HeaderBar {
-              show-title: true;
-
-              [start]
-              ToggleButton search_button {
-                icon-name: "edit-find-symbolic";
-              }
-
-              [end]
-              MenuButton {
-                icon-name: "open-menu-symbolic";
-                tooltip-text: _("Main menu");
-                primary: true;
-                menu-model: window_menu;
-              }
+            [start]
+            ToggleButton search_button {
+              icon-name: "edit-find-symbolic";
             }
 
-            [top]
-            SearchBar search_bar {
-              key-capture-widget: sidebar;
+            [end]
+            MenuButton {
+              icon-name: "open-menu-symbolic";
+              tooltip-text: _("Main menu");
+              primary: true;
+              menu-model: window_menu;
+            }
+          }
 
-              SearchEntry search_entry {
-                search-delay: 100;
-                placeholder-text: _("Search fonts");
-                hexpand: true;
-              }
+          [top]
+          SearchBar search_bar {
+            key-capture-widget: sidebar;
 
-              styles [
-                "searchbar",
-              ]
+            SearchEntry search_entry {
+              search-delay: 100;
+              placeholder-text: _("Search fonts");
+              hexpand: true;
             }
 
-            [bottom]
-            ActionBar {
-              Adw.WrapBox categories {
-                child-spacing: 5;
-                line-spacing: 10;
-                margin-top: 6;
-                margin-bottom: 6;
-                margin-start: 6;
-                margin-end: 6;
-              }
+            styles [
+              "searchbar",
+            ]
+          }
+
+          [bottom]
+          ActionBar {
+            Adw.WrapBox categories {
+              child-spacing: 5;
+              line-spacing: 10;
+              margin-top: 6;
+              margin-bottom: 6;
+              margin-start: 6;
+              margin-end: 6;
             }
+          }
 
-            content: Box {
-              orientation: vertical;
-              spacing: 6;
+          content: Box {
+            orientation: vertical;
+            spacing: 6;
 
-              ScrolledWindow {
-                hscrollbar-policy: never;
-                propagate-natural-height: true;
-                valign: start;
+            ScrolledWindow {
+              hscrollbar-policy: never;
+              propagate-natural-height: true;
+              valign: start;
 
-                ListView fonts_list {
-                  styles [
-                    "navigation-sidebar",
-                  ]
-                }
-              }
-            };
-          };
-        };
-
-        content: Adw.NavigationPage preview_page {
-          title: _("Preview");
-          tag: "preview";
-
-          child: Adw.ToolbarView preview_page_toolbar {
-            extend-content-to-top-edge: true;
-
-            [top]
-            Adw.HeaderBar preview_page_titlebar {
-              show-title: false;
-            }
-
-            [top]
-            Adw.Banner banner {
-              button-label: _("Reload");
-              title: _("You are not connected to the internet, font preview won't work");
-              revealed: false;
-            }
-
-            [bottom]
-            ActionBar bottom_action_bar {
-              visible: false;
-
-              [start]
-              Entry preview_entry {
-                placeholder-text: "Sphinx of black quartz, judge my vow.";
-                margin-start: 6;
-                hexpand: true;
-              }
-
-              [end]
-              Box {
-                DropDown font_size_dropdown {
-                  model: Gtk.StringList {
-                    strings [
-                      "8px",
-                      "10px",
-                      "12px",
-                      "14px",
-                      "16px",
-                      "18px",
-                      "20px",
-                      "24px",
-                      "28px",
-                      "32px",
-                      "36px",
-                      "40px",
-                      "48px",
-                      "56px",
-                      "64px",
-                    ]
-                  };
-
-                  selected: 7;
-                  tooltip-text: _("Font Size");
-                }
-
-                DropDown line_height_dropdown {
-                  model: Gtk.StringList {
-                    strings [
-                      "1",
-                      "1.15",
-                      "1.25",
-                      "1.5",
-                      "1.7",
-                      "2",
-                    ]
-                  };
-
-                  tooltip-text: _("Line Height");
-                }
-
-                DropDown letter_spacing_dropdown {
-                  model: Gtk.StringList {
-                    strings [
-                      "-3",
-                      "-1.5",
-                      "0",
-                      "3",
-                      "6",
-                    ]
-                  };
-
-                  selected: 2;
-                  tooltip-text: _("Letter Spacing");
-                }
-
-                ToggleButton italic_toggle {
-                  icon-name: "format-text-italic-symbolic";
-                  tooltip-text: _("Italic");
-                }
-
+              ListView fonts_list {
                 styles [
-                  "linked",
+                  "navigation-sidebar",
                 ]
               }
             }
+          };
+        };
+      };
 
-            content: Stack preview_stack {
-              StackPage welcome_page {
-                name: "welcome";
+      content: Adw.NavigationPage preview_page {
+        title: _("Preview");
+        tag: "preview";
 
-                child: Adw.StatusPage {
-                  title: _("Welcome to Sitra");
-                  description: _("Please select a font to preview it here");
-                  icon-name: "sitra-logo";
+        child: Adw.ToolbarView preview_page_toolbar {
+          extend-content-to-top-edge: true;
+
+          [top]
+          Adw.HeaderBar preview_page_titlebar {
+            show-title: false;
+          }
+
+          [top]
+          Adw.Banner banner {
+            button-label: _("Reload");
+            title: _("You are not connected to the internet, font preview won't work");
+            revealed: false;
+          }
+
+          [bottom]
+          ActionBar bottom_action_bar {
+            visible: false;
+
+            [start]
+            Entry preview_entry {
+              placeholder-text: "Sphinx of black quartz, judge my vow.";
+              margin-start: 6;
+              hexpand: true;
+            }
+
+            [end]
+            Box {
+              DropDown font_size_dropdown {
+                model: Gtk.StringList {
+                  strings [
+                    "8px",
+                    "10px",
+                    "12px",
+                    "14px",
+                    "16px",
+                    "18px",
+                    "20px",
+                    "24px",
+                    "28px",
+                    "32px",
+                    "36px",
+                    "40px",
+                    "48px",
+                    "56px",
+                    "64px",
+                  ]
                 };
+
+                selected: 7;
+                tooltip-text: _("Font Size");
               }
 
-              StackPage web_page {
-                name: "preview";
+              DropDown line_height_dropdown {
+                model: Gtk.StringList {
+                  strings [
+                    "1",
+                    "1.15",
+                    "1.25",
+                    "1.5",
+                    "1.7",
+                    "2",
+                  ]
+                };
 
-                child: Box container {
+                tooltip-text: _("Line Height");
+              }
+
+              DropDown letter_spacing_dropdown {
+                model: Gtk.StringList {
+                  strings [
+                    "-3",
+                    "-1.5",
+                    "0",
+                    "3",
+                    "6",
+                  ]
+                };
+
+                selected: 2;
+                tooltip-text: _("Letter Spacing");
+              }
+
+              ToggleButton italic_toggle {
+                icon-name: "format-text-italic-symbolic";
+                tooltip-text: _("Italic");
+              }
+
+              styles [
+                "linked",
+              ]
+            }
+          }
+
+          content: Stack preview_stack {
+            StackPage welcome_page {
+              name: "welcome";
+
+              child: Adw.StatusPage {
+                title: _("Welcome to Sitra");
+                description: _("Please select a font to preview it here");
+                icon-name: "sitra-logo";
+              };
+            }
+
+            StackPage web_page {
+              name: "preview";
+
+              child: Box container {
+                orientation: vertical;
+                margin-start: 24;
+                margin-end: 12;
+                margin-top: 12;
+
+                Box {
+                  spacing: 6;
+                  margin-bottom: 12;
                   orientation: vertical;
-                  margin-start: 24;
-                  margin-end: 12;
-                  margin-top: 12;
 
                   Box {
-                    spacing: 6;
-                    margin-bottom: 12;
                     orientation: vertical;
+                    halign: start;
+                    valign: start;
 
-                    Box {
-                      orientation: vertical;
+                    Label header_font_title {
+                      label: "Font Name";
                       halign: start;
-                      valign: start;
 
-                      Label header_font_title {
-                        label: "Font Name";
-                        halign: start;
-
-                        styles [
-                          "title-1",
-                        ]
-                      }
-
-                      Box {
-                        spacing: 6;
-
-                        styles [
-                          "caption",
-                        ]
-
-                        MenuButton header_font_category_button {
-                          popover: category_popover;
-
-                          Adw.ButtonContent header_font_category_button_content {
-                            label: "Category";
-                            icon-name: "sitra-category-symbolic";
-
-                            styles [
-                              "header-font-category-button-content",
-                            ]
-                          }
-
-                          styles [
-                            "flat",
-                          ]
-                        }
-
-                        MenuButton header_font_license_button {
-                          popover: license_popover;
-
-                          Adw.ButtonContent header_font_license_button_content {
-                            label: "License";
-                            icon-name: "sitra-license-symbolic";
-                          }
-
-                          styles [
-                            "flat",
-                          ]
-                        }
-                      }
+                      styles [
+                        "title-1",
+                      ]
                     }
 
                     Box {
                       spacing: 6;
-                      valign: center;
-                      halign: start;
 
-                      Button install_button {
-                        label: _("Install");
+                      styles [
+                        "caption",
+                      ]
+
+                      MenuButton header_font_category_button {
+                        popover: category_popover;
+
+                        Adw.ButtonContent header_font_category_button_content {
+                          label: "Category";
+                          icon-name: "sitra-category-symbolic";
+
+                          styles [
+                            "header-font-category-button-content",
+                          ]
+                        }
 
                         styles [
-                          "suggested-action",
+                          "flat",
                         ]
                       }
 
-                      Button uninstall_button {
-                        label: _("Uninstall");
-                        visible: false;
+                      MenuButton header_font_license_button {
+                        popover: license_popover;
+
+                        Adw.ButtonContent header_font_license_button_content {
+                          label: "License";
+                          icon-name: "sitra-license-symbolic";
+                        }
 
                         styles [
-                          "destructive-action",
+                          "flat",
                         ]
-                      }
-
-                      Button integrate_button {
-                        label: _("Use in a Project");
                       }
                     }
                   }
 
-                  Box web_container {}
-                };
-              }
+                  Box {
+                    spacing: 6;
+                    valign: center;
+                    halign: start;
 
-              StackPage status_page {
-                name: "status";
+                    Button install_button {
+                      label: _("Install");
 
-                child: Adw.StatusPage {
-                  title: _("No Internet connection");
-                  description: _("You are not connected to the internet, font previews can't work offline.");
-                  icon-name: "network-offline-symbolic";
-                };
-              }
-            };
+                      styles [
+                        "suggested-action",
+                      ]
+                    }
+
+                    Button cancel_button {
+                      styles [
+                        "progress-button",
+                      ]
+
+                      overflow: hidden;
+                      visible: false;
+
+                      child: Overlay {
+                        Label {
+                          label: _("Cancel");
+
+                          styles [
+                            "progress-button-label",
+                          ]
+                        }
+
+                        [overlay]
+                        ProgressBar install_progress_bar {
+                          valign: end;
+                          halign: fill;
+
+                          styles [
+                            "progress-button-line",
+                            "osd",
+                          ]
+                        }
+                      };
+                    }
+
+                    Button uninstall_button {
+                      label: _("Uninstall");
+                      visible: false;
+
+                      styles [
+                        "destructive-action",
+                      ]
+                    }
+
+                    Button integrate_button {
+                      label: _("Use in a Project");
+                    }
+                  }
+                }
+
+                Box web_container {}
+              };
+            }
+
+            StackPage status_page {
+              name: "status";
+
+              child: Adw.StatusPage {
+                title: _("No Internet connection");
+                description: _("You are not connected to the internet, font previews can't work offline.");
+                icon-name: "network-offline-symbolic";
+              };
+            }
           };
         };
       };

@@ -48,6 +48,7 @@ public class Sitra.Window : Adw.ApplicationWindow {
     [GtkChild] private unowned Adw.ButtonContent header_font_license_button_content;
     [GtkChild] private unowned Gtk.Button integrate_button;
     [GtkChild] private unowned Gtk.Button install_button;
+    [GtkChild] private unowned Gtk.Button cancel_button;
     [GtkChild] private unowned Gtk.Button uninstall_button;
     [GtkChild] private unowned Gtk.ProgressBar install_progress_bar;
 
@@ -245,9 +246,9 @@ public class Sitra.Window : Adw.ApplicationWindow {
         });
 
         banner.button_clicked.connect (() => {
-                banner.set_revealed (false);
-                var string_object = (Gtk.StringObject) fonts_model.selected_item;
-                update_preview (string_object.string);
+            banner.set_revealed (false);
+            var string_object = (Gtk.StringObject) fonts_model.selected_item;
+            update_preview (string_object.string);
         });
 
         preview_entry.changed.connect (() => {
@@ -273,7 +274,6 @@ public class Sitra.Window : Adw.ApplicationWindow {
             if (fonts_model.selected_item != null) {
                 var string_object = (Gtk.StringObject) fonts_model.selected_item;
                 update_preview (string_object.string);
-
             }
         });
 
@@ -291,8 +291,10 @@ public class Sitra.Window : Adw.ApplicationWindow {
 
         // Setup font manager signals
         font_manager.installation_started.connect ((font_family) => {
+            install_progress_bar.fraction = 0.0;
             install_progress_bar.visible = true;
-            install_button.sensitive = false;
+            install_button.visible = false;
+            cancel_button.visible = true;
         });
 
         font_manager.installation_progress.connect ((font_family, progress) => {
@@ -301,7 +303,8 @@ public class Sitra.Window : Adw.ApplicationWindow {
 
         font_manager.installation_completed.connect ((font_family, success, error_message) => {
             install_progress_bar.visible = false;
-            install_button.sensitive = true;
+            cancel_button.visible = false;
+            install_button.visible = true;
 
             if (success) {
                 var toast = new Adw.Toast (_("Font '%s' installed successfully").printf (font_family));
@@ -349,6 +352,10 @@ public class Sitra.Window : Adw.ApplicationWindow {
             }
         });
 
+        cancel_button.clicked.connect (() => {
+            font_manager.cancel_installation ();
+        });
+
         uninstall_button.clicked.connect (() => {
             if (fonts_model.selected_item != null) {
                 var string_object = (Gtk.StringObject) fonts_model.selected_item;
@@ -358,7 +365,6 @@ public class Sitra.Window : Adw.ApplicationWindow {
                 }
             }
         });
-
     }
 
     // --- Helpers ---
@@ -381,13 +387,13 @@ public class Sitra.Window : Adw.ApplicationWindow {
         if (!network_helper.has_connectivity ()) {
             banner.set_revealed (true);
             preview_stack.set_visible_child_name ("status");
-            bottom_action_bar.set_visible(false);
+            bottom_action_bar.set_visible (false);
             return;
         }
 
         preview_stack.set_visible_child_name ("preview");
         banner.set_revealed (false);
-        bottom_action_bar.set_visible(true);
+        bottom_action_bar.set_visible (true);
 
         var preview_font = fonts_manager.get_font (family_name);
         if (preview_font == null) {
@@ -440,10 +446,9 @@ public class Sitra.Window : Adw.ApplicationWindow {
         update_info_popover (categories_manager, category_popover, family_name);
     }
 
-
     private void update_info_popover (Sitra.Managers.BaseInfoManager manager,
-                                        Gtk.Popover popover,
-                                        string family_name) {
+                                      Gtk.Popover popover,
+                                      string family_name) {
         var font = fonts_manager.get_font (family_name);
         if (font == null)
             return;
@@ -493,13 +498,14 @@ public class Sitra.Window : Adw.ApplicationWindow {
 
         if (font != null && font_manager.is_font_installed (font.id)) {
             install_button.visible = false;
+            cancel_button.visible = false;
             uninstall_button.visible = true;
             uninstall_button.sensitive = true;
         } else {
             install_button.visible = true;
             install_button.sensitive = true;
+            cancel_button.visible = false;
             uninstall_button.visible = false;
         }
     }
 }
-

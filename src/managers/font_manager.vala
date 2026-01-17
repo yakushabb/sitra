@@ -32,6 +32,7 @@ public class Sitra.Managers.FontManager : Object {
     private string fonts_dir;
     private string tracking_file_path;
     private KeyFile installed_fonts_db;
+    private Cancellable? cancellable;
 
     public signal void installation_started (string font_family);
     public signal void installation_progress (string font_family, double progress);
@@ -81,6 +82,7 @@ public class Sitra.Managers.FontManager : Object {
     }
 
     public async void install_font (Sitra.Models.FontInfo font) throws Error {
+        cancellable = new Cancellable ();
         installation_started (font.family);
         installation_progress (font.family, 0.0);
 
@@ -109,6 +111,8 @@ public class Sitra.Managers.FontManager : Object {
             track_installation (font);
             installation_progress (font.family, 1.0);
 
+            cancellable = null;
+
             // Cleanup temporary zip file
             try {
                 zip_file.delete ();
@@ -117,13 +121,22 @@ public class Sitra.Managers.FontManager : Object {
             }
 
             success = true;
-
         } catch (Error e) {
             error_msg = e.message;
+            if (e is IOError.CANCELLED) {
+                error_msg = _("Installation cancelled");
+            }
             warning ("Font installation failed for %s: %s", font.family, e.message);
+            cancellable = null;
         }
 
         installation_completed (font.family, success, error_msg);
+    }
+
+    public void cancel_installation () {
+        if (cancellable != null && !cancellable.is_cancelled ()) {
+            cancellable.cancel ();
+        }
     }
 
     public async void uninstall_font (Sitra.Models.FontInfo font) throws Error {
@@ -168,14 +181,15 @@ public class Sitra.Managers.FontManager : Object {
         var zip_file = File.new_for_path (zip_path);
 
         try {
-            var input_stream = yield session.send_async (message, Priority.DEFAULT, null);
+            var input_stream = yield session.send_async (message, Priority.DEFAULT, cancellable);
 
             if (message.status_code != 200) {
                 throw new IOError.FAILED ("Failed to download font: HTTP %u".printf (message.status_code));
             }
 
-            var output_stream = yield zip_file.replace_async (null, false, FileCreateFlags.NONE, Priority.DEFAULT, null);
-            yield output_stream.splice_async (input_stream, OutputStreamSpliceFlags.CLOSE_SOURCE | OutputStreamSpliceFlags.CLOSE_TARGET, Priority.DEFAULT, null);
+            var output_stream = yield zip_file.replace_async (null, false, FileCreateFlags.NONE, Priority.DEFAULT, cancellable);
+
+            yield output_stream.splice_async (input_stream, OutputStreamSpliceFlags.CLOSE_SOURCE | OutputStreamSpliceFlags.CLOSE_TARGET, Priority.DEFAULT, cancellable);
 
             return zip_file;
         } catch (Error e) {
@@ -207,7 +221,7 @@ public class Sitra.Managers.FontManager : Object {
                 Idle.add ((owned) callback);
             });
 
-            extractor.start (null);
+            extractor.start (cancellable);
             yield;
 
             if (extraction_error != null) {
@@ -224,12 +238,10 @@ public class Sitra.Managers.FontManager : Object {
         File? font_source_dir = null;
 
         try {
-            var enumerator = yield extract_dir.enumerate_children_async (
-                FileAttribute.STANDARD_NAME + "," + FileAttribute.STANDARD_TYPE,
+            var enumerator = yield extract_dir.enumerate_children_async (FileAttribute.STANDARD_NAME + "," + FileAttribute.STANDARD_TYPE,
                 FileQueryInfoFlags.NONE,
                 Priority.DEFAULT,
-                null
-            );
+                cancellable);
 
             FileInfo? info;
             while ((info = enumerator.next_file (null)) != null) {
@@ -262,19 +274,16 @@ public class Sitra.Managers.FontManager : Object {
             yield delete_directory_recursive (extract_dir);
 
             yield update_font_cache ();
-
         } catch (Error e) {
             throw new IOError.FAILED ("Failed to process and install font: %s".printf (e.message));
         }
     }
 
     private async void copy_directory_recursive (File source, File dest) throws Error {
-        var enumerator = yield source.enumerate_children_async (
-            FileAttribute.STANDARD_NAME + "," + FileAttribute.STANDARD_TYPE,
+        var enumerator = yield source.enumerate_children_async (FileAttribute.STANDARD_NAME + "," + FileAttribute.STANDARD_TYPE,
             FileQueryInfoFlags.NONE,
             Priority.DEFAULT,
-            null
-        );
+            cancellable);
 
         FileInfo? info;
         while ((info = enumerator.next_file (null)) != null) {
@@ -285,18 +294,16 @@ public class Sitra.Managers.FontManager : Object {
                 dest_child.make_directory_with_parents ();
                 yield copy_directory_recursive (source_child, dest_child);
             } else {
-                yield source_child.copy_async (dest_child, FileCopyFlags.OVERWRITE, Priority.DEFAULT, null);
+                yield source_child.copy_async (dest_child, FileCopyFlags.OVERWRITE, Priority.DEFAULT, cancellable);
             }
         }
     }
 
     private async void delete_directory_recursive (File dir) throws Error {
-        var enumerator = yield dir.enumerate_children_async (
-            FileAttribute.STANDARD_NAME + "," + FileAttribute.STANDARD_TYPE,
+        var enumerator = yield dir.enumerate_children_async (FileAttribute.STANDARD_NAME + "," + FileAttribute.STANDARD_TYPE,
             FileQueryInfoFlags.NONE,
             Priority.DEFAULT,
-            null
-        );
+            cancellable);
 
         FileInfo? info;
         while ((info = enumerator.next_file (null)) != null) {
@@ -314,8 +321,8 @@ public class Sitra.Managers.FontManager : Object {
     private async void update_font_cache () throws Error {
         try {
             var subprocess = new Subprocess (
-                SubprocessFlags.STDERR_SILENCE,
-                "fc-cache", "-f"
+                                             SubprocessFlags.STDERR_SILENCE,
+                                             "fc-cache", "-f"
             );
             yield subprocess.wait_async (null);
         } catch (Error e) {
