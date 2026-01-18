@@ -43,13 +43,13 @@ public class Sitra.Application : Adw.Application {
     }
 
     private void on_about_action () {
-        string[] developers = { "Ronnie Nissan <ronnie.nissan@proton.me>" };
-		string[] designers = {"Tobias Bernard"};
+        string[] developers = { "Ronnie Nissan https://ronnienissan.pages.dev/" };
+		string[] designers = {"Tobias Bernard https://tobiasbernard.com/"};
 		string[] artists = {"Jakub Steiner https://jimmac.eu/"};
         var about = new Adw.AboutDialog () {
 			application_name = _("sitra"),
 			comments = _(
-                "Sitra helps you install fonts from Fontsource on your system"
+                "Sitra helps you install fonts from online sources on your system"
             ),
 			issue_url = "https://github.com/ronniedroid/sitra/issues/new",
             license_type = Gtk.License.GPL_3_0,
