@@ -17,5 +17,7 @@
     <file preprocess="xml-stripblanks" alias="sitra-logo.svg">assets/io.github.ronniedroid.sitra.svg</file>
     <file preprocess="xml-stripblanks" alias="sitra-globe-symbolic.svg">assets/globe-symbolic.svg</file>
     <file preprocess="xml-stripblanks" alias="sitra-code-symbolic.svg">assets/code-symbolic.svg</file>
+    <file preprocess="xml-stripblanks" alias="io.github.ronniedroid.concessio.svg">assets/io.github.ronniedroid.concessio.svg</file>
+    <file preprocess="xml-stripblanks" alias="io.github.getnf.embellish.svg">assets/io.github.getnf.embellish.svg</file>
   </gresource>
 </gresources>

@@ -43,16 +43,28 @@ public class Sitra.Application : Adw.Application {
     }
 
     private void on_about_action () {
-        string[] developers = { "Ronnie Nissan" };
+        string[] developers = { "Ronnie Nissan <ronnie.nissan@proton.me>" };
+		string[] designers = {"Tobias Bernard"};
+		string[] artists = {"Jakub Steiner https://jimmac.eu/"};
         var about = new Adw.AboutDialog () {
-            application_name = "sitra",
+			application_name = _("sitra"),
+			comments = _(
+                "Sitra helps you install fonts from Fontsource on your system"
+            ),
+			issue_url = "https://github.com/ronniedroid/sitra/issues/new",
+            license_type = Gtk.License.GPL_3_0,
             application_icon = "io.github.ronniedroid.sitra",
-            developer_name = "Ronnie Nissan",
+			developer_name = "Ronnie Nissan",
             translator_credits = _("translator-credits"),
-            version = "0.1.0",
+            version = Config.PACKAGE_VERSION,
             developers = developers,
-            copyright = "© 2025 Ronnie Nissan",
+			designers = designers,
+			artists = artists,
+            copyright = "© 2026 Ronnie Nissan",
         };
+
+		about.add_other_app("io.github.ronniedroid.concessio", _("Concessio"), _("Understand file permissions"));
+		about.add_other_app("io.github.getnf.embellish", _("Embellish"), _("Install Nerd Fonts"));
 
         about.present (this.active_window);
     }

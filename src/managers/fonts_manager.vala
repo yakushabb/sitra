@@ -58,7 +58,7 @@ public class Sitra.Managers.FontsManager : Object {
     }
 
     public string?[] get_font_names_array () {
-        var names = get_font_names().to_array ();
+        var names = (string[]) get_font_names().to_array ();
         var result = new string?[names.length + 1];
         for (int i = 0; i < names.length; i++) {
             result[i] = names[i];

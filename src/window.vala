@@ -62,6 +62,7 @@ public class Sitra.Window : Adw.ApplicationWindow {
     private Sitra.Managers.FontManager font_manager;
     private Sitra.IntegrationDialog integration_dialog;
     private Sitra.Helpers.NetworkHelper network_helper;
+    private string? installing_font_family = null;
 
     private Gtk.FilterListModel filtered_model;
     private Gtk.SingleSelection fonts_model;
@@ -291,26 +292,38 @@ public class Sitra.Window : Adw.ApplicationWindow {
 
         // Setup font manager signals
         font_manager.installation_started.connect ((font_family) => {
-            install_progress_bar.fraction = 0.0;
-            install_progress_bar.visible = true;
-            install_button.visible = false;
-            cancel_button.visible = true;
+            installing_font_family = font_family;
+
+            if (is_selected_font (font_family)) {
+                install_progress_bar.fraction = 0.0;
+                install_progress_bar.visible = true;
+                install_button.visible = false;
+                cancel_button.visible = true;
+            }
         });
 
         font_manager.installation_progress.connect ((font_family, progress) => {
-            install_progress_bar.fraction = progress;
+            if (is_selected_font (font_family)) {
+                install_progress_bar.fraction = progress;
+            }
         });
 
         font_manager.installation_completed.connect ((font_family, success, error_message) => {
-            install_progress_bar.visible = false;
-            cancel_button.visible = false;
-            install_button.visible = true;
+            installing_font_family = null;
+
+            if (is_selected_font (font_family)) {
+                install_progress_bar.visible = false;
+                cancel_button.visible = false;
+                install_button.visible = true;
+            }
 
             if (success) {
                 var toast = new Adw.Toast (_("Font '%s' installed successfully").printf (font_family));
                 toast.timeout = 3;
                 toast_overlay.add_toast (toast);
-                update_install_button_state ();
+                if (is_selected_font (font_family)) {
+                    update_install_button_state ();
+                }
             } else {
                 var toast = new Adw.Toast (_("Failed to install '%s': %s").printf (font_family, error_message ?? "Unknown error"));
                 toast.timeout = 5;
@@ -484,6 +497,13 @@ public class Sitra.Window : Adw.ApplicationWindow {
         }
     }
 
+    private bool is_selected_font (string family) {
+        if (fonts_model.selected_item == null)
+            return false;
+        var string_object = (Gtk.StringObject) fonts_model.selected_item;
+        return string_object.string == family;
+    }
+
     private void update_install_button_state () {
         if (fonts_model.selected_item == null) {
             install_button.visible = true;
@@ -501,11 +521,17 @@ public class Sitra.Window : Adw.ApplicationWindow {
             cancel_button.visible = false;
             uninstall_button.visible = true;
             uninstall_button.sensitive = true;
+        } else if (installing_font_family == font_family) {
+            install_button.visible = false;
+            cancel_button.visible = true;
+            uninstall_button.visible = false;
+            install_progress_bar.visible = true;
         } else {
             install_button.visible = true;
-            install_button.sensitive = true;
+            install_button.sensitive = (installing_font_family == null);
             cancel_button.visible = false;
             uninstall_button.visible = false;
+            install_progress_bar.visible = false;
         }
     }
 }

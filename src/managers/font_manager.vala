@@ -82,6 +82,10 @@ public class Sitra.Managers.FontManager : Object {
     }
 
     public async void install_font (Sitra.Models.FontInfo font) throws Error {
+        if (cancellable != null) {
+            throw new IOError.BUSY ("An installation is already in progress");
+        }
+
         cancellable = new Cancellable ();
         installation_started (font.family);
         installation_progress (font.family, 0.0);
@@ -97,14 +101,17 @@ public class Sitra.Managers.FontManager : Object {
             // Step 1: Download font (0% - 50%) - use font.id for API
             installation_progress (font.family, 0.1);
             var zip_file = yield download_font (font.id);
+
             installation_progress (font.family, 0.5);
 
             // Step 2: Extract font (50% - 80%)
             var extract_dir = yield extract_font (zip_file, font.id);
+
             installation_progress (font.family, 0.8);
 
             // Step 3: Process and install (80% - 100%)
             yield process_and_install (extract_dir, font.id);
+
             installation_progress (font.family, 0.9);
 
             // Step 4: Track installation
@@ -213,11 +220,23 @@ public class Sitra.Managers.FontManager : Object {
             Error? extraction_error = null;
 
             ulong cancel_id = 0;
+            ulong completed_id = 0;
+            ulong error_id = 0;
+
             if (cancellable != null) {
                 cancel_id = cancellable.connect (() => {
                     Idle.add ((owned) callback);
                 });
             }
+
+            completed_id = extractor.completed.connect (() => {
+                Idle.add ((owned) callback);
+            });
+
+            error_id = extractor.error.connect ((e) => {
+                extraction_error = e;
+                Idle.add ((owned) callback);
+            });
 
             extractor.start (cancellable);
             yield;
@@ -225,6 +244,8 @@ public class Sitra.Managers.FontManager : Object {
             if (cancel_id > 0) {
                 cancellable.disconnect (cancel_id);
             }
+            SignalHandler.disconnect (extractor, completed_id);
+            SignalHandler.disconnect (extractor, error_id);
 
             if (cancellable != null && cancellable.is_cancelled ()) {
                 throw new IOError.CANCELLED ("Installation cancelled");
