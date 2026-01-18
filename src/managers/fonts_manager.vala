@@ -23,18 +23,31 @@ using Gee;
 public class Sitra.Managers.FontsManager : Object {
 
     private Gee.Map<string, Sitra.Models.FontInfo> fonts;
+    private Gee.Set<string> google_fonts;
 
     public FontsManager () {
         fonts = new Gee.HashMap<string, Sitra.Models.FontInfo> ();
+        google_fonts = new Gee.HashSet<string> ();
     }
 
-    public void load_from_json (string json_data) throws Error {
+    public void load_from_json (string fonts_json, string google_fonts_json) throws Error {
+        var google_parser = new Json.Parser ();
+        google_parser.load_from_data (google_fonts_json);
+        var root = google_parser.get_root ().get_object ();
+        var items = root.get_array_member ("items");
+        foreach (var node in items.get_elements ()) {
+            var obj = node.get_object ();
+            google_fonts.add (obj.get_string_member ("family"));
+        }
+
         var parser = new Json.Parser ();
-        parser.load_from_data (json_data);
+        parser.load_from_data (fonts_json);
         var array = parser.get_root ().get_array ();
         foreach (var node in array.get_elements ()) {
             var font_info = Sitra.Models.FontInfo.from_json (node.get_object ());
-            fonts.set (font_info.family, font_info);
+            if (google_fonts.contains (font_info.family)) {
+                fonts.set (font_info.family, font_info);
+            }
         }
     }
 
@@ -53,12 +66,12 @@ public class Sitra.Managers.FontsManager : Object {
         }
         names.sort ((a, b) => {
             return a.collate (b); // locale-aware compare
-            });
+        });
         return names;
     }
 
     public string?[] get_font_names_array () {
-        var names = (string[]) get_font_names().to_array ();
+        var names = (string[]) get_font_names ().to_array ();
         var result = new string?[names.length + 1];
         for (int i = 0; i < names.length; i++) {
             result[i] = names[i];

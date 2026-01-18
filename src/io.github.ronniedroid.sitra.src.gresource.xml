@@ -6,6 +6,7 @@
     <file preprocess="xml-stripblanks">shortcuts-dialog.ui</file>
     <file preprocess="xml-stripblanks">integration_dialog.ui</file>
     <file alias="fonts.json">assets/fonts.json</file>
+    <file alias="google-fonts.json">assets/google-fonts.json</file>
     <file alias="licenses">assets/licenses</file>
     <file alias="licenses.svg">assets/license.svg</file>
     <file alias="categories">assets/categories</file>

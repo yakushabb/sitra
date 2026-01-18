@@ -80,13 +80,17 @@ public class Sitra.Window : Adw.ApplicationWindow {
         banner.set_revealed (false);
 
         // --- Load JSON font data ---
-        string json_data = "";
+        string fonts_json = "";
+        string google_fonts_json = "{\"items\": []}";
         try {
-            var bytes = resources_lookup_data ("/io/github/ronniedroid/sitra/fonts.json", 0);
-            json_data = (string) bytes.get_data ();
+            var fonts_bytes = resources_lookup_data ("/io/github/ronniedroid/sitra/fonts.json", 0);
+            fonts_json = (string) fonts_bytes.get_data ();
+
+            var google_fonts_bytes = resources_lookup_data ("/io/github/ronniedroid/sitra/google-fonts.json", 0);
+            google_fonts_json = (string) google_fonts_bytes.get_data ();
         } catch (Error e) {
-            warning ("Failed to load fonts.json: %s", e.message);
-            json_data = "[]";
+            warning ("Failed to load JSON data: %s", e.message);
+            if (fonts_json == "") fonts_json = "[]";
         }
 
         // --- WebView ---
@@ -123,7 +127,7 @@ public class Sitra.Window : Adw.ApplicationWindow {
         fonts_manager = new Sitra.Managers.FontsManager ();
 
         try {
-            fonts_manager.load_from_json (json_data);
+            fonts_manager.load_from_json (fonts_json, google_fonts_json);
         } catch (Error e) {
             warning ("Failed to load fonts: %s", e.message);
         }

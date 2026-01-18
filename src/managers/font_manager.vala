@@ -20,10 +20,12 @@
 
 using Gee;
 using Autoar;
+using Soup;
+using GLib;
 
-public class Sitra.Managers.FontManager : Object {
+public class Sitra.Managers.FontManager : GLib.Object {
 
-    private const string FONTSOURCE_API_URL = "https://api.fontsource.org/v1/download/%s";
+    private const string GOOGLE_FONTS_DOWNLOAD_URL = "https://gwfh.mranftl.com/api/fonts/%s?download=zip&subsets=%s&formats=ttf";
     private const string FONTS_DIR_PATH = ".local/share/fonts";
     private const string TRACKING_DIR_PATH = ".local/share/sitra";
     private const string TRACKING_FILE = "installed_fonts.ini";
@@ -98,9 +100,9 @@ public class Sitra.Managers.FontManager : Object {
                 throw new IOError.EXISTS ("Font '%s' is already installed".printf (font.family));
             }
 
-            // Step 1: Download font (0% - 50%) - use font.id for API
+            // Step 1: Download font (0% - 50%)
             installation_progress (font.family, 0.1);
-            var zip_file = yield download_font (font.id);
+            var zip_file = yield download_font (font);
 
             installation_progress (font.family, 0.5);
 
@@ -110,7 +112,7 @@ public class Sitra.Managers.FontManager : Object {
             installation_progress (font.family, 0.8);
 
             // Step 3: Process and install (80% - 100%)
-            yield process_and_install (extract_dir, font.id);
+            yield process_and_install (extract_dir, font);
 
             installation_progress (font.family, 0.9);
 
@@ -179,16 +181,23 @@ public class Sitra.Managers.FontManager : Object {
         uninstallation_completed (font.family, success, error_msg);
     }
 
-    private async File download_font (string font_id) throws Error {
-        var url = FONTSOURCE_API_URL.printf (font_id);
+    private async File download_font (Sitra.Models.FontInfo font) throws Error {
+        var subsets_str = string.joinv (",", (string[]) font.subsets.to_array ());
+        string url = GOOGLE_FONTS_DOWNLOAD_URL.printf (font.id, subsets_str);
+
         var message = new Soup.Message ("GET", url);
+        message.request_headers.append ("Accept", "application/zip, application/octet-stream, */*");
 
         var temp_dir = Environment.get_tmp_dir ();
-        var zip_path = Path.build_filename (temp_dir, "%s.zip".printf (font_id));
+        var zip_path = Path.build_filename (temp_dir, "%s.zip".printf (font.id));
         var zip_file = File.new_for_path (zip_path);
 
         try {
             var input_stream = yield session.send_async (message, Priority.DEFAULT, cancellable);
+
+            debug ("FontManager: Download URL: %s", url);
+            debug ("FontManager: Status code: %u", message.status_code);
+            debug ("FontManager: Content-Type: %s", message.response_headers.get_one ("Content-Type"));
 
             if (message.status_code != 200) {
                 throw new IOError.FAILED ("Failed to download font: HTTP %u".printf (message.status_code));
@@ -197,6 +206,14 @@ public class Sitra.Managers.FontManager : Object {
             var output_stream = yield zip_file.replace_async (null, false, FileCreateFlags.NONE, Priority.DEFAULT, cancellable);
 
             yield output_stream.splice_async (input_stream, OutputStreamSpliceFlags.CLOSE_SOURCE | OutputStreamSpliceFlags.CLOSE_TARGET, Priority.DEFAULT, cancellable);
+
+            // Verify if it's a zip file (at least check first bytes)
+            var read_stream = yield zip_file.read_async (Priority.DEFAULT, cancellable);
+
+            uint8 buffer[4];
+            size_t bytes_read;
+            yield read_stream.read_all_async (buffer, Priority.DEFAULT, cancellable, out bytes_read);
+            yield read_stream.close_async (Priority.DEFAULT, cancellable);
 
             return zip_file;
         } catch (Error e) {
@@ -261,10 +278,11 @@ public class Sitra.Managers.FontManager : Object {
         }
     }
 
-    private async void process_and_install (File extract_dir, string font_family) throws Error {
-        File? font_source_dir = null;
-
+    private async void process_and_install (File extract_dir, Sitra.Models.FontInfo font) throws Error {
         try {
+            File font_source_dir = extract_dir;
+
+            // Find if there's a subdirectory wrapping the content (common for Google Fonts zips)
             var enumerator = yield extract_dir.enumerate_children_async (FileAttribute.STANDARD_NAME + "," + FileAttribute.STANDARD_TYPE,
                 FileQueryInfoFlags.NONE,
                 Priority.DEFAULT,
@@ -278,16 +296,7 @@ public class Sitra.Managers.FontManager : Object {
                 }
             }
 
-            if (font_source_dir == null) {
-                throw new IOError.NOT_FOUND ("No extracted directory found");
-            }
-
-            var webfonts_dir = font_source_dir.get_child ("webfonts");
-            if (webfonts_dir.query_exists ()) {
-                yield delete_directory_recursive (webfonts_dir);
-            }
-
-            var dest_path = Path.build_filename (fonts_dir, font_family);
+            var dest_path = Path.build_filename (fonts_dir, font.id);
             var dest_dir = File.new_for_path (dest_path);
 
             if (dest_dir.query_exists ()) {
