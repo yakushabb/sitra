@@ -19,13 +19,11 @@
  */
 
 using Gee;
-using Autoar;
 using Soup;
 using GLib;
 
 public class Sitra.Managers.FontManager : GLib.Object {
 
-    private const string GOOGLE_FONTS_DOWNLOAD_URL = "https://gwfh.mranftl.com/api/fonts/%s?download=zip&subsets=%s&formats=ttf";
     private const string FONTS_DIR_PATH = ".local/share/fonts";
     private const string TRACKING_DIR_PATH = ".local/share/sitra";
     private const string TRACKING_FILE = "installed_fonts.ini";
@@ -100,35 +98,42 @@ public class Sitra.Managers.FontManager : GLib.Object {
                 throw new IOError.EXISTS ("Font '%s' is already installed".printf (font.family));
             }
 
-            // Step 1: Download font (0% - 50%)
-            installation_progress (font.family, 0.1);
-            var zip_file = yield download_font (font);
+            // Step 1: Create a temporary directory for the font
+            var temp_dir = Environment.get_tmp_dir ();
+            var font_temp_path = Path.build_filename (temp_dir, "sitra-%s".printf (font.id));
+            var font_temp_dir = File.new_for_path (font_temp_path);
 
-            installation_progress (font.family, 0.5);
+            if (font_temp_dir.query_exists ()) {
+                yield delete_directory_recursive (font_temp_dir);
+            }
+            font_temp_dir.make_directory_with_parents ();
 
-            // Step 2: Extract font (50% - 80%)
-            var extract_dir = yield extract_font (zip_file, font.id);
-
-            installation_progress (font.family, 0.8);
-
-            // Step 3: Process and install (80% - 100%)
-            yield process_and_install (extract_dir, font);
+            // Step 2: Download each variant (0% - 90%)
+            yield download_font_files (font, font_temp_dir);
 
             installation_progress (font.family, 0.9);
 
-            // Step 4: Track installation
+            // Step 3: Move to final destination (90% - 95%)
+            var dest_path = Path.build_filename (fonts_dir, font.id);
+            var dest_dir = File.new_for_path (dest_path);
+
+            if (dest_dir.query_exists ()) {
+                yield delete_directory_recursive (dest_dir);
+            }
+            dest_dir.make_directory_with_parents ();
+
+            yield copy_directory_recursive (font_temp_dir, dest_dir);
+            yield delete_directory_recursive (font_temp_dir);
+
+            installation_progress (font.family, 0.95);
+
+            // Step 4: Update font cache and track installation (95% - 100%)
+            yield update_font_cache ();
+
             track_installation (font);
             installation_progress (font.family, 1.0);
 
             cancellable = null;
-
-            // Cleanup temporary zip file
-            try {
-                zip_file.delete ();
-            } catch (Error e) {
-                debug ("Failed to delete temporary zip: %s", e.message);
-            }
-
             success = true;
         } catch (Error e) {
             error_msg = e.message;
@@ -181,137 +186,61 @@ public class Sitra.Managers.FontManager : GLib.Object {
         uninstallation_completed (font.family, success, error_msg);
     }
 
-    private async File download_font (Sitra.Models.FontInfo font) throws Error {
-        var subsets_str = string.joinv (",", (string[]) font.subsets.to_array ());
-        string url = GOOGLE_FONTS_DOWNLOAD_URL.printf (font.id, subsets_str);
+    private async void download_font_files (Sitra.Models.FontInfo font, File temp_dir) throws Error {
+        var variants = font.files.keys.to_array ();
+        double count = 0;
+        double total = variants.length;
 
-        var message = new Soup.Message ("GET", url);
-        message.request_headers.append ("Accept", "application/zip, application/octet-stream, */*");
-
-        var temp_dir = Environment.get_tmp_dir ();
-        var zip_path = Path.build_filename (temp_dir, "%s.zip".printf (font.id));
-        var zip_file = File.new_for_path (zip_path);
-
-        try {
-            var input_stream = yield session.send_async (message, Priority.DEFAULT, cancellable);
-
-            debug ("FontManager: Download URL: %s", url);
-            debug ("FontManager: Status code: %u", message.status_code);
-            debug ("FontManager: Content-Type: %s", message.response_headers.get_one ("Content-Type"));
-
-            if (message.status_code != 200) {
-                throw new IOError.FAILED ("Failed to download font: HTTP %u".printf (message.status_code));
-            }
-
-            var output_stream = yield zip_file.replace_async (null, false, FileCreateFlags.NONE, Priority.DEFAULT, cancellable);
-
-            yield output_stream.splice_async (input_stream, OutputStreamSpliceFlags.CLOSE_SOURCE | OutputStreamSpliceFlags.CLOSE_TARGET, Priority.DEFAULT, cancellable);
-
-            // Verify if it's a zip file (at least check first bytes)
-            var read_stream = yield zip_file.read_async (Priority.DEFAULT, cancellable);
-
-            uint8 buffer[4];
-            size_t bytes_read;
-            yield read_stream.read_all_async (buffer, Priority.DEFAULT, cancellable, out bytes_read);
-            yield read_stream.close_async (Priority.DEFAULT, cancellable);
-
-            return zip_file;
-        } catch (Error e) {
-            throw new IOError.FAILED ("Failed to download font: %s".printf (e.message));
-        }
-    }
-
-    private async File extract_font (File zip_file, string font_family) throws Error {
-        var temp_dir = Environment.get_tmp_dir ();
-        var extract_path = Path.build_filename (temp_dir, "sitra-%s".printf (font_family));
-        var extract_dir = File.new_for_path (extract_path);
-
-        if (!extract_dir.query_exists ()) {
-            extract_dir.make_directory_with_parents ();
-        }
-
-        try {
-            var extractor = new Extractor (zip_file, extract_dir);
-
-            SourceFunc callback = extract_font.callback;
-            Error? extraction_error = null;
-
-            ulong cancel_id = 0;
-            ulong completed_id = 0;
-            ulong error_id = 0;
-
-            if (cancellable != null) {
-                cancel_id = cancellable.connect (() => {
-                    Idle.add ((owned) callback);
-                });
-            }
-
-            completed_id = extractor.completed.connect (() => {
-                Idle.add ((owned) callback);
-            });
-
-            error_id = extractor.error.connect ((e) => {
-                extraction_error = e;
-                Idle.add ((owned) callback);
-            });
-
-            extractor.start (cancellable);
-            yield;
-
-            if (cancel_id > 0) {
-                cancellable.disconnect (cancel_id);
-            }
-            SignalHandler.disconnect (extractor, completed_id);
-            SignalHandler.disconnect (extractor, error_id);
-
+        foreach (var variant in variants) {
             if (cancellable != null && cancellable.is_cancelled ()) {
                 throw new IOError.CANCELLED ("Installation cancelled");
             }
 
-            if (extraction_error != null) {
-                throw extraction_error;
-            }
+            string url = font.files.get (variant);
+            string filename = normalize_filename (font.id, variant);
+            var file = temp_dir.get_child (filename);
 
-            return extract_dir;
-        } catch (Error e) {
-            throw new IOError.FAILED ("Failed to extract font: %s".printf (e.message));
+            yield download_single_file (url, file);
+
+            count++;
+            installation_progress (font.family, (count / total) * 0.9);
         }
     }
 
-    private async void process_and_install (File extract_dir, Sitra.Models.FontInfo font) throws Error {
+    private string normalize_filename (string font_id, string variant) {
+        if (variant == "regular") {
+            return "%s.ttf".printf (font_id);
+        }
+
+        string normalized = variant;
+        if (variant.has_suffix ("italic")) {
+            string weight = variant.replace ("italic", "");
+            if (weight == "") {
+                normalized = "italic";
+            } else {
+                normalized = weight + "-italic";
+            }
+        }
+
+        return "%s-%s.ttf".printf (font_id, normalized);
+    }
+
+    private async void download_single_file (string url, File destination) throws Error {
+        var message = new Soup.Message ("GET", url);
+        message.request_headers.append ("Accept", "font/ttf, application/octet-stream, */*");
+
         try {
-            File font_source_dir = extract_dir;
+            var input_stream = yield session.send_async (message, Priority.DEFAULT, cancellable);
 
-            // Find if there's a subdirectory wrapping the content (common for Google Fonts zips)
-            var enumerator = yield extract_dir.enumerate_children_async (FileAttribute.STANDARD_NAME + "," + FileAttribute.STANDARD_TYPE,
-                FileQueryInfoFlags.NONE,
-                Priority.DEFAULT,
-                cancellable);
-
-            FileInfo? info;
-            while ((info = enumerator.next_file (null)) != null) {
-                if (info.get_file_type () == FileType.DIRECTORY) {
-                    font_source_dir = extract_dir.get_child (info.get_name ());
-                    break;
-                }
+            if (message.status_code != 200) {
+                throw new IOError.FAILED ("Failed to download font file: HTTP %u".printf (message.status_code));
             }
 
-            var dest_path = Path.build_filename (fonts_dir, font.id);
-            var dest_dir = File.new_for_path (dest_path);
+            var output_stream = yield destination.replace_async (null, false, FileCreateFlags.NONE, Priority.DEFAULT, cancellable);
 
-            if (dest_dir.query_exists ()) {
-                yield delete_directory_recursive (dest_dir);
-            }
-
-            dest_dir.make_directory_with_parents ();
-
-            yield copy_directory_recursive (font_source_dir, dest_dir);
-
-            yield delete_directory_recursive (extract_dir);
-
-            yield update_font_cache ();
+            yield output_stream.splice_async (input_stream, OutputStreamSpliceFlags.CLOSE_SOURCE | OutputStreamSpliceFlags.CLOSE_TARGET, Priority.DEFAULT, cancellable);
         } catch (Error e) {
-            throw new IOError.FAILED ("Failed to process and install font: %s".printf (e.message));
+            throw new IOError.FAILED ("Failed to download font file: %s".printf (e.message));
         }
     }
 

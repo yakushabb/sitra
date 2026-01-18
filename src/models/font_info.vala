@@ -29,10 +29,11 @@ public class Sitra.Models.FontInfo : GLib.Object {
     public string license { get; set; }
     public Gee.List<int> weights { get; set; default = new Gee.ArrayList<int> (); }
     public Gee.List<string> subsets { get; set; default = new Gee.ArrayList<string> (); }
+    public Gee.Map<string, string> files { get; set; default = new Gee.HashMap<string, string> (); }
     public Gee.List<string> styles { get; set; default = new Gee.ArrayList<string> (); }
 
     public FontInfo(string id, string family, string category, bool variable, string license,
-        Gee.List<int> weights, Gee.List<string> subsets, Gee.List<string> styles) {
+        Gee.List<int> weights, Gee.List<string> subsets, Gee.List<string> styles, Gee.Map<string, string>? files = null) {
         this.id = id;
         this.family = family;
         this.category = category;
@@ -41,6 +42,9 @@ public class Sitra.Models.FontInfo : GLib.Object {
         this.weights = weights;
         this.subsets = subsets;
         this.styles = styles;
+        if (files != null) {
+            this.files.set_all(files);
+        }
     }
 
     public static FontInfo from_json(Json.Object obj) {
@@ -68,6 +72,6 @@ public class Sitra.Models.FontInfo : GLib.Object {
             styles.add((string) node.get_string());
         }
 
-        return new FontInfo(id, family, category, variable, license, weights, subsets, styles);
+        return new FontInfo(id, family, category, variable, license, weights, subsets, styles, null);
     }
 }

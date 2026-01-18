@@ -31,13 +31,23 @@ public class Sitra.Managers.FontsManager : Object {
     }
 
     public void load_from_json (string fonts_json, string google_fonts_json) throws Error {
+        var google_files_map = new Gee.HashMap<string, Gee.Map<string, string>> ();
+
         var google_parser = new Json.Parser ();
         google_parser.load_from_data (google_fonts_json);
         var root = google_parser.get_root ().get_object ();
         var items = root.get_array_member ("items");
         foreach (var node in items.get_elements ()) {
             var obj = node.get_object ();
-            google_fonts.add (obj.get_string_member ("family"));
+            string family = obj.get_string_member ("family");
+            google_fonts.add (family);
+
+            var files_obj = obj.get_object_member ("files");
+            var variant_files = new Gee.HashMap<string, string> ();
+            foreach (var member_name in files_obj.get_members ()) {
+                variant_files.set (member_name, files_obj.get_string_member (member_name));
+            }
+            google_files_map.set (family, variant_files);
         }
 
         var parser = new Json.Parser ();
@@ -46,6 +56,9 @@ public class Sitra.Managers.FontsManager : Object {
         foreach (var node in array.get_elements ()) {
             var font_info = Sitra.Models.FontInfo.from_json (node.get_object ());
             if (google_fonts.contains (font_info.family)) {
+                if (google_files_map.has_key (font_info.family)) {
+                    font_info.files.set_all (google_files_map.get (font_info.family));
+                }
                 fonts.set (font_info.family, font_info);
             }
         }
