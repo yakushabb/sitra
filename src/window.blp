@@ -4,7 +4,7 @@ using Adw 1;
 template $SitraWindow: Adw.ApplicationWindow {
   title: _("Sitra");
   default-width: 800;
-  default-height: 600;
+  default-height: 800;
   width-request: 360;
   height-request: 200;
 
@@ -324,6 +324,12 @@ template $SitraWindow: Adw.ApplicationWindow {
                       label: _("Use in a Project");
                     }
                   }
+                }
+
+                Adw.WrapBox subsets_box {
+                  child-spacing: 5;
+                  line-spacing: 5;
+                  margin-bottom: 12;
                 }
 
                 Box web_container {}

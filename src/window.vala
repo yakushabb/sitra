@@ -51,6 +51,7 @@ public class Sitra.Window : Adw.ApplicationWindow {
     [GtkChild] private unowned Gtk.Button cancel_button;
     [GtkChild] private unowned Gtk.Button uninstall_button;
     [GtkChild] private unowned Gtk.ProgressBar install_progress_bar;
+    [GtkChild] private unowned Adw.WrapBox subsets_box;
 
     private WebView web_view;
     private Gee.HashMap<string, Gtk.ToggleButton> category_toggles;
@@ -63,6 +64,7 @@ public class Sitra.Window : Adw.ApplicationWindow {
     private Sitra.IntegrationDialog integration_dialog;
     private Sitra.Helpers.NetworkHelper network_helper;
     private string? installing_font_family = null;
+    private KeyFile preview_texts;
 
     private Gtk.FilterListModel filtered_model;
     private Gtk.SingleSelection fonts_model;
@@ -91,6 +93,15 @@ public class Sitra.Window : Adw.ApplicationWindow {
         } catch (Error e) {
             warning ("Failed to load JSON data: %s", e.message);
             if (fonts_json == "") fonts_json = "[]";
+        }
+
+        // --- Load Preview Texts ---
+        preview_texts = new KeyFile ();
+        try {
+            var preview_text_bytes = resources_lookup_data ("/io/github/ronniedroid/sitra/preview_text", 0);
+            preview_texts.load_from_data ((string) preview_text_bytes.get_data (), -1, KeyFileFlags.NONE);
+        } catch (Error e) {
+            warning ("Failed to load preview texts: %s", e.message);
         }
 
         // --- WebView ---
@@ -219,6 +230,10 @@ public class Sitra.Window : Adw.ApplicationWindow {
                 update_license_popover (family);
                 update_category_popover (family);
                 update_install_button_state ();
+
+                var font = fonts_manager.get_font (family);
+                if (font != null)
+                    update_subsets (font);
             }
         });
 
@@ -235,6 +250,10 @@ public class Sitra.Window : Adw.ApplicationWindow {
             update_license_popover (family);
             update_category_popover (family);
             update_install_button_state ();
+
+            var font = fonts_manager.get_font (family);
+            if (font != null)
+                update_subsets (font);
 
             if (split_view.get_collapsed ())
                 split_view.set_show_content (true);
@@ -435,6 +454,83 @@ public class Sitra.Window : Adw.ApplicationWindow {
             html = "<html><body><p>No preview available</p></body></html>";
 
         web_view.load_html (html, null);
+    }
+
+    private void update_subsets (Sitra.Models.FontInfo font) {
+        // Clear previous subsets
+        Gtk.Widget? child_widget = subsets_box.get_first_child ();
+        while (child_widget != null) {
+            Gtk.Widget? next = child_widget.get_next_sibling ();
+            subsets_box.remove (child_widget);
+            child_widget = next;
+        }
+
+        if (font.subsets == null)
+            return;
+
+        string[] excluded_subsets = { "math", "symbols", "emoji", "icons", "ornaments", "music" };
+        Gtk.ToggleButton? group_button = null;
+
+        foreach (var subset in font.subsets) {
+            bool excluded = false;
+            foreach (var ex in excluded_subsets) {
+                if (subset == ex) {
+                    excluded = true;
+                    break;
+                }
+            }
+            if (excluded) continue;
+
+            string label = subset;
+            if (label.has_suffix ("-ext")) {
+                label = label.replace ("-ext", " Extended");
+            }
+            label = label[0].to_string ().up () + label.substring (1);
+
+            var button = new Gtk.ToggleButton.with_label (label);
+            button.add_css_class ("category");
+
+            if (group_button == null) {
+                group_button = button;
+            } else {
+                button.set_group (group_button);
+            }
+
+            button.toggled.connect (() => {
+                if (button.active) {
+                    try {
+                        string text = preview_texts.get_string ("preview_text", subset);
+                        if (preview_entry.get_text () != text) {
+                            preview_entry.set_text (text);
+                        }
+                    } catch (Error e) {
+                        // ignore if not found in preview_texts
+                    }
+                }
+            });
+
+            subsets_box.append (button);
+        }
+
+        // Try to activate 'Latin' or the first one
+        if (group_button != null) {
+            Gtk.ToggleButton? latin_button = null;
+            Gtk.Widget? iter = subsets_box.get_first_child ();
+            while (iter != null) {
+                var tb = iter as Gtk.ToggleButton;
+                if (tb != null && tb.get_label ().down () == "latin") {
+                    latin_button = tb;
+                    break;
+                }
+                iter = iter.get_next_sibling ();
+            }
+
+            if (latin_button != null) {
+                latin_button.set_active (true);
+            } else {
+                group_button.set_active (true);
+            }
+        }
     }
 
     private void bind_dropdown_to_property (Gtk.DropDown dropdown,

@@ -11,6 +11,7 @@
     <file alias="licenses.svg">assets/license.svg</file>
     <file alias="categories">assets/categories</file>
     <file alias="category.svg">assets/category.svg</file>
+    <file alias="preview_text">assets/preview_text</file>
   </gresource>
   <gresource prefix="/io/github/ronniedroid/sitra/icons/scalable/actions">
     <file preprocess="xml-stripblanks" alias="sitra-license-symbolic.svg">assets/license-symbolic.svg</file>
