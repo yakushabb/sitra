@@ -39,6 +39,10 @@
     background-color: alpha(currentColor, 0.08);
 }
 
+
+/*A hack to make the cancel button still have same
+  padding as libadwaita pill style but keep the progress
+  bar at the bottom*/
 .progress-button {
     padding: 0;
 }

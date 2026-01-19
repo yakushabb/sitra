@@ -78,7 +78,20 @@ public class Sitra.Managers.FontsManager : Object {
             names.add (key);
         }
         names.sort ((a, b) => {
-            return a.collate (b); // locale-aware compare
+            var font_a = fonts.get (a);
+            var font_b = fonts.get (b);
+
+            // Calculate combined score (subsets + weights)
+            int score_a = font_a.subsets.size + font_a.weights.size;
+            int score_b = font_b.subsets.size + font_b.weights.size;
+
+            int score_diff = score_b - score_a;
+            if (score_diff != 0) {
+                return score_diff;
+            }
+
+            // If scores are equal, fall back to alphabetical
+            return a.collate (b);
         });
         return names;
     }
