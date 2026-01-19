@@ -95,7 +95,7 @@ public class Sitra.Managers.FontManager : GLib.Object {
 
         try {
             if (is_font_installed (font.id)) {
-                throw new IOError.EXISTS ("Font '%s' is already installed".printf (font.family));
+                throw new IOError.EXISTS (_("Font '%s' is already installed").printf (font.family));
             }
 
             // Step 1: Create a temporary directory for the font
@@ -159,7 +159,7 @@ public class Sitra.Managers.FontManager : GLib.Object {
 
         try {
             if (!is_font_installed (font.id)) {
-                throw new IOError.NOT_FOUND ("Font '%s' is not installed".printf (font.family));
+                throw new IOError.NOT_FOUND (_("Font '%s' is not installed").printf (font.family));
             }
 
             var dest_path = Path.build_filename (fonts_dir, font.id);
@@ -172,7 +172,7 @@ public class Sitra.Managers.FontManager : GLib.Object {
             try {
                 installed_fonts_db.save_to_file (tracking_file_path);
             } catch (Error e) {
-                warning ("Failed to save installed fonts database after uninstallation: %s", e.message);
+                warning (_("Failed to save installed fonts database after uninstallation: %s").printf (e.message));
             }
 
             yield update_font_cache ();
@@ -233,14 +233,14 @@ public class Sitra.Managers.FontManager : GLib.Object {
             var input_stream = yield session.send_async (message, Priority.DEFAULT, cancellable);
 
             if (message.status_code != 200) {
-                throw new IOError.FAILED ("Failed to download font file: HTTP %u".printf (message.status_code));
+                throw new IOError.FAILED (_("Failed to download font file: HTTP %u").printf (message.status_code));
             }
 
             var output_stream = yield destination.replace_async (null, false, FileCreateFlags.NONE, Priority.DEFAULT, cancellable);
 
             yield output_stream.splice_async (input_stream, OutputStreamSpliceFlags.CLOSE_SOURCE | OutputStreamSpliceFlags.CLOSE_TARGET, Priority.DEFAULT, cancellable);
         } catch (Error e) {
-            throw new IOError.FAILED ("Failed to download font file: %s".printf (e.message));
+            throw new IOError.FAILED (_("Failed to download font file: %s").printf (e.message));
         }
     }
 
@@ -311,7 +311,7 @@ public class Sitra.Managers.FontManager : GLib.Object {
         try {
             installed_fonts_db.save_to_file (tracking_file_path);
         } catch (Error e) {
-            warning ("Failed to save installed fonts database: %s", e.message);
+            warning (_("Failed to save installed fonts database: %s").printf (e.message));
         }
     }
 }

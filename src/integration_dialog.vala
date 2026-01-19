@@ -251,7 +251,7 @@ public class Sitra.IntegrationDialog : Adw.Dialog {
                 var weights_copy = new ArrayList<int> ();
                 weights_copy.add_all (font.weights);
                 weights_copy.sort ();
-                
+
                 min_weight = weights_copy.get (0);
                 max_weight = weights_copy.get (weights_copy.size - 1);
             }
@@ -317,8 +317,8 @@ public class Sitra.IntegrationDialog : Adw.Dialog {
     private void copy_to_clipboard (string text) {
         var clipboard = this.get_clipboard ();
         clipboard.set_text (text);
-        
-        var toast = new Adw.Toast ("Copied to clipboard");
+
+        var toast = new Adw.Toast (_("Copied to clipboard"));
         toast.timeout = 2;
         toast_overlay.add_toast (toast);
     }

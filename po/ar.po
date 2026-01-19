@@ -1,0 +1,600 @@
+# Arabic translations for io.github.ronniedroid.sitra package.
+# Copyright (C) 2026 THE io.github.ronniedroid.sitra'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the io.github.ronniedroid.sitra package.
+# Automatically generated, 2026.
+# Ronnie Nissan <ronnie.nissan@proton.me>, 2026.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: io.github.ronniedroid.sitra\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-01-18 21:32+0300\n"
+"PO-Revision-Date: 2026-01-18 21:28+0300\n"
+"Last-Translator: Ronnie Nissan <ronnie.nissan@proton.me>\n"
+"Language-Team: Arabic\n"
+"Language: ar\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=6; plural= n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 "
+"&& n%100<=10 ? 3 : n%100>=11 && n%100<=99 ? 4 : 5;\n"
+"X-Generator: Gtranslator 49.0\n"
+
+#: data/io.github.ronniedroid.sitra.desktop.in:2 src/application.vala:50
+msgid "sitra"
+msgstr "سطرا"
+
+#: data/io.github.ronniedroid.sitra.desktop.in:3
+#: data/io.github.ronniedroid.sitra.metainfo.xml.in:8
+msgid "Get fonts from online sources"
+msgstr "احصل على الخطوط من المصادر عبر الإنترنت"
+
+#: data/io.github.ronniedroid.sitra.desktop.in:9
+msgid "Fonts;Install;"
+msgstr "Fonts;Install;خطوط;تثبيت;"
+
+#: data/io.github.ronniedroid.sitra.metainfo.xml.in:7 src/window.blp:5
+#: src/window.blp:27
+msgid "Sitra"
+msgstr "سطرا"
+
+#: data/io.github.ronniedroid.sitra.metainfo.xml.in:10
+msgid ""
+"Get your fonts from online sources with a sleek, friendly user interface. "
+"Sitra provides a seamless experience for installing, uninstalling and "
+"previewing fonts."
+msgstr ""
+"احصل على خطوطك من المصادر عبر الإنترنت بواجهة مستخدم أنيقة وسهلة. يوفر سطرا "
+"تجربة سلسة لتثبيت الخطوط وإزالتها ومعاينتها."
+
+#: data/io.github.ronniedroid.sitra.metainfo.xml.in:15
+msgid "List fonts available on Google Fonts"
+msgstr "عرض الخطوط المتاحة على خطوط جوجل"
+
+#: data/io.github.ronniedroid.sitra.metainfo.xml.in:16
+msgid "Preview the fonts using Fontsource CDN for privacy"
+msgstr "معاينة الخطوط باستخدام Fontsource CDN لضمان الخصوصية"
+
+#: data/io.github.ronniedroid.sitra.metainfo.xml.in:17
+msgid ""
+"Get code to use the font in your project, via CDN or npm from fontsource"
+msgstr "احصل على كود لاستخدام الخط في مشروعك، عبر CDN أو npm من fontsource"
+
+#: data/io.github.ronniedroid.sitra.metainfo.xml.in:18
+msgid "Download the fonts on your device in ttf format from google"
+msgstr "تنزيل الخطوط على جهازك بتنسيق ttf من جوجل"
+
+#: data/io.github.ronniedroid.sitra.metainfo.xml.in:19
+msgid ""
+"Filter font by category using the toggle buttons or by family and subset "
+"using search"
+msgstr ""
+"تصفية الخطوط حسب الفئة باستخدام أزرار التبديل أو حسب العائلة والمجموعة "
+"باستخدام البحث"
+
+#: data/io.github.ronniedroid.sitra.metainfo.xml.in:24
+msgid "Ronnie Nissan"
+msgstr "روني نيسان"
+
+#: data/io.github.ronniedroid.sitra.metainfo.xml.in:44
+msgid "Showcasing font preview"
+msgstr "استعراض معاينة الخط"
+
+#: data/io.github.ronniedroid.sitra.metainfo.xml.in:48
+msgid "Showcasing font preview when a font is already installed"
+msgstr "استعراض معاينة الخط عندما يكون الخط مثبتاً بالفعل"
+
+#: data/io.github.ronniedroid.sitra.metainfo.xml.in:52
+msgid "Showcasing font preview with different subsets, Arabic in this case"
+msgstr "استعراض معاينة الخط بمجموعات أحرف مختلفة، العربية في هذه الحالة"
+
+#: data/io.github.ronniedroid.sitra.metainfo.xml.in:56
+msgid "Showcasing Use in an Project dialog, showing npm instructions"
+msgstr "استعراض حوار \"الاستخدام في مشروع\"، مع إظهار تعليمات npm"
+
+#: data/io.github.ronniedroid.sitra.metainfo.xml.in:60
+msgid "Showcasing Use in an Project dialog, showing cdn instructions"
+msgstr "استعراض حوار \"الاستخدام في مشروع\"، مع إظهار تعليمات CDN"
+
+#: src/application.vala:52
+msgid "Sitra helps you install fonts from online sources on your system"
+msgstr "يساعدك سطرا على تثبيت الخطوط من المصادر عبر الإنترنت على نظامك"
+
+#: src/application.vala:58
+msgid "translator-credits"
+msgstr "روني نيسان https://github.com/ronniedroid/"
+
+#: src/application.vala:66
+msgid "Concessio"
+msgstr "كونسيسيو"
+
+#: src/application.vala:66
+msgid "Understand file permissions"
+msgstr "فهم أذونات الملفات"
+
+#: src/application.vala:67
+msgid "Embellish"
+msgstr "أيمبيليش"
+
+#: src/application.vala:67
+msgid "Install Nerd Fonts"
+msgstr "تثبيت خطوط نيرد (Nerd Fonts)"
+
+#. These strings are extracted for translation
+#: src/data_translations.vala:6
+msgid ""
+"Fonts without decorative strokes; clean and modern, commonly used for UI and "
+"body text."
+msgstr ""
+"خطوط بدون زوائد زخرفية؛ نظيفة وعصرية، تستخدم عادة لواجهات المستخدم والنصوص "
+"الأساسية."
+
+#: src/data_translations.vala:7
+msgid ""
+"Decorative fonts designed for headlines and large sizes, not suitable for "
+"long text."
+msgstr ""
+"خطوط زخرفية مصممة للعناوين والأحجام الكبيرة، وغير مناسبة للنصوص الطويلة."
+
+#: src/data_translations.vala:8
+msgid ""
+"Fonts with decorative strokes at the ends of letters; traditional and often "
+"used in print."
+msgstr ""
+"خطوط ذات زوائد زخرفية في نهايات الحروف؛ تقليدية وغالباً ما تستخدم في "
+"المطبوعات."
+
+#: src/data_translations.vala:9
+msgid ""
+"Fonts that mimic handwritten or cursive styles; informal and expressive."
+msgstr "خطوط تحاكي أسلوب الكتابة اليدوية؛ غير رسمية وتعبيرية."
+
+#: src/data_translations.vala:10
+msgid ""
+"Fonts where all characters have equal width; commonly used for code and "
+"terminals."
+msgstr ""
+"خطوط حيث يكون لجميع الأحرف عرض متساوٍ؛ تستخدم عادة للبرمجة وواجهات الأوامر."
+
+#: src/data_translations.vala:11
+msgid ""
+"Symbol-based fonts containing pictograms or UI icons instead of letters."
+msgstr "خطوط تعتمد على الرموز وتحتوي على أيقونات بدلاً من الحروف."
+
+#: src/data_translations.vala:12
+msgid ""
+"Fonts that do not fit standard categories or are highly experimental or "
+"mixed-style."
+msgstr "خطوط لا تندرج تحت فئات قياسية أو هي خطوط تجريبية أو ذات أنماط مختلطة."
+
+#: src/data_translations.vala:13
+msgid ""
+"Permissive licence allowing almost unrestricted use, modification, and "
+"distribution."
+msgstr "ترخيص مرن يسمح بالاستخدام والتعديل والتوزيع دون قيود تقريباً."
+
+#: src/data_translations.vala:14
+msgid ""
+"Free to use, modify, and distribute, with conditions: no selling and "
+"original licence must be included."
+msgstr ""
+"حر في الاستخدام والتعديل والتوزيع، بشرط: عدم البيع وإدراج الترخيص الأصلي."
+
+#: src/data_translations.vala:15
+msgid ""
+"Permissive, requires attribution, notice of changes, and inclusion of NOTICE "
+"file. Modified code can use a different licence."
+msgstr ""
+"مرن، يتطلب الإسناد، والتنبيه بالتغييرات، وإدراج ملف NOTICE. يمكن للكود "
+"المعدل استخدام ترخيص مختلف."
+
+#: src/data_translations.vala:16
+msgid "Permissive, requires attribution and licence file."
+msgstr "مرن، يتطلب الإسناد وملف الترخيص."
+
+#: src/data_translations.vala:17 src/data_translations.vala:18
+msgid ""
+"Permissive license allowing unrestricted use, modification, and distribution."
+msgstr "ترخيص مرن يسمح بالاستخدام والتعديل والتوزيع دون قيود."
+
+#: src/data_translations.vala:19
+msgid "arabic"
+msgstr "العربية"
+
+#: src/data_translations.vala:20
+msgid "armenian"
+msgstr "الأرمنية"
+
+#: src/data_translations.vala:21
+msgid "bengali"
+msgstr "البنغالية"
+
+#: src/data_translations.vala:22
+msgid "canadian-aboriginal"
+msgstr "السكان الأصليين لكندا"
+
+#: src/data_translations.vala:23
+msgid "cherokee"
+msgstr "شيروكي"
+
+#: src/data_translations.vala:24
+msgid "cyrillic"
+msgstr "السيريلية"
+
+#: src/data_translations.vala:25
+msgid "cyrillic-ext"
+msgstr "السيريلية الممتدة"
+
+#: src/data_translations.vala:26
+msgid "devanagari"
+msgstr "ديواناجاري"
+
+#: src/data_translations.vala:27
+msgid "ethiopic"
+msgstr "الإثيوبية"
+
+#: src/data_translations.vala:28
+msgid "georgian"
+msgstr "الجورجية"
+
+#: src/data_translations.vala:29
+msgid "greek"
+msgstr "اليونانية"
+
+#: src/data_translations.vala:30
+msgid "greek-ext"
+msgstr "اليونانية الممتدة"
+
+#: src/data_translations.vala:31
+msgid "gujarati"
+msgstr "غوجاراتية"
+
+#: src/data_translations.vala:32
+msgid "gurmukhi"
+msgstr "غورموخي"
+
+#: src/data_translations.vala:33
+msgid "hebrew"
+msgstr "العبرية"
+
+#: src/data_translations.vala:34
+msgid "japanese"
+msgstr "اليابانية"
+
+#: src/data_translations.vala:35
+msgid "kannada"
+msgstr "كانادا"
+
+#: src/data_translations.vala:36
+msgid "khmer"
+msgstr "الخميرية"
+
+#: src/data_translations.vala:37
+msgid "korean"
+msgstr "الكورية"
+
+#: src/data_translations.vala:38
+msgid "latin"
+msgstr "اللاتينية"
+
+#: src/data_translations.vala:39
+msgid "latin-ext"
+msgstr "اللاتينية الممتدة"
+
+#: src/data_translations.vala:40
+msgid "malayalam"
+msgstr "المالايالامية"
+
+#: src/data_translations.vala:41
+msgid "myanmar"
+msgstr "ميانمار"
+
+#: src/data_translations.vala:42
+msgid "oriya"
+msgstr "أوريا"
+
+#: src/data_translations.vala:43
+msgid "sinhala"
+msgstr "السنهالية"
+
+#: src/data_translations.vala:44
+msgid "syriac"
+msgstr "السريانية"
+
+#: src/data_translations.vala:45
+msgid "tamil"
+msgstr "التاميلية"
+
+#: src/data_translations.vala:46
+msgid "telugu"
+msgstr "تيلوغو"
+
+#: src/data_translations.vala:47
+msgid "thai"
+msgstr "التايلاندية"
+
+#: src/data_translations.vala:48
+msgid "tibetan"
+msgstr "التبتية"
+
+#: src/data_translations.vala:49
+msgid "vietnamese"
+msgstr "الفيتنامية"
+
+#: src/integration_dialog.blp:5
+msgid "Integration"
+msgstr "إدماج"
+
+#: src/integration_dialog.blp:24 src/integration_dialog.blp:29
+#: src/window.blp:277
+msgid "Install"
+msgstr "تثبيت"
+
+#: src/integration_dialog.blp:30
+msgid "Install the font using npm or yarn"
+msgstr "تثبيت الخط باستخدام npm أو yarn"
+
+#: src/integration_dialog.blp:33 src/integration_dialog.blp:135
+msgid "Use Static Version"
+msgstr "استخدام النسخة الثابتة"
+
+#: src/integration_dialog.blp:34
+msgid "Install the static version instead of variable font"
+msgstr "تثبيت النسخة الثابتة بدلاً من الخط المتغير"
+
+#: src/integration_dialog.blp:38
+msgid "NPM"
+msgstr "NPM"
+
+#: src/integration_dialog.blp:49 src/integration_dialog.blp:69
+#: src/integration_dialog.blp:94 src/integration_dialog.blp:114
+#: src/integration_dialog.blp:219 src/integration_dialog.blp:243
+msgid "Copy to clipboard"
+msgstr "نسخ إلى الحافظة"
+
+#: src/integration_dialog.blp:58
+msgid "Yarn"
+msgstr "Yarn"
+
+#: src/integration_dialog.blp:79
+msgid "Import"
+msgstr "استيراد"
+
+#: src/integration_dialog.blp:80
+msgid "Import into CSS"
+msgstr "استيراد إلى ملف CSS"
+
+#: src/integration_dialog.blp:103 src/integration_dialog.blp:229
+msgid "Use in CSS"
+msgstr "استخدام في CSS"
+
+#: src/integration_dialog.blp:127
+msgid "CDN"
+msgstr "CDN"
+
+#: src/integration_dialog.blp:132
+msgid "Chose from the options below"
+msgstr "اختر من الخيارات أدناه"
+
+#: src/integration_dialog.blp:136
+msgid "Use the static version instead of variable font"
+msgstr "استخدام النسخة الثابتة بدلاً من الخط المتغير"
+
+#: src/integration_dialog.blp:140
+msgid "Subset"
+msgstr "المجموعة الفرعية"
+
+#: src/integration_dialog.blp:144
+msgid "Weight"
+msgstr "الوزن"
+
+#: src/integration_dialog.blp:148
+msgid "Style"
+msgstr "النمط"
+
+#: src/integration_dialog.blp:159 src/window.vala:129 src/window.vala:462
+msgid "Display"
+msgstr "عرض"
+
+#: src/integration_dialog.blp:173
+msgid "Format"
+msgstr "التنسيق"
+
+#: src/integration_dialog.blp:186
+msgid "Copy below code to your global CSS"
+msgstr "انسخ الكود أدناه إلى ملف CSS العالمي الخاص بك"
+
+#: src/integration_dialog.vala:321
+msgid "Copied to clipboard"
+msgstr "تم النسخ إلى الحافظة"
+
+#: src/managers/base_info_manager.vala:84
+#: src/managers/base_info_manager.vala:90
+msgid "No description available"
+msgstr "لا يوجد وصف متاح"
+
+#: src/managers/font_manager.vala:98
+#, c-format
+msgid "Font '%s' is already installed"
+msgstr "الخط '%s' مثبت بالفعل"
+
+#: src/managers/font_manager.vala:141
+msgid "Installation cancelled"
+msgstr "تم إلغاء التثبيت"
+
+#: src/managers/font_manager.vala:162
+#, c-format
+msgid "Font '%s' is not installed"
+msgstr "الخط '%s' غير مثبت"
+
+#: src/managers/font_manager.vala:175
+#, c-format
+msgid "Failed to save installed fonts database after uninstallation: %s"
+msgstr "فشل حفظ قاعدة بيانات الخطوط المثبتة بعد إلغاء التثبيت: %s"
+
+#: src/managers/font_manager.vala:236
+#, c-format
+msgid "Failed to download font file: HTTP %u"
+msgstr "فشل تنزيل ملف الخط: HTTP %u"
+
+#: src/managers/font_manager.vala:243
+#, c-format
+msgid "Failed to download font file: %s"
+msgstr "فشل تنزيل ملف الخط: %s"
+
+#: src/managers/font_manager.vala:314
+#, c-format
+msgid "Failed to save installed fonts database: %s"
+msgstr "فشل حفظ قاعدة بيانات الخطوط المثبتة: %s"
+
+#: src/shortcuts-dialog.blp:7
+msgctxt "shortcut window"
+msgid "General"
+msgstr "عام"
+
+#: src/shortcuts-dialog.blp:10
+msgctxt "shortcut window"
+msgid "Show Shortcuts"
+msgstr "إظهار الاختصارات"
+
+#: src/shortcuts-dialog.blp:15
+msgctxt "shortcut window"
+msgid "Quit"
+msgstr "إنهاء"
+
+#: src/window.blp:43
+msgid "Main menu"
+msgstr "القائمة الرئيسية"
+
+#: src/window.blp:55
+msgid "Search fonts"
+msgstr "البحث عن الخطوط"
+
+#: src/window.blp:96
+msgid "Preview"
+msgstr "معاينة"
+
+#: src/window.blp:109
+msgid "Reload"
+msgstr "إعادة التحميل"
+
+#: src/window.blp:110
+msgid "You are not connected to the internet, font preview won't work"
+msgstr "أنت غير متصل بالإنترنت، لن تعمل معاينة الخطوط"
+
+#: src/window.blp:149
+msgid "Font Size"
+msgstr "حجم الخط"
+
+#: src/window.blp:164
+msgid "Line Height"
+msgstr "ارتفاع السطر"
+
+#: src/window.blp:179
+msgid "Letter Spacing"
+msgstr "تباعد الأحرف"
+
+#: src/window.blp:184
+msgid "Italic"
+msgstr "مائل"
+
+#: src/window.blp:198
+msgid "Welcome to Sitra"
+msgstr "مرحباً بك في سطرا"
+
+#: src/window.blp:199
+msgid "Please select a font to preview it here"
+msgstr "يرجى اختيار خط لمعاينته هنا"
+
+#: src/window.blp:224
+msgid "Font Name"
+msgstr "اسم الخط"
+
+#: src/window.blp:243
+msgid "Category"
+msgstr "الفئة"
+
+#: src/window.blp:260
+msgid "License"
+msgstr "الترخيص"
+
+#: src/window.blp:294
+msgid "Cancel"
+msgstr "إلغاء"
+
+#: src/window.blp:315
+msgid "Uninstall"
+msgstr "إلغاء التثبيت"
+
+#: src/window.blp:324
+msgid "Use in a Project"
+msgstr "استخدام في مشروع"
+
+#: src/window.blp:343
+msgid "No Internet connection"
+msgstr "لا يوجد اتصال بالإنترنت"
+
+#: src/window.blp:344
+msgid ""
+"You are not connected to the internet, font previews can't work offline."
+msgstr "أنت غير متصل بالإنترنت، لا يمكن لمعاينة الخطوط العمل دون اتصال."
+
+#: src/window.blp:358
+msgid "Keyboard Shortcuts"
+msgstr "اختصارات لوحة المفاتيح"
+
+#: src/window.blp:363
+msgid "About App"
+msgstr "حول التطبيق"
+
+#: src/window.vala:128 src/window.vala:461
+msgid "Sans Serif"
+msgstr "بدون زوائد"
+
+#: src/window.vala:130 src/window.vala:463
+msgid "Serif"
+msgstr "بزوائد"
+
+#: src/window.vala:131 src/window.vala:464
+msgid "Handwriting"
+msgstr "خط يد"
+
+#: src/window.vala:132 src/window.vala:465
+msgid "Monospace"
+msgstr "أحادي المسافة"
+
+#: src/window.vala:133 src/window.vala:466
+msgid "Icons"
+msgstr "أيقونات"
+
+#: src/window.vala:134 src/window.vala:201 src/window.vala:467
+msgid "Variable"
+msgstr "متغير"
+
+#: src/window.vala:354
+#, c-format
+msgid "Font '%s' installed successfully"
+msgstr "تم تثبيت الخط '%s' بنجاح"
+
+#: src/window.vala:361
+#, c-format
+msgid "Failed to install '%s': %s"
+msgstr "فشل تثبيت '%s': %s"
+
+#: src/window.vala:369
+#, c-format
+msgid "Font '%s' uninstalled successfully"
+msgstr "تم إلغاء تثبيت الخط '%s' بنجاح"
+
+#: src/window.vala:374
+#, c-format
+msgid "Failed to uninstall '%s': %s"
+msgstr "فشل إلغاء تثبيت '%s': %s"
+
+#: src/window.vala:476
+msgid "No preview available"
+msgstr "لا توجد معاينة متاحة"
+
+#: src/window.vala:508
+msgid " Extended"
+msgstr " ممتد"

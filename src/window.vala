@@ -92,7 +92,7 @@ public class Sitra.Window : Adw.ApplicationWindow {
             google_fonts_json = (string) google_fonts_bytes.get_data ();
         } catch (Error e) {
             warning ("Failed to load JSON data: %s", e.message);
-            if (fonts_json == "") fonts_json = "[]";
+            if (fonts_json == "")fonts_json = "[]";
         }
 
         // --- Load Preview Texts ---
@@ -123,7 +123,17 @@ public class Sitra.Window : Adw.ApplicationWindow {
         };
 
         foreach (string category in categories_list) {
-            var label = category == "sans-serif" ? "sans serif" : category;
+            string label;
+            switch (category) {
+            case "sans-serif": label = _("Sans Serif"); break;
+            case "display": label = _("Display"); break;
+            case "serif": label = _("Serif"); break;
+            case "handwriting": label = _("Handwriting"); break;
+            case "monospace": label = _("Monospace"); break;
+            case "icons": label = _("Icons"); break;
+            case "variable": label = _("Variable"); break;
+            default: label = category; break;
+            }
             var toggle = new Gtk.ToggleButton.with_label (label);
             toggle.set_css_classes ({ "category", category });
             categories.append (toggle);
@@ -188,7 +198,7 @@ public class Sitra.Window : Adw.ApplicationWindow {
             category_label.add_css_class ("caption-heading");
             category_box.append (category_label);
 
-            var variable_badge = new Gtk.Label ("Variable");
+            var variable_badge = new Gtk.Label (_("Variable"));
             variable_badge.add_css_class ("caption");
             variable_badge.add_css_class ("variable-badge");
             category_box.append (variable_badge);
@@ -445,13 +455,25 @@ public class Sitra.Window : Adw.ApplicationWindow {
         preview_page.set_title (family_name);
 
         header_font_title.label = preview_font.family;
-        var header_font_category_label = preview_font.category == "sans-serif" ? "sans serif" : preview_font.category;
+
+        string header_font_category_label;
+        switch (preview_font.category) {
+        case "sans-serif": header_font_category_label = _("Sans Serif"); break;
+        case "display": header_font_category_label = _("Display"); break;
+        case "serif": header_font_category_label = _("Serif"); break;
+        case "handwriting": header_font_category_label = _("Handwriting"); break;
+        case "monospace": header_font_category_label = _("Monospace"); break;
+        case "icons": header_font_category_label = _("Icons"); break;
+        case "variable": header_font_category_label = _("Variable"); break;
+        default: header_font_category_label = preview_font.category; break;
+        }
+
         header_font_category_button_content.label = header_font_category_label;
         header_font_license_button_content.label = preview_font.license;
 
         var html = preview_manager.build_html (preview_font);
         if (html == null || html.strip ().length == 0)
-            html = "<html><body><p>No preview available</p></body></html>";
+            html = "<html><body><p>" + _("No preview available") + "</p></body></html>";
 
         web_view.load_html (html, null);
     }
@@ -479,11 +501,11 @@ public class Sitra.Window : Adw.ApplicationWindow {
                     break;
                 }
             }
-            if (excluded) continue;
+            if (excluded)continue;
 
             string label = subset;
             if (label.has_suffix ("-ext")) {
-                label = label.replace ("-ext", " Extended");
+                label = label.replace ("-ext", _(" Extended"));
             }
             label = label[0].to_string ().up () + label.substring (1);
 

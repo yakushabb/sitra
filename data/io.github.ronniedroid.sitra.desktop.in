@@ -1,10 +1,11 @@
 [Desktop Entry]
 Name=sitra
-Exec=sitra
+Comment=Get fonts from online sources
+Exec=io.github.ronniedroid.sitra
 Icon=io.github.ronniedroid.sitra
 Terminal=false
 Type=Application
-Categories=Utility;
-Keywords=GTK;
+Categories=GNOME;GTK;TextTools;Utility;
+Keywords=Fonts;Install;
 StartupNotify=true
 DBusActivatable=true
