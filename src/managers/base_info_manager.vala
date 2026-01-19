@@ -55,7 +55,7 @@ public abstract class Sitra.Managers.BaseInfoManager : Object {
         var box = new Gtk.Box (Gtk.Orientation.VERTICAL, 4);
 
         var id_label = new Gtk.Label (id);
-        id_label.add_css_class ("heading");
+        id_label.set_css_classes ({"heading", "category"});
 
         var desc_label = new Gtk.Label (description);
         desc_label.set_halign (Gtk.Align.START);

@@ -35,7 +35,6 @@ public class Sitra.Window : Adw.ApplicationWindow {
     [GtkChild] private unowned Gtk.SearchEntry search_entry;
     [GtkChild] private unowned Gtk.Entry preview_entry;
     [GtkChild] private unowned Gtk.Box web_container;
-    [GtkChild] private unowned Gtk.ActionBar bottom_action_bar;
     [GtkChild] private unowned Gtk.DropDown font_size_dropdown;
     [GtkChild] private unowned Gtk.DropDown line_height_dropdown;
     [GtkChild] private unowned Gtk.DropDown letter_spacing_dropdown;
@@ -123,17 +122,7 @@ public class Sitra.Window : Adw.ApplicationWindow {
         };
 
         foreach (string category in categories_list) {
-            string label;
-            switch (category) {
-            case "sans-serif": label = _("Sans Serif"); break;
-            case "display": label = _("Display"); break;
-            case "serif": label = _("Serif"); break;
-            case "handwriting": label = _("Handwriting"); break;
-            case "monospace": label = _("Monospace"); break;
-            case "icons": label = _("Icons"); break;
-            case "variable": label = _("Variable"); break;
-            default: label = category; break;
-            }
+            string label = format_category_label(category);
             var toggle = new Gtk.ToggleButton.with_label (label);
             toggle.set_css_classes ({ "category", category });
             categories.append (toggle);
@@ -189,25 +178,26 @@ public class Sitra.Window : Adw.ApplicationWindow {
             box.margin_top = 6;
             box.margin_bottom = 6;
 
-            // Horizontal box for category and variable badge
-            var category_box = new Gtk.Box (Gtk.Orientation.HORIZONTAL, 6);
-
-            var category_label = new Gtk.Label ("");
-            category_label.set_halign (Gtk.Align.START);
-            category_label.add_css_class ("dimmed");
-            category_label.add_css_class ("caption-heading");
-            category_box.append (category_label);
-
-            var variable_badge = new Gtk.Label (_("Variable"));
-            variable_badge.add_css_class ("caption");
-            variable_badge.add_css_class ("variable-badge");
-            category_box.append (variable_badge);
-
-            box.append (category_box);
 
             var family_label = new Gtk.Label ("");
             family_label.set_halign (Gtk.Align.START);
             box.append (family_label);
+
+            // Horizontal box for category and variable badge
+            var info_box = new Gtk.Box (Gtk.Orientation.HORIZONTAL, 6);
+
+            var category_badge = new Gtk.Label ("");
+            category_badge.set_halign (Gtk.Align.START);
+            category_badge.add_css_class ("caption");
+            category_badge.add_css_class ("info-badge");
+            info_box.append (category_badge);
+
+            var variable_badge = new Gtk.Label (_("Variable"));
+            variable_badge.add_css_class ("caption");
+            variable_badge.add_css_class ("info-badge");
+            info_box.append (variable_badge);
+
+            box.append (info_box);
 
             list_item.child = box;
         });
@@ -215,15 +205,16 @@ public class Sitra.Window : Adw.ApplicationWindow {
         factory.bind.connect ((obj) => {
             var list_item = (Gtk.ListItem) obj;
             var box = (Gtk.Box) list_item.child;
-            var category_box = (Gtk.Box) box.get_first_child ();
-            var category_label = (Gtk.Label) category_box.get_first_child ();
-            var variable_badge = (Gtk.Label) category_box.get_last_child ();
-            var family_label = (Gtk.Label) box.get_last_child ();
+            var info_box = (Gtk.Box) box.get_last_child ();
+            var category_badge = (Gtk.Label) info_box.get_first_child ();
+            var variable_badge = (Gtk.Label) info_box.get_last_child ();
+            var family_label = (Gtk.Label) box.get_first_child ();
 
             var string_object = (Gtk.StringObject) list_item.item;
             var font = fonts_manager.get_font (string_object.string);
 
-            category_label.set_label (font.category);
+
+            category_badge.set_label (format_category_label(font.category));
             family_label.set_label (font.family);
 
             // Show badge only for variable fonts
@@ -415,6 +406,16 @@ public class Sitra.Window : Adw.ApplicationWindow {
 
     // --- Helpers ---
 
+
+    private string format_category_label (string category) {
+            string label;
+            switch (category) {
+            case "sans-serif": label = _("Sans Serif"); break;
+            default: label = category; break;
+            }
+            return label;
+        }
+
     private void update_italic_toggle_state (string family) {
         var font = fonts_manager.get_font (family);
         if (font == null)
@@ -433,13 +434,11 @@ public class Sitra.Window : Adw.ApplicationWindow {
         if (!network_helper.has_connectivity ()) {
             banner.set_revealed (true);
             preview_stack.set_visible_child_name ("status");
-            bottom_action_bar.set_visible (false);
             return;
         }
 
         preview_stack.set_visible_child_name ("preview");
         banner.set_revealed (false);
-        bottom_action_bar.set_visible (true);
 
         var preview_font = fonts_manager.get_font (family_name);
         if (preview_font == null) {
@@ -453,22 +452,8 @@ public class Sitra.Window : Adw.ApplicationWindow {
         }
 
         preview_page.set_title (family_name);
-
         header_font_title.label = preview_font.family;
-
-        string header_font_category_label;
-        switch (preview_font.category) {
-        case "sans-serif": header_font_category_label = _("Sans Serif"); break;
-        case "display": header_font_category_label = _("Display"); break;
-        case "serif": header_font_category_label = _("Serif"); break;
-        case "handwriting": header_font_category_label = _("Handwriting"); break;
-        case "monospace": header_font_category_label = _("Monospace"); break;
-        case "icons": header_font_category_label = _("Icons"); break;
-        case "variable": header_font_category_label = _("Variable"); break;
-        default: header_font_category_label = preview_font.category; break;
-        }
-
-        header_font_category_button_content.label = header_font_category_label;
+        header_font_category_button_content.label = format_category_label(preview_font.category);
         header_font_license_button_content.label = preview_font.license;
 
         var html = preview_manager.build_html (preview_font);

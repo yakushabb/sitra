@@ -35,7 +35,11 @@ public class Sitra.Managers.CategoriesManager : Sitra.Managers.BaseInfoManager {
     }
 
     public override string get_id (Sitra.Models.FontInfo font) {
-        return font.category;
+        string category;
+        switch (font.category) {
+        case "sans-serif": category = _("Sans Serif"); break;
+        default: category = font.category; break;
+        }
+        return category;
     }
 }
-
