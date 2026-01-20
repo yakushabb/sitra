@@ -116,14 +116,12 @@ public class Sitra.Window : Adw.ApplicationWindow {
         // --- Categories ---
         category_toggles = new Gee.HashMap<string, Gtk.ToggleButton> ();
 
-        string[] categories_list = {
-            "sans-serif", "display", "serif", "handwriting",
-            "monospace", "icons", "variable",
-        };
+        string[] categories_list = categories_manager.get_category_labels();
+        categories_list += "Variable";
 
         foreach (string category in categories_list) {
-            string label = format_category_label(category);
-            var toggle = new Gtk.ToggleButton.with_label (_(label));
+            string label = categories_manager.format_category_labels(category);
+            var toggle = new Gtk.ToggleButton.with_label (label);
             toggle.set_css_classes ({ "category", category });
             categories.append (toggle);
             category_toggles[category] = toggle;
@@ -217,7 +215,7 @@ public class Sitra.Window : Adw.ApplicationWindow {
             var font = fonts_manager.get_font (string_object.string);
 
 
-            category_badge.set_label (_(format_category_label(font.category)));
+            category_badge.set_label (categories_manager.format_category_labels(font.category));
             family_label.set_label (font.family);
 
             // Show badge only for variable fonts
@@ -410,15 +408,6 @@ public class Sitra.Window : Adw.ApplicationWindow {
     // --- Helpers ---
 
 
-    private string format_category_label (string category) {
-            string label;
-            switch (category) {
-            case "sans-serif": label = "Sans Serif"; break;
-            default: label = category; break;
-            }
-            return label;
-        }
-
     private void update_italic_toggle_state (string family) {
         var font = fonts_manager.get_font (family);
         if (font == null)
@@ -456,7 +445,7 @@ public class Sitra.Window : Adw.ApplicationWindow {
 
         preview_page.set_title (family_name);
         header_font_title.label = preview_font.family;
-        header_font_category_button_content.label = _(format_category_label(preview_font.category));
+        header_font_category_button_content.label = categories_manager.format_category_labels(preview_font.category);
         header_font_license_button_content.label = preview_font.license;
 
         var html = preview_manager.build_html (preview_font);

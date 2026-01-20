@@ -35,11 +35,24 @@ public class Sitra.Managers.CategoriesManager : Sitra.Managers.BaseInfoManager {
     }
 
     public override string get_id (Sitra.Models.FontInfo font) {
-        string category;
-        switch (font.category) {
-        case "sans-serif": category = _("Sans Serif"); break;
-        default: category = font.category; break;
-        }
-        return category;
+        return font.category;
     }
+
+    public string format_category_labels (string category) {
+        string label;
+        switch (category) {
+            case "sans-serif": label = _("Sans Serif"); break;
+            case "serif": label = _("Serif"); break;
+            case "display": label = _("Display"); break;
+            case "handwriting": label = _("Handwriting"); break;
+            case "monospace": label = _("Monospace"); break;
+            case "icons": label = _("Icons"); break;
+            default: label = category; break;
+        }
+        return label;
+    }
+
+    public string[] get_category_labels () {
+    return get_all_keys ();
+}
 }

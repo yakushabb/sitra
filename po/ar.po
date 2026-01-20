@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: io.github.ronniedroid.sitra\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-01-18 21:32+0300\n"
+"POT-Creation-Date: 2026-01-20 18:30+0300\n"
 "PO-Revision-Date: 2026-01-18 21:28+0300\n"
 "Last-Translator: Ronnie Nissan <ronnie.nissan@proton.me>\n"
 "Language-Team: Arabic\n"
@@ -326,7 +326,7 @@ msgid "Integration"
 msgstr "إدماج"
 
 #: src/integration_dialog.blp:24 src/integration_dialog.blp:29
-#: src/window.blp:277
+#: src/window.blp:271
 msgid "Install"
 msgstr "تثبيت"
 
@@ -392,7 +392,7 @@ msgstr "الوزن"
 msgid "Style"
 msgstr "النمط"
 
-#: src/integration_dialog.blp:159 src/window.vala:129 src/window.vala:462
+#: src/integration_dialog.blp:159 src/managers/categories_manager.vala:46
 msgid "Display"
 msgstr "عرض"
 
@@ -408,10 +408,30 @@ msgstr "انسخ الكود أدناه إلى ملف CSS العالمي الخا
 msgid "Copied to clipboard"
 msgstr "تم النسخ إلى الحافظة"
 
-#: src/managers/base_info_manager.vala:84
-#: src/managers/base_info_manager.vala:90
+#: src/managers/base_info_manager.vala:89
+#: src/managers/base_info_manager.vala:95
 msgid "No description available"
 msgstr "لا يوجد وصف متاح"
+
+#: src/managers/categories_manager.vala:44
+msgid "Sans Serif"
+msgstr "بدون زوائد"
+
+#: src/managers/categories_manager.vala:45
+msgid "Serif"
+msgstr "بزوائد"
+
+#: src/managers/categories_manager.vala:47
+msgid "Handwriting"
+msgstr "خط يد"
+
+#: src/managers/categories_manager.vala:48
+msgid "Monospace"
+msgstr "أحادي المسافة"
+
+#: src/managers/categories_manager.vala:49
+msgid "Icons"
+msgstr "أيقونات"
 
 #: src/managers/font_manager.vala:98
 #, c-format
@@ -474,127 +494,107 @@ msgstr "البحث عن الخطوط"
 msgid "Preview"
 msgstr "معاينة"
 
-#: src/window.blp:109
-msgid "Reload"
-msgstr "إعادة التحميل"
-
 #: src/window.blp:110
-msgid "You are not connected to the internet, font preview won't work"
-msgstr "أنت غير متصل بالإنترنت، لن تعمل معاينة الخطوط"
-
-#: src/window.blp:149
-msgid "Font Size"
-msgstr "حجم الخط"
-
-#: src/window.blp:164
-msgid "Line Height"
-msgstr "ارتفاع السطر"
-
-#: src/window.blp:179
-msgid "Letter Spacing"
-msgstr "تباعد الأحرف"
-
-#: src/window.blp:184
-msgid "Italic"
-msgstr "مائل"
-
-#: src/window.blp:198
 msgid "Welcome to Sitra"
 msgstr "مرحباً بك في سطرا"
 
-#: src/window.blp:199
+#: src/window.blp:111
 msgid "Please select a font to preview it here"
 msgstr "يرجى اختيار خط لمعاينته هنا"
 
-#: src/window.blp:224
+#: src/window.blp:128
+msgid "Reload"
+msgstr "إعادة التحميل"
+
+#: src/window.blp:129
+msgid "You are not connected to the internet, font preview won't work"
+msgstr "أنت غير متصل بالإنترنت، لن تعمل معاينة الخطوط"
+
+#: src/window.blp:167
+msgid "Font Size"
+msgstr "حجم الخط"
+
+#: src/window.blp:182
+msgid "Line Height"
+msgstr "ارتفاع السطر"
+
+#: src/window.blp:197
+msgid "Letter Spacing"
+msgstr "تباعد الأحرف"
+
+#: src/window.blp:202
+msgid "Italic"
+msgstr "مائل"
+
+#: src/window.blp:226
 msgid "Font Name"
 msgstr "اسم الخط"
 
-#: src/window.blp:243
+#: src/window.blp:245
 msgid "Category"
 msgstr "الفئة"
 
-#: src/window.blp:260
+#: src/window.blp:258
 msgid "License"
 msgstr "الترخيص"
 
-#: src/window.blp:294
+#: src/window.blp:290
 msgid "Cancel"
 msgstr "إلغاء"
 
-#: src/window.blp:315
+#: src/window.blp:311
 msgid "Uninstall"
 msgstr "إلغاء التثبيت"
 
-#: src/window.blp:324
+#: src/window.blp:321
 msgid "Use in a Project"
 msgstr "استخدام في مشروع"
 
-#: src/window.blp:343
+#: src/window.blp:357
 msgid "No Internet connection"
 msgstr "لا يوجد اتصال بالإنترنت"
 
-#: src/window.blp:344
+#: src/window.blp:358
 msgid ""
 "You are not connected to the internet, font previews can't work offline."
 msgstr "أنت غير متصل بالإنترنت، لا يمكن لمعاينة الخطوط العمل دون اتصال."
 
-#: src/window.blp:358
+#: src/window.blp:372
 msgid "Keyboard Shortcuts"
 msgstr "اختصارات لوحة المفاتيح"
 
-#: src/window.blp:363
+#: src/window.blp:377
 msgid "About App"
 msgstr "حول التطبيق"
 
-#: src/window.vala:128 src/window.vala:461
-msgid "Sans Serif"
-msgstr "بدون زوائد"
-
-#: src/window.vala:130 src/window.vala:463
-msgid "Serif"
-msgstr "بزوائد"
-
-#: src/window.vala:131 src/window.vala:464
-msgid "Handwriting"
-msgstr "خط يد"
-
-#: src/window.vala:132 src/window.vala:465
-msgid "Monospace"
-msgstr "أحادي المسافة"
-
-#: src/window.vala:133 src/window.vala:466
-msgid "Icons"
-msgstr "أيقونات"
-
-#: src/window.vala:134 src/window.vala:201 src/window.vala:467
+#: src/window.vala:197
 msgid "Variable"
 msgstr "متغير"
 
-#: src/window.vala:354
+#: src/window.vala:346
 #, c-format
 msgid "Font '%s' installed successfully"
 msgstr "تم تثبيت الخط '%s' بنجاح"
 
-#: src/window.vala:361
+#: src/window.vala:353
 #, c-format
 msgid "Failed to install '%s': %s"
 msgstr "فشل تثبيت '%s': %s"
 
-#: src/window.vala:369
+#: src/window.vala:361
 #, c-format
 msgid "Font '%s' uninstalled successfully"
 msgstr "تم إلغاء تثبيت الخط '%s' بنجاح"
 
-#: src/window.vala:374
+#: src/window.vala:366
 #, c-format
 msgid "Failed to uninstall '%s': %s"
 msgstr "فشل إلغاء تثبيت '%s': %s"
 
-#: src/window.vala:476
+#: src/window.vala:453
 msgid "No preview available"
 msgstr "لا توجد معاينة متاحة"
 
-#: src/window.vala:508
+#: src/window.vala:485
 msgid " Extended"
 msgstr " ممتد"

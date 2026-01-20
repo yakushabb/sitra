@@ -8,12 +8,6 @@
     border-radius: 9999px;
 }
 
-.header-font-category-button-content label,
-.category>label,
-.category {
-    text-transform: capitalize;
-}
-
 .serif {
     font-family: "Noto Serif";
 }
@@ -31,10 +25,6 @@
 }
 
 .font_item {
-    text-transform: capitalize;
-}
-
-.info-badge {
     text-transform: capitalize;
 }
 

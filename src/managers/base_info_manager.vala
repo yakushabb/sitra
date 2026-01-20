@@ -54,7 +54,12 @@ public abstract class Sitra.Managers.BaseInfoManager : Object {
 
         var box = new Gtk.Box (Gtk.Orientation.VERTICAL, 4);
 
-        var id_label = new Gtk.Label (id);
+        string display_title = id;
+        if (this is Sitra.Managers.CategoriesManager) {
+            display_title = ((Sitra.Managers.CategoriesManager)this).format_category_labels(id);
+        }
+
+        var id_label = new Gtk.Label (display_title);
         id_label.set_css_classes ({"heading", "category"});
 
         var desc_label = new Gtk.Label (description);
@@ -88,6 +93,25 @@ public abstract class Sitra.Managers.BaseInfoManager : Object {
             return keyfile.get_string (get_group_name (), key);
         } catch (Error e) {
             return _("No description available");
+        }
+    }
+
+    public string[] get_all_keys () {
+        string resource_path = get_resource_path ();
+        var keyfile = new KeyFile ();
+
+        try {
+            Bytes data = resources_lookup_data (
+                resource_path,
+                ResourceLookupFlags.NONE
+            );
+            keyfile.load_from_bytes (data, KeyFileFlags.NONE);
+
+            // This returns an array of strings for the group defined in the subclass
+            return keyfile.get_keys (get_group_name ());
+        } catch (Error e) {
+            warning (@"Failed to load keys from $(resource_path): $(e.message)");
+            return new string[0];
         }
     }
 }
