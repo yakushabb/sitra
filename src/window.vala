@@ -117,7 +117,7 @@ public class Sitra.Window : Adw.ApplicationWindow {
         category_toggles = new Gee.HashMap<string, Gtk.ToggleButton> ();
 
         string[] categories_list = categories_manager.get_category_labels();
-        categories_list += "Variable";
+        categories_list += "variable";
 
         foreach (string category in categories_list) {
             string label = categories_manager.format_category_labels(category);

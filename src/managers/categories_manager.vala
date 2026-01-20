@@ -47,6 +47,7 @@ public class Sitra.Managers.CategoriesManager : Sitra.Managers.BaseInfoManager {
             case "handwriting": label = _("Handwriting"); break;
             case "monospace": label = _("Monospace"); break;
             case "icons": label = _("Icons"); break;
+            case "Variable": label = ("Variable"); break;
             default: label = category; break;
         }
         return label;
