@@ -123,7 +123,7 @@ public class Sitra.Window : Adw.ApplicationWindow {
 
         foreach (string category in categories_list) {
             string label = format_category_label(category);
-            var toggle = new Gtk.ToggleButton.with_label (label);
+            var toggle = new Gtk.ToggleButton.with_label (_(label));
             toggle.set_css_classes ({ "category", category });
             categories.append (toggle);
             category_toggles[category] = toggle;
@@ -174,7 +174,7 @@ public class Sitra.Window : Adw.ApplicationWindow {
         factory.setup.connect ((obj) => {
             var list_item = (Gtk.ListItem) obj;
             var box = new Gtk.Box (Gtk.Orientation.VERTICAL, 0);
-            box.spacing = 6;
+            box.spacing = 0;
             box.margin_top = 6;
             box.margin_bottom = 6;
 
@@ -184,17 +184,20 @@ public class Sitra.Window : Adw.ApplicationWindow {
             box.append (family_label);
 
             // Horizontal box for category and variable badge
-            var info_box = new Gtk.Box (Gtk.Orientation.HORIZONTAL, 6);
+            var info_box = new Gtk.Box (Gtk.Orientation.HORIZONTAL, 0);
 
             var category_badge = new Gtk.Label ("");
             category_badge.set_halign (Gtk.Align.START);
-            category_badge.add_css_class ("caption");
-            category_badge.add_css_class ("info-badge");
+            category_badge.set_css_classes ({"caption", "info-badge"});
             info_box.append (category_badge);
 
+            var separator = new Gtk.Label ("🞄");
+            separator.set_halign (Gtk.Align.CENTER);
+            category_badge.add_css_class ("caption");
+            info_box.append (separator);
+
             var variable_badge = new Gtk.Label (_("Variable"));
-            variable_badge.add_css_class ("caption");
-            variable_badge.add_css_class ("info-badge");
+            variable_badge.set_css_classes ({"caption", "info-badge"});
             info_box.append (variable_badge);
 
             box.append (info_box);
@@ -214,7 +217,7 @@ public class Sitra.Window : Adw.ApplicationWindow {
             var font = fonts_manager.get_font (string_object.string);
 
 
-            category_badge.set_label (format_category_label(font.category));
+            category_badge.set_label (_(format_category_label(font.category)));
             family_label.set_label (font.family);
 
             // Show badge only for variable fonts
@@ -410,7 +413,7 @@ public class Sitra.Window : Adw.ApplicationWindow {
     private string format_category_label (string category) {
             string label;
             switch (category) {
-            case "sans-serif": label = _("Sans Serif"); break;
+            case "sans-serif": label = "Sans Serif"; break;
             default: label = category; break;
             }
             return label;
@@ -453,7 +456,7 @@ public class Sitra.Window : Adw.ApplicationWindow {
 
         preview_page.set_title (family_name);
         header_font_title.label = preview_font.family;
-        header_font_category_button_content.label = format_category_label(preview_font.category);
+        header_font_category_button_content.label = _(format_category_label(preview_font.category));
         header_font_license_button_content.label = preview_font.license;
 
         var html = preview_manager.build_html (preview_font);

@@ -31,6 +31,15 @@ public class Sitra.Managers.PreviewManager : Object {
         return font.category == "icons";
     }
 
+    private string get_dir () {
+        var dir = "ltr";
+        if (Gtk.Widget.get_default_direction () == Gtk.TextDirection.RTL) {
+         dir = "rtl";
+        }
+
+        return dir;
+    }
+
     private string determine_preview_text(Sitra.Models.FontInfo font) {
         // If user has custom preview text, always use that
         if (this.preview_text != DEFAULT_PREVIEW_TEXT) {
@@ -162,8 +171,8 @@ public class Sitra.Managers.PreviewManager : Object {
         var html = new StringBuilder();
 
         string display_text = determine_preview_text(font);
-
-        html.append ("<!DOCTYPE html><html><head><meta charset='UTF-8'>\n");
+        string direction = get_dir();
+        html.append (@"<!DOCTYPE html><html dir='$direction'><head><meta charset='UTF-8'>\n");
         html.append ("<link rel=\"preconnect\" href=\"https://cdn.jsdelivr.net\" crossorigin>\n");
         html.append ("<style>\n");
 

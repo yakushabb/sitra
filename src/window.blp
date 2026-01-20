@@ -1,13 +1,16 @@
 using Gtk 4.0;
 using Adw 1;
+
 template $SitraWindow: Adw.ApplicationWindow {
   title: _("Sitra");
   default-width: 800;
   default-height: 800;
   width-request: 360;
   height-request: 200;
+
   Adw.Breakpoint {
     condition ("max-width: 600sp")
+
     setters {
       split_view.collapsed: true;
       preview_page_titlebar.show-title: true;
@@ -15,20 +18,25 @@ template $SitraWindow: Adw.ApplicationWindow {
       container.margin-top: 12;
     }
   }
+
   content: Adw.ToastOverlay toast_overlay {
     child: Adw.NavigationSplitView split_view {
       min-sidebar-width: 300;
+
       sidebar: Adw.NavigationPage sidebar {
         title: _("Sitra");
         tag: "fonts";
+
         child: Adw.ToolbarView {
           [top]
           Adw.HeaderBar {
             show-title: true;
+
             [start]
             ToggleButton search_button {
               icon-name: "edit-find-symbolic";
             }
+
             [end]
             MenuButton {
               icon-name: "open-menu-symbolic";
@@ -37,18 +45,22 @@ template $SitraWindow: Adw.ApplicationWindow {
               menu-model: window_menu;
             }
           }
+
           [top]
           SearchBar search_bar {
             key-capture-widget: sidebar;
+
             SearchEntry search_entry {
               search-delay: 100;
               placeholder-text: _("Search fonts");
               hexpand: true;
             }
+
             styles [
               "searchbar",
             ]
           }
+
           [bottom]
           ActionBar {
             Adw.WrapBox categories {
@@ -60,13 +72,16 @@ template $SitraWindow: Adw.ApplicationWindow {
               margin-end: 6;
             }
           }
+
           content: Box {
             orientation: vertical;
             spacing: 6;
+
             ScrolledWindow {
               hscrollbar-policy: never;
               propagate-natural-height: true;
               valign: start;
+
               ListView fonts_list {
                 styles [
                   "navigation-sidebar",
@@ -76,17 +91,21 @@ template $SitraWindow: Adw.ApplicationWindow {
           };
         };
       };
+
       content: Adw.NavigationPage preview_page {
         title: _("Preview");
         tag: "preview";
+
         child: Stack preview_stack {
           StackPage welcome_page {
             name: "welcome";
+
             child: Adw.ToolbarView {
               [top]
               Adw.HeaderBar {
                 show-title: false;
               }
+
               content: Adw.StatusPage {
                 title: _("Welcome to Sitra");
                 description: _("Please select a font to preview it here");
@@ -94,13 +113,16 @@ template $SitraWindow: Adw.ApplicationWindow {
               };
             };
           }
+
           StackPage web_page {
             name: "preview";
+
             child: Adw.ToolbarView preview_page_toolbar {
               [top]
               Adw.HeaderBar preview_page_titlebar {
                 show-title: false;
               }
+
               [top]
               Adw.Banner banner {
                 button-label: _("Reload");
@@ -117,6 +139,7 @@ template $SitraWindow: Adw.ApplicationWindow {
                   margin-start: 6;
                   hexpand: true;
                 }
+
                 [end]
                 Box {
                   DropDown font_size_dropdown {
@@ -139,9 +162,11 @@ template $SitraWindow: Adw.ApplicationWindow {
                         "64px",
                       ]
                     };
+
                     selected: 7;
                     tooltip-text: _("Font Size");
                   }
+
                   DropDown line_height_dropdown {
                     model: Gtk.StringList {
                       strings [
@@ -153,8 +178,10 @@ template $SitraWindow: Adw.ApplicationWindow {
                         "2",
                       ]
                     };
+
                     tooltip-text: _("Line Height");
                   }
+
                   DropDown letter_spacing_dropdown {
                     model: Gtk.StringList {
                       strings [
@@ -165,13 +192,16 @@ template $SitraWindow: Adw.ApplicationWindow {
                         "6",
                       ]
                     };
+
                     selected: 2;
                     tooltip-text: _("Letter Spacing");
                   }
+
                   ToggleButton italic_toggle {
                     icon-name: "format-text-italic-symbolic";
                     tooltip-text: _("Italic");
                   }
+
                   styles [
                     "linked",
                   ]
@@ -180,115 +210,149 @@ template $SitraWindow: Adw.ApplicationWindow {
 
               [top]
               Box container {
-                  spacing: 12;
-                  margin-bottom: 12;
-                  margin-end: 12;
-                  margin-start: 24;
+                spacing: 12;
+                margin-bottom: 12;
+                margin-end: 12;
+                margin-start: 24;
+                orientation: vertical;
+
+                Box {
                   orientation: vertical;
-                  Box {
-                    orientation: vertical;
-                    spacing: 6;
+                  spacing: 6;
+                  halign: start;
+                  valign: start;
+
+                  Label header_font_title {
+                    label: _("Font Name");
                     halign: start;
-                    valign: start;
-                    Label header_font_title {
-                      label: _("Font Name");
-                      halign: start;
-                      styles [
-                        "title-1",
-                      ]
-                    }
-                    Box {
-                      spacing: 6;
-                      styles [
-                        "caption",
-                      ]
-                      MenuButton header_font_category_button {
-                        popover: category_popover;
-                        Adw.ButtonContent header_font_category_button_content {
-                          label: _("Category");
-                          icon-name: "sitra-category-symbolic";
-                          styles [
-                            "header-font-category-button-content",
-                          ]
-                        }
-                      }
-                      MenuButton header_font_license_button {
-                        popover: license_popover;
-                        Adw.ButtonContent header_font_license_button_content {
-                          label: _("License");
-                          icon-name: "sitra-license-symbolic";
-                        }
-                      }
-                    }
+
+                    styles [
+                      "title-1",
+                    ]
                   }
+
                   Box {
                     spacing: 6;
-                    valign: center;
-                    halign: start;
-                    Button install_button {
-                      label: _("Install");
-                      styles [
-                        "suggested-action",
-                        "pill"
-                      ]
+
+                    styles [
+                      "caption",
+                    ]
+
+                    MenuButton header_font_category_button {
+                      popover: category_popover;
+
+                      Adw.ButtonContent header_font_category_button_content {
+                        label: _("Category");
+                        icon-name: "sitra-category-symbolic";
+
+                        styles [
+                          "header-font-category-button-content",
+                        ]
+                      }
                     }
-                    Button cancel_button {
-                      styles [
-                        "progress-button",
-                        "pill"
-                      ]
-                      overflow: hidden;
-                      visible: false;
-                      child: Overlay {
-                        Label {
-                          label: _("Cancel");
-                          styles [
-                            "progress-button-label",
-                          ]
-                        }
-                        [overlay]
-                        ProgressBar install_progress_bar {
-                          valign: end;
-                          halign: fill;
-                          styles [
-                            "progress-button-line",
-                            "osd",
-                          ]
-                        }
-                      };
+
+                    MenuButton header_font_license_button {
+                      popover: license_popover;
+
+                      Adw.ButtonContent header_font_license_button_content {
+                        label: _("License");
+                        icon-name: "sitra-license-symbolic";
+                      }
                     }
-                    Button uninstall_button {
-                      label: _("Uninstall");
-                      visible: false;
-                      styles [
-                        "destructive-action",
-                        "pill"
-                      ]
-                    }
-                    Button integrate_button {
-                      label: _("Use in a Project");
-                      styles [
-                        "pill"
-                      ]
-                    }
-                  }
-                  Adw.WrapBox subsets_box {
-                    child-spacing: 5;
-                    line-spacing: 5;
-                    margin-bottom: 12;
                   }
                 }
 
-              content: Box web_container {margin-start: 24;};
+                Box {
+                  spacing: 6;
+                  valign: center;
+                  halign: start;
+
+                  Button install_button {
+                    label: _("Install");
+
+                    styles [
+                      "suggested-action",
+                      "pill",
+                    ]
+                  }
+
+                  Button cancel_button {
+                    styles [
+                      "progress-button",
+                      "pill",
+                    ]
+
+                    overflow: hidden;
+                    visible: false;
+
+                    child: Overlay {
+                      Label {
+                        label: _("Cancel");
+
+                        styles [
+                          "progress-button-label",
+                        ]
+                      }
+
+                      [overlay]
+                      ProgressBar install_progress_bar {
+                        valign: end;
+                        halign: fill;
+
+                        styles [
+                          "progress-button-line",
+                          "osd",
+                        ]
+                      }
+                    };
+                  }
+
+                  Button uninstall_button {
+                    label: _("Uninstall");
+                    visible: false;
+
+                    styles [
+                      "destructive-action",
+                      "pill",
+                    ]
+                  }
+
+                  Button integrate_button {
+                    label: _("Use in a Project");
+
+                    styles [
+                      "pill",
+                    ]
+                  }
+                }
+
+                Adw.WrapBox subsets_box {
+                  child-spacing: 5;
+                  line-spacing: 5;
+                  margin-bottom: 12;
+                }
+              }
+
+              content: Gtk.ScrolledWindow {
+                hexpand: true;
+                vexpand: true;
+
+                Box web_container {
+                  margin-start: 24;
+                }
+              };
             };
           }
+
           StackPage status_page {
             name: "status";
+
             child: Adw.ToolbarView {
               [top]
               Adw.HeaderBar {
                 show-title: false;
               }
+
               content: Adw.StatusPage {
                 title: _("No Internet connection");
                 description: _("You are not connected to the internet, font previews can't work offline.");
@@ -301,22 +365,26 @@ template $SitraWindow: Adw.ApplicationWindow {
     };
   };
 }
+
 menu window_menu {
   section {
     item {
       label: _("Keyboard Shortcuts");
       action: "app.shortcuts";
     }
+
     item {
       label: _("About App");
       action: "app.about";
     }
   }
 }
+
 Popover license_popover {
   has-arrow: true;
   name: "plain_popover";
 }
+
 Popover category_popover {
   has-arrow: true;
   name: "plain_popover";
