@@ -41,13 +41,14 @@ public class Sitra.Managers.CategoriesManager : Sitra.Managers.BaseInfoManager {
     public string format_category_labels (string category) {
         string label;
         switch (category) {
-            case "sans-serif": label = _("Sans Serif"); break;
-            case "serif": label = _("Serif"); break;
-            case "display": label = _("Display"); break;
-            case "handwriting": label = _("Handwriting"); break;
-            case "monospace": label = _("Monospace"); break;
-            case "icons": label = _("Icons"); break;
-            case "Variable": label = ("Variable"); break;
+            case "sans-serif": label = GLib.dgettext (Config.GETTEXT_PACKAGE, "Sans Serif"); break;
+            case "serif": label = GLib.dgettext (Config.GETTEXT_PACKAGE, "Serif"); break;
+            case "display": label = GLib.dgettext (Config.GETTEXT_PACKAGE, "Display"); break;
+            case "handwriting": label = GLib.dgettext (Config.GETTEXT_PACKAGE, "Handwriting"); break;
+            case "monospace": label = GLib.dgettext (Config.GETTEXT_PACKAGE, "Monospace"); break;
+            case "icons": label = GLib.dgettext (Config.GETTEXT_PACKAGE, "Icons"); break;
+            case "Variable":
+            case "variable": label = GLib.dgettext (Config.GETTEXT_PACKAGE, "Variable"); break;
             default: label = category; break;
         }
         return label;

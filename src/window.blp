@@ -208,137 +208,134 @@ template $SitraWindow: Adw.ApplicationWindow {
                 }
               }
 
-              [top]
-              Box container {
-                spacing: 12;
-                margin-bottom: 12;
-                margin-end: 12;
-                margin-start: 24;
-                orientation: vertical;
-
-                Box {
-                  orientation: vertical;
-                  spacing: 6;
-                  halign: start;
-                  valign: start;
-
-                  Label header_font_title {
-                    label: _("Font Name");
-                    halign: start;
-
-                    styles [
-                      "title-1",
-                    ]
-                  }
-
-                  Box {
-                    spacing: 6;
-
-                    styles [
-                      "caption",
-                    ]
-
-                    MenuButton header_font_category_button {
-                      popover: category_popover;
-
-                      Adw.ButtonContent header_font_category_button_content {
-                        label: _("Category");
-                        icon-name: "sitra-category-symbolic";
-
-                        styles [
-                          "header-font-category-button-content",
-                        ]
-                      }
-                    }
-
-                    MenuButton header_font_license_button {
-                      popover: license_popover;
-
-                      Adw.ButtonContent header_font_license_button_content {
-                        label: _("License");
-                        icon-name: "sitra-license-symbolic";
-                      }
-                    }
-                  }
-                }
-
-                Box {
-                  spacing: 6;
-                  valign: center;
-                  halign: start;
-
-                  Button install_button {
-                    label: _("Install");
-
-                    styles [
-                      "suggested-action",
-                      "pill",
-                    ]
-                  }
-
-                  Button cancel_button {
-                    styles [
-                      "progress-button",
-                      "pill",
-                    ]
-
-                    overflow: hidden;
-                    visible: false;
-
-                    child: Overlay {
-                      Label {
-                        label: _("Cancel");
-
-                        styles [
-                          "progress-button-label",
-                        ]
-                      }
-
-                      [overlay]
-                      ProgressBar install_progress_bar {
-                        valign: end;
-                        halign: fill;
-
-                        styles [
-                          "progress-button-line",
-                          "osd",
-                        ]
-                      }
-                    };
-                  }
-
-                  Button uninstall_button {
-                    label: _("Uninstall");
-                    visible: false;
-
-                    styles [
-                      "destructive-action",
-                      "pill",
-                    ]
-                  }
-
-                  Button integrate_button {
-                    label: _("Use in a Project");
-
-                    styles [
-                      "pill",
-                    ]
-                  }
-                }
-
-                Adw.WrapBox subsets_box {
-                  child-spacing: 5;
-                  line-spacing: 5;
-                  margin-bottom: 12;
-                }
-              }
-
               content: Gtk.ScrolledWindow {
                 hexpand: true;
                 vexpand: true;
 
-                Box web_container {
+                Box container {
+                  spacing: 12;
+                  margin-bottom: 12;
+                  margin-end: 12;
                   margin-start: 24;
+                  orientation: vertical;
+
+                  Box {
+                    orientation: vertical;
+                    spacing: 6;
+                    halign: start;
+                    valign: start;
+
+                    Label header_font_title {
+                      label: _("Font Name");
+                      halign: start;
+
+                      styles [
+                        "title-1",
+                      ]
+                    }
+
+                    Box {
+                      spacing: 6;
+
+                      styles [
+                        "caption",
+                      ]
+
+                      MenuButton header_font_category_button {
+                        popover: category_popover;
+
+                        Adw.ButtonContent header_font_category_button_content {
+                          label: _("Category");
+                          icon-name: "sitra-category-symbolic";
+
+                          styles [
+                            "header-font-category-button-content",
+                          ]
+                        }
+                      }
+
+                      MenuButton header_font_license_button {
+                        popover: license_popover;
+
+                        Adw.ButtonContent header_font_license_button_content {
+                          label: _("License");
+                          icon-name: "sitra-license-symbolic";
+                        }
+                      }
+                    }
+                  }
+
+                  Box {
+                    spacing: 6;
+                    valign: center;
+                    halign: start;
+
+                    Button install_button {
+                      label: _("Install");
+
+                      styles [
+                        "suggested-action",
+                        "pill",
+                      ]
+                    }
+
+                    Button cancel_button {
+                      styles [
+                        "progress-button",
+                        "pill",
+                      ]
+
+                      overflow: hidden;
+                      visible: false;
+
+                      child: Overlay {
+                        Label {
+                          label: _("Cancel");
+
+                          styles [
+                            "progress-button-label",
+                          ]
+                        }
+
+                        [overlay]
+                        ProgressBar install_progress_bar {
+                          valign: end;
+                          halign: fill;
+
+                          styles [
+                            "progress-button-line",
+                            "osd",
+                          ]
+                        }
+                      };
+                    }
+
+                    Button uninstall_button {
+                      label: _("Uninstall");
+                      visible: false;
+
+                      styles [
+                        "destructive-action",
+                        "pill",
+                      ]
+                    }
+
+                    Button integrate_button {
+                      label: _("Use in a Project");
+
+                      styles [
+                        "pill",
+                      ]
+                    }
+                  }
+
+                  Adw.WrapBox subsets_box {
+                    child-spacing: 5;
+                    line-spacing: 5;
+                    margin-bottom: 12;
+                  }
+
+                  Box web_container {}
                 }
               };
             };

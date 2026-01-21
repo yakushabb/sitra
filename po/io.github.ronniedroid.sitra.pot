@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: io.github.ronniedroid.sitra\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-01-20 18:30+0300\n"
+"POT-Creation-Date: 2026-01-21 08:28+0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -310,7 +310,7 @@ msgid "Integration"
 msgstr ""
 
 #: src/integration_dialog.blp:24 src/integration_dialog.blp:29
-#: src/window.blp:271
+#: src/window.blp:274
 msgid "Install"
 msgstr ""
 
@@ -510,75 +510,75 @@ msgstr ""
 msgid "Italic"
 msgstr ""
 
-#: src/window.blp:226
+#: src/window.blp:229
 msgid "Font Name"
 msgstr ""
 
-#: src/window.blp:245
+#: src/window.blp:248
 msgid "Category"
 msgstr ""
 
-#: src/window.blp:258
+#: src/window.blp:261
 msgid "License"
 msgstr ""
 
-#: src/window.blp:290
+#: src/window.blp:293
 msgid "Cancel"
 msgstr ""
 
-#: src/window.blp:311
+#: src/window.blp:314
 msgid "Uninstall"
 msgstr ""
 
-#: src/window.blp:321
+#: src/window.blp:324
 msgid "Use in a Project"
 msgstr ""
 
-#: src/window.blp:357
+#: src/window.blp:354
 msgid "No Internet connection"
 msgstr ""
 
-#: src/window.blp:358
+#: src/window.blp:355
 msgid ""
 "You are not connected to the internet, font previews can't work offline."
 msgstr ""
 
-#: src/window.blp:372
+#: src/window.blp:369
 msgid "Keyboard Shortcuts"
 msgstr ""
 
-#: src/window.blp:377
+#: src/window.blp:374
 msgid "About App"
 msgstr ""
 
-#: src/window.vala:197
+#: src/window.vala:208
 msgid "Variable"
 msgstr ""
 
-#: src/window.vala:346
+#: src/window.vala:357
 #, c-format
 msgid "Font '%s' installed successfully"
 msgstr ""
 
-#: src/window.vala:353
+#: src/window.vala:364
 #, c-format
 msgid "Failed to install '%s': %s"
 msgstr ""
 
-#: src/window.vala:361
+#: src/window.vala:372
 #, c-format
 msgid "Font '%s' uninstalled successfully"
 msgstr ""
 
-#: src/window.vala:366
+#: src/window.vala:377
 #, c-format
 msgid "Failed to uninstall '%s': %s"
 msgstr ""
 
-#: src/window.vala:453
+#: src/window.vala:464
 msgid "No preview available"
 msgstr ""
 
-#: src/window.vala:485
+#: src/window.vala:496
 msgid " Extended"
 msgstr ""

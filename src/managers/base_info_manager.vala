@@ -90,7 +90,8 @@ public abstract class Sitra.Managers.BaseInfoManager : Object {
         }
 
         try {
-            return keyfile.get_string (get_group_name (), key);
+            string description = keyfile.get_string (get_group_name (), key);
+            return GLib.dgettext (Config.GETTEXT_PACKAGE, description);
         } catch (Error e) {
             return _("No description available");
         }

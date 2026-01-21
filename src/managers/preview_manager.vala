@@ -211,6 +211,7 @@ public class Sitra.Managers.PreviewManager : Object {
                 background-color: transparent;
                 color: black;
                 margin: 0;
+                overflow: hidden;
             }
             @media (prefers-color-scheme: dark) {
                 html, body {

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: io.github.ronniedroid.sitra\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-01-20 18:30+0300\n"
+"POT-Creation-Date: 2026-01-21 08:28+0300\n"
 "PO-Revision-Date: 2026-01-18 21:28+0300\n"
 "Last-Translator: Ronnie Nissan <ronnie.nissan@proton.me>\n"
 "Language-Team: Arabic\n"
@@ -326,7 +326,7 @@ msgid "Integration"
 msgstr "إدماج"
 
 #: src/integration_dialog.blp:24 src/integration_dialog.blp:29
-#: src/window.blp:271
+#: src/window.blp:274
 msgid "Install"
 msgstr "تثبيت"
 
@@ -526,75 +526,75 @@ msgstr "تباعد الأحرف"
 msgid "Italic"
 msgstr "مائل"
 
-#: src/window.blp:226
+#: src/window.blp:229
 msgid "Font Name"
 msgstr "اسم الخط"
 
-#: src/window.blp:245
+#: src/window.blp:248
 msgid "Category"
 msgstr "الفئة"
 
-#: src/window.blp:258
+#: src/window.blp:261
 msgid "License"
 msgstr "الترخيص"
 
-#: src/window.blp:290
+#: src/window.blp:293
 msgid "Cancel"
 msgstr "إلغاء"
 
-#: src/window.blp:311
+#: src/window.blp:314
 msgid "Uninstall"
 msgstr "إلغاء التثبيت"
 
-#: src/window.blp:321
+#: src/window.blp:324
 msgid "Use in a Project"
 msgstr "استخدام في مشروع"
 
-#: src/window.blp:357
+#: src/window.blp:354
 msgid "No Internet connection"
 msgstr "لا يوجد اتصال بالإنترنت"
 
-#: src/window.blp:358
+#: src/window.blp:355
 msgid ""
 "You are not connected to the internet, font previews can't work offline."
 msgstr "أنت غير متصل بالإنترنت، لا يمكن لمعاينة الخطوط العمل دون اتصال."
 
-#: src/window.blp:372
+#: src/window.blp:369
 msgid "Keyboard Shortcuts"
 msgstr "اختصارات لوحة المفاتيح"
 
-#: src/window.blp:377
+#: src/window.blp:374
 msgid "About App"
 msgstr "حول التطبيق"
 
-#: src/window.vala:197
+#: src/window.vala:208
 msgid "Variable"
 msgstr "متغير"
 
-#: src/window.vala:346
+#: src/window.vala:357
 #, c-format
 msgid "Font '%s' installed successfully"
 msgstr "تم تثبيت الخط '%s' بنجاح"
 
-#: src/window.vala:353
+#: src/window.vala:364
 #, c-format
 msgid "Failed to install '%s': %s"
 msgstr "فشل تثبيت '%s': %s"
 
-#: src/window.vala:361
+#: src/window.vala:372
 #, c-format
 msgid "Font '%s' uninstalled successfully"
 msgstr "تم إلغاء تثبيت الخط '%s' بنجاح"
 
-#: src/window.vala:366
+#: src/window.vala:377
 #, c-format
 msgid "Failed to uninstall '%s': %s"
 msgstr "فشل إلغاء تثبيت '%s': %s"
 
-#: src/window.vala:453
+#: src/window.vala:464
 msgid "No preview available"
 msgstr "لا توجد معاينة متاحة"
 
-#: src/window.vala:485
+#: src/window.vala:496
 msgid " Extended"
 msgstr " ممتد"

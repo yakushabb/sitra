@@ -105,22 +105,33 @@ public class Sitra.Window : Adw.ApplicationWindow {
 
         // --- WebView ---
         web_view = new WebView ();
-        web_view.vexpand = true;
+        web_view.valign = Gtk.Align.START;
         web_view.hexpand = true;
+        web_view.set_size_request (-1, 100);
         web_container.append (web_view);
 
         var color = Gdk.RGBA ();
         color.parse ("rgba(0,0,0,0)");
         web_view.set_background_color (color);
 
+        web_view.load_changed.connect ((load_event) => {
+            if (load_event == LoadEvent.FINISHED) {
+                resize_webview ();
+            }
+        });
+
+        web_view.notify["allocated-width"].connect (() => {
+            resize_webview ();
+        });
+
         // --- Categories ---
         category_toggles = new Gee.HashMap<string, Gtk.ToggleButton> ();
 
-        string[] categories_list = categories_manager.get_category_labels();
+        string[] categories_list = categories_manager.get_category_labels ();
         categories_list += "variable";
 
         foreach (string category in categories_list) {
-            string label = categories_manager.format_category_labels(category);
+            string label = categories_manager.format_category_labels (category);
             var toggle = new Gtk.ToggleButton.with_label (label);
             toggle.set_css_classes ({ "category", category });
             categories.append (toggle);
@@ -186,7 +197,7 @@ public class Sitra.Window : Adw.ApplicationWindow {
 
             var category_badge = new Gtk.Label ("");
             category_badge.set_halign (Gtk.Align.START);
-            category_badge.set_css_classes ({"caption", "info-badge"});
+            category_badge.set_css_classes ({ "caption", "info-badge" });
             info_box.append (category_badge);
 
             var separator = new Gtk.Label ("🞄");
@@ -195,7 +206,7 @@ public class Sitra.Window : Adw.ApplicationWindow {
             info_box.append (separator);
 
             var variable_badge = new Gtk.Label (_("Variable"));
-            variable_badge.set_css_classes ({"caption", "info-badge"});
+            variable_badge.set_css_classes ({ "caption", "info-badge" });
             info_box.append (variable_badge);
 
             box.append (info_box);
@@ -209,16 +220,18 @@ public class Sitra.Window : Adw.ApplicationWindow {
             var info_box = (Gtk.Box) box.get_last_child ();
             var category_badge = (Gtk.Label) info_box.get_first_child ();
             var variable_badge = (Gtk.Label) info_box.get_last_child ();
+            var separator = (Gtk.Label) info_box.get_first_child ().get_next_sibling();
             var family_label = (Gtk.Label) box.get_first_child ();
 
             var string_object = (Gtk.StringObject) list_item.item;
             var font = fonts_manager.get_font (string_object.string);
 
 
-            category_badge.set_label (categories_manager.format_category_labels(font.category));
+            category_badge.set_label (categories_manager.format_category_labels (font.category));
             family_label.set_label (font.family);
 
             // Show badge only for variable fonts
+            separator.visible = font.variable;
             variable_badge.visible = font.variable;
         });
         fonts_list.factory = factory;
@@ -445,7 +458,7 @@ public class Sitra.Window : Adw.ApplicationWindow {
 
         preview_page.set_title (family_name);
         header_font_title.label = preview_font.family;
-        header_font_category_button_content.label = categories_manager.format_category_labels(preview_font.category);
+        header_font_category_button_content.label = categories_manager.format_category_labels (preview_font.category);
         header_font_license_button_content.label = preview_font.license;
 
         var html = preview_manager.build_html (preview_font);
@@ -480,9 +493,12 @@ public class Sitra.Window : Adw.ApplicationWindow {
             }
             if (excluded)continue;
 
-            string label = subset;
-            if (label.has_suffix ("-ext")) {
-                label = label.replace ("-ext", _(" Extended"));
+            string label;
+            if (subset.has_suffix ("-ext")) {
+                string base_subset = subset.substring (0, subset.length - 4);
+                label = GLib.dgettext (Config.GETTEXT_PACKAGE, base_subset) + _(" Extended");
+            } else {
+                label = GLib.dgettext (Config.GETTEXT_PACKAGE, subset);
             }
             label = label[0].to_string ().up () + label.substring (1);
 
@@ -566,6 +582,22 @@ public class Sitra.Window : Adw.ApplicationWindow {
             return;
 
         manager.populate_popover (popover, font);
+    }
+
+    private void resize_webview () {
+        string js = "document.body.scrollHeight";
+        web_view.evaluate_javascript.begin (js, -1, null, "", null, (obj, res) => {
+            try {
+                var val = web_view.evaluate_javascript.end (res);
+                if (val.is_number ()) {
+                    int height = (int) val.to_double ();
+                    debug ("Resizing webview to: %d", height);
+                    web_view.set_size_request (-1, height);
+                }
+            } catch (Error e) {
+                debug ("Error resizing webview: %s", e.message);
+            }
+        });
     }
 
     private async void install_font_async (string font_family) {
