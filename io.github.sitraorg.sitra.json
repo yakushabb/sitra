@@ -1,5 +1,5 @@
 {
-  "id": "io.github.ronniedroid.sitra",
+  "id": "io.github.sitraorg.sitra",
   "runtime": "org.gnome.Platform",
   "runtime-version": "49",
   "sdk": "org.gnome.Sdk",
@@ -58,9 +58,9 @@
       "sources" : [
         {
           "type" : "git",
-          "url" : "https://github.com/ronniedroid/libsitra.git",
-          "tag": "v0.1.1",
-          "commit": "17b7ec4cce5962263fb1f3afac5f2b6ced5c5984"
+          "url" : "https://github.com/sitraorg/libsitra.git",
+          "tag": "v0.1.0",
+          "commit": "d804cb7aa3030dc32a951b2dd2eb11aa330e2601"
         }
       ]
     },

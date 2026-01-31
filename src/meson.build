@@ -33,8 +33,8 @@ blueprints = custom_target('blueprints',
   command: [find_program('blueprint-compiler'), 'batch-compile', '@OUTPUT@', '@CURRENT_SOURCE_DIR@', '@INPUT@'],
 )
 
-sitra_sources += gnome.compile_resources('io.github.ronniedroid.sitra',
-  'io.github.ronniedroid.sitra.src.gresource.xml',
+sitra_sources += gnome.compile_resources('io.github.sitraorg.sitra',
+  'io.github.sitraorg.sitra.src.gresource.xml',
   c_name: 'sitra',
   dependencies: blueprints,
 )

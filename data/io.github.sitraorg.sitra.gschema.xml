@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <schemalist gettext-domain="sitra">
-	<schema id="io.github.ronniedroid.sitra" path="/io/github/ronniedroid/sitra/">
+	<schema id="io.github.sitraorg.sitra" path="/io/github/sitraorg/sitra/">
 	</schema>
 </schemalist>

@@ -1,4 +1,4 @@
-application_id = 'io.github.ronniedroid.sitra'
+application_id = 'io.github.sitraorg.sitra'
 
 scalable_dir = 'hicolor' / 'scalable' / 'apps'
 install_data(

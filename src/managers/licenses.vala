@@ -26,7 +26,7 @@ public class Sitra.Managers.Licenses : Object {
     public Licenses () {
         key_file = new KeyFile ();
         try {
-            var data = resources_lookup_data ("/io/github/ronniedroid/sitra/licenses", ResourceLookupFlags.NONE);
+            var data = resources_lookup_data ("/io/github/sitraorg/sitra/licenses", ResourceLookupFlags.NONE);
             key_file.load_from_data ((string) data.get_data (), data.get_size (), KeyFileFlags.NONE);
         } catch (Error e) {
             critical ("Could not load categories: %s", e.message);

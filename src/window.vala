@@ -21,7 +21,7 @@ using WebKit;
 using Gee;
 using Libsitra;
 
-[GtkTemplate (ui = "/io/github/ronniedroid/sitra/window.ui")]
+[GtkTemplate (ui = "/io/github/sitraorg/sitra/window.ui")]
 public class Sitra.Window : Adw.ApplicationWindow {
     [GtkChild] private unowned Gtk.ListView fonts_list;
     [GtkChild] private unowned Adw.ToastOverlay toast_overlay;
@@ -90,7 +90,7 @@ public class Sitra.Window : Adw.ApplicationWindow {
         // --- Load Preview Texts ---
         preview_texts = new KeyFile ();
         try {
-            var preview_text_bytes = resources_lookup_data ("/io/github/ronniedroid/sitra/preview_text", 0);
+            var preview_text_bytes = resources_lookup_data ("/io/github/sitraorg/sitra/preview_text", 0);
             preview_texts.load_from_data ((string) preview_text_bytes.get_data (), -1, KeyFileFlags.NONE);
         } catch (Error e) {
             warning ("Failed to load preview texts: %s", e.message);

@@ -21,9 +21,9 @@
 public class Sitra.Application : Adw.Application {
     public Application () {
         Object (
-            application_id: "io.github.ronniedroid.sitra",
+            application_id: "io.github.sitraorg.sitra",
             flags: ApplicationFlags.DEFAULT_FLAGS,
-            resource_base_path: "/io/github/ronniedroid/sitra"
+            resource_base_path: "/io/github/sitraorg/sitra"
         );
     }
 
@@ -51,9 +51,9 @@ public class Sitra.Application : Adw.Application {
 			comments = _(
                 "Sitra helps you install fonts from online sources on your system"
             ),
-			issue_url = "https://github.com/ronniedroid/sitra/issues/new",
+			issue_url = "https://github.com/sitraorg/sitra/issues/new",
             license_type = Gtk.License.GPL_3_0,
-            application_icon = "io.github.ronniedroid.sitra",
+            application_icon = "io.github.sitraorg.sitra",
 			developer_name = "Ronnie Nissan",
             translator_credits = _("translator-credits"),
             version = Config.PACKAGE_VERSION,

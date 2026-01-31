@@ -20,7 +20,7 @@
 
 using Gee;
 
-[GtkTemplate (ui = "/io/github/ronniedroid/sitra/integration_dialog.ui")]
+[GtkTemplate (ui = "/io/github/sitraorg/sitra/integration_dialog.ui")]
 public class Sitra.IntegrationDialog : Adw.Dialog {
 
     [GtkChild] private unowned Adw.ToastOverlay toast_overlay;

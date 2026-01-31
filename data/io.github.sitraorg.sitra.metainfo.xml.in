@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <component type="desktop-application">
-  <id>io.github.ronniedroid.sitra</id>
+  <id>io.github.sitraorg.sitra</id>
   <metadata_license>CC0-1.0</metadata_license>
   <project_license>GPL-3.0-or-later</project_license>
 
@@ -24,13 +24,13 @@
     <name>Ronnie Nissan</name>
   </developer>
 
-  <url type="homepage">https://github.com/ronniedroid/sitra</url>
-  <url type="vcs-browser">https://github.com/ronniedroid/sitra</url>
-  <url type="bugtracker">https://github.com/ronniedroid/sitra/issues/new</url>
+  <url type="homepage">https://github.com/sitraorg/sitra</url>
+  <url type="vcs-browser">https://github.com/sitraorg/sitra</url>
+  <url type="bugtracker">https://github.com/sitraorg/sitra/issues/new</url>
   <url type="contact">https://ronnienissan.pages.dev/</url>
 
   <translation type="gettext">sitra</translation>
-  <launchable type="desktop-id">io.github.ronniedroid.sitra.desktop</launchable>
+  <launchable type="desktop-id">io.github.sitraorg.sitra.desktop</launchable>
   <content_rating type="oars-1.1" />
 
   <branding>
@@ -40,23 +40,23 @@
 
   <screenshots>
     <screenshot type="default">
-      <image>https://raw.githubusercontent.com/ronniedroid/sitra/main/data/screenshots/font-preview-page.png</image>
+      <image>https://raw.githubusercontent.com/sitraorg/sitra/main/data/screenshots/font-preview-page.png</image>
       <caption>Showcasing font preview</caption>
     </screenshot>
     <screenshot>
-      <image>https://raw.githubusercontent.com/ronniedroid/sitra/main/data/screenshots/font-preview-page-with-font-installed.png</image>
+      <image>https://raw.githubusercontent.com/sitraorg/sitra/main/data/screenshots/font-preview-page-with-font-installed.png</image>
       <caption>Showcasing font preview when a font is already installed</caption>
     </screenshot>
     <screenshot>
-      <image>https://raw.githubusercontent.com/ronniedroid/sitra/main/data/screenshots/font-preview-page-with-arabic-subset.png</image>
+      <image>https://raw.githubusercontent.com/sitraorg/sitra/main/data/screenshots/font-preview-page-with-arabic-subset.png</image>
       <caption>Showcasing font preview with different subsets, Arabic in this case</caption>
     </screenshot>
     <screenshot>
-      <image>https://raw.githubusercontent.com/ronniedroid/sitra/main/data/screenshots/use-in-a-project-dialog-npm.png</image>
+      <image>https://raw.githubusercontent.com/sitraorg/sitra/main/data/screenshots/use-in-a-project-dialog-npm.png</image>
       <caption>Showcasing Use in an Project dialog, showing npm instructions</caption>
     </screenshot>
     <screenshot>
-      <image>https://raw.githubusercontent.com/ronniedroid/sitra/main/data/screenshots/use-in-a-project-dialog-cdn.png</image>
+      <image>https://raw.githubusercontent.com/sitraorg/sitra/main/data/screenshots/use-in-a-project-dialog-cdn.png</image>
       <caption>Showcasing Use in an Project dialog, showing cdn instructions</caption>
     </screenshot>
   </screenshots>

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <gresources>
-  <gresource prefix="/io/github/ronniedroid/sitra">
+  <gresource prefix="/io/github/sitraorg/sitra">
     <file alias="style.css">assets/style.css</file>
     <file preprocess="xml-stripblanks">window.ui</file>
     <file preprocess="xml-stripblanks">shortcuts-dialog.ui</file>
@@ -11,10 +11,10 @@
     <file alias="categories">assets/categories</file>
     <file alias="licenses">assets/licenses</file>
   </gresource>
-  <gresource prefix="/io/github/ronniedroid/sitra/icons/scalable/actions">
+  <gresource prefix="/io/github/sitraorg/sitra/icons/scalable/actions">
     <file preprocess="xml-stripblanks" alias="sitra-license-symbolic.svg">assets/license-symbolic.svg</file>
     <file preprocess="xml-stripblanks" alias="sitra-category-symbolic.svg">assets/shapes-symbolic.svg</file>
-    <file preprocess="xml-stripblanks" alias="sitra-logo.svg">assets/io.github.ronniedroid.sitra.svg</file>
+    <file preprocess="xml-stripblanks" alias="sitra-logo.svg">assets/io.github.sitraorg.sitra.svg</file>
     <file preprocess="xml-stripblanks" alias="sitra-globe-symbolic.svg">assets/globe-symbolic.svg</file>
     <file preprocess="xml-stripblanks" alias="sitra-code-symbolic.svg">assets/code-symbolic.svg</file>
     <file preprocess="xml-stripblanks" alias="io.github.ronniedroid.concessio.svg">assets/io.github.ronniedroid.concessio.svg</file>
