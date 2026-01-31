@@ -23,15 +23,12 @@ using Gee;
 public class Sitra.Helpers.FontsFilterHelper : Object {
     public Gtk.CustomFilter filter { get; private set; }
 
-    private Gee.Map<string, Sitra.Models.FontInfo> fonts_map;
     private Gtk.SearchEntry search_entry;
     private Gee.HashMap<string, Gtk.ToggleButton> category_toggles;
 
-    public FontsFilterHelper (Gee.Map<string, Sitra.Models.FontInfo> fonts_map,
-        Gtk.SearchEntry search_entry,
+    public FontsFilterHelper (Gtk.SearchEntry search_entry,
         Gee.HashMap<string, Gtk.ToggleButton> category_toggles) {
 
-        this.fonts_map = fonts_map;
         this.search_entry = search_entry;
         this.category_toggles = category_toggles;
 
@@ -41,15 +38,10 @@ public class Sitra.Helpers.FontsFilterHelper : Object {
     }
 
     private bool match_item (Object? item) {
-        var string_object = item as Gtk.StringObject;
-        if (string_object == null)
-            return false;
-
         string query = search_entry ? .text ? .strip () ? .down () ?? "";
-        string family_name = string_object.string;
-        var font = fonts_map.get (family_name);
+        var font = item as Libsitra.Font;
         if (font == null) {
-            warning ("Font '%s' not found in map", family_name);
+            warning ("Font '%s' not found in map", font.family);
             return false;
         }
         bool variable_only = category_toggles.has_key ("variable") &&

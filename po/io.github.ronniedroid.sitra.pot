@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: io.github.ronniedroid.sitra\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-01-21 08:28+0300\n"
+"POT-Creation-Date: 2026-01-31 15:13+0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -150,159 +150,157 @@ msgstr ""
 
 #: src/data_translations.vala:12
 msgid ""
-"Fonts that do not fit standard categories or are highly experimental or "
-"mixed-style."
-msgstr ""
-
-#: src/data_translations.vala:13
-msgid ""
 "Permissive licence allowing almost unrestricted use, modification, and "
 "distribution."
 msgstr ""
 
-#: src/data_translations.vala:14
+#: src/data_translations.vala:13
 msgid ""
 "Free to use, modify, and distribute, with conditions: no selling and "
 "original licence must be included."
 msgstr ""
 
-#: src/data_translations.vala:15
+#: src/data_translations.vala:14
 msgid ""
 "Permissive, requires attribution, notice of changes, and inclusion of NOTICE "
 "file. Modified code can use a different licence."
 msgstr ""
 
-#: src/data_translations.vala:16
+#: src/data_translations.vala:15
 msgid "Permissive, requires attribution and licence file."
 msgstr ""
 
-#: src/data_translations.vala:17 src/data_translations.vala:18
+#: src/data_translations.vala:16 src/data_translations.vala:17
 msgid ""
 "Permissive license allowing unrestricted use, modification, and distribution."
 msgstr ""
 
-#: src/data_translations.vala:19
+#: src/data_translations.vala:18
 msgid "arabic"
 msgstr ""
 
-#: src/data_translations.vala:20
+#: src/data_translations.vala:19
 msgid "armenian"
 msgstr ""
 
-#: src/data_translations.vala:21
+#: src/data_translations.vala:20
 msgid "bengali"
 msgstr ""
 
-#: src/data_translations.vala:22
+#: src/data_translations.vala:21
 msgid "canadian-aboriginal"
 msgstr ""
 
-#: src/data_translations.vala:23
+#: src/data_translations.vala:22
 msgid "cherokee"
 msgstr ""
 
-#: src/data_translations.vala:24
+#: src/data_translations.vala:23
 msgid "cyrillic"
 msgstr ""
 
-#: src/data_translations.vala:25
+#: src/data_translations.vala:24
 msgid "cyrillic-ext"
 msgstr ""
 
-#: src/data_translations.vala:26
+#: src/data_translations.vala:25
 msgid "devanagari"
 msgstr ""
 
-#: src/data_translations.vala:27
+#: src/data_translations.vala:26
 msgid "ethiopic"
 msgstr ""
 
-#: src/data_translations.vala:28
+#: src/data_translations.vala:27
 msgid "georgian"
 msgstr ""
 
-#: src/data_translations.vala:29
+#: src/data_translations.vala:28
 msgid "greek"
 msgstr ""
 
-#: src/data_translations.vala:30
+#: src/data_translations.vala:29
 msgid "greek-ext"
 msgstr ""
 
-#: src/data_translations.vala:31
+#: src/data_translations.vala:30
 msgid "gujarati"
 msgstr ""
 
-#: src/data_translations.vala:32
+#: src/data_translations.vala:31
 msgid "gurmukhi"
 msgstr ""
 
-#: src/data_translations.vala:33
+#: src/data_translations.vala:32
 msgid "hebrew"
 msgstr ""
 
-#: src/data_translations.vala:34
+#: src/data_translations.vala:33
 msgid "japanese"
 msgstr ""
 
-#: src/data_translations.vala:35
+#: src/data_translations.vala:34
 msgid "kannada"
 msgstr ""
 
-#: src/data_translations.vala:36
+#: src/data_translations.vala:35
 msgid "khmer"
 msgstr ""
 
-#: src/data_translations.vala:37
+#: src/data_translations.vala:36
 msgid "korean"
 msgstr ""
 
-#: src/data_translations.vala:38
+#: src/data_translations.vala:37
 msgid "latin"
 msgstr ""
 
-#: src/data_translations.vala:39
+#: src/data_translations.vala:38
 msgid "latin-ext"
 msgstr ""
 
-#: src/data_translations.vala:40
+#: src/data_translations.vala:39
 msgid "malayalam"
 msgstr ""
 
-#: src/data_translations.vala:41
+#: src/data_translations.vala:40
 msgid "myanmar"
 msgstr ""
 
-#: src/data_translations.vala:42
+#: src/data_translations.vala:41
 msgid "oriya"
 msgstr ""
 
-#: src/data_translations.vala:43
+#: src/data_translations.vala:42
 msgid "sinhala"
 msgstr ""
 
-#: src/data_translations.vala:44
+#: src/data_translations.vala:43
 msgid "syriac"
 msgstr ""
 
-#: src/data_translations.vala:45
+#: src/data_translations.vala:44
 msgid "tamil"
 msgstr ""
 
-#: src/data_translations.vala:46
+#: src/data_translations.vala:45
 msgid "telugu"
 msgstr ""
 
-#: src/data_translations.vala:47
+#: src/data_translations.vala:46
 msgid "thai"
 msgstr ""
 
-#: src/data_translations.vala:48
+#: src/data_translations.vala:47
 msgid "tibetan"
 msgstr ""
 
-#: src/data_translations.vala:49
+#: src/data_translations.vala:48
 msgid "vietnamese"
+msgstr ""
+
+#: src/data_translations.vala:49
+msgid "kayah-li"
 msgstr ""
 
 #: src/integration_dialog.blp:5
@@ -318,7 +316,7 @@ msgstr ""
 msgid "Install the font using npm or yarn"
 msgstr ""
 
-#: src/integration_dialog.blp:33 src/integration_dialog.blp:135
+#: src/integration_dialog.blp:33 src/integration_dialog.blp:136
 msgid "Use Static Version"
 msgstr ""
 
@@ -331,8 +329,8 @@ msgid "NPM"
 msgstr ""
 
 #: src/integration_dialog.blp:49 src/integration_dialog.blp:69
-#: src/integration_dialog.blp:94 src/integration_dialog.blp:114
-#: src/integration_dialog.blp:219 src/integration_dialog.blp:243
+#: src/integration_dialog.blp:94 src/integration_dialog.blp:115
+#: src/integration_dialog.blp:220 src/integration_dialog.blp:244
 msgid "Copy to clipboard"
 msgstr ""
 
@@ -348,107 +346,48 @@ msgstr ""
 msgid "Import into CSS"
 msgstr ""
 
-#: src/integration_dialog.blp:103 src/integration_dialog.blp:229
+#: src/integration_dialog.blp:103 src/integration_dialog.blp:230
 msgid "Use in CSS"
 msgstr ""
 
-#: src/integration_dialog.blp:127
+#: src/integration_dialog.blp:128
 msgid "CDN"
 msgstr ""
 
-#: src/integration_dialog.blp:132
+#: src/integration_dialog.blp:133
 msgid "Chose from the options below"
 msgstr ""
 
-#: src/integration_dialog.blp:136
+#: src/integration_dialog.blp:137
 msgid "Use the static version instead of variable font"
 msgstr ""
 
-#: src/integration_dialog.blp:140
+#: src/integration_dialog.blp:141
 msgid "Subset"
 msgstr ""
 
-#: src/integration_dialog.blp:144
+#: src/integration_dialog.blp:145
 msgid "Weight"
 msgstr ""
 
-#: src/integration_dialog.blp:148
+#: src/integration_dialog.blp:149
 msgid "Style"
 msgstr ""
 
-#: src/integration_dialog.blp:159 src/managers/categories_manager.vala:46
+#: src/integration_dialog.blp:160 src/window.vala:394
 msgid "Display"
 msgstr ""
 
-#: src/integration_dialog.blp:173
+#: src/integration_dialog.blp:174
 msgid "Format"
 msgstr ""
 
-#: src/integration_dialog.blp:186
+#: src/integration_dialog.blp:187
 msgid "Copy below code to your global CSS"
 msgstr ""
 
 #: src/integration_dialog.vala:321
 msgid "Copied to clipboard"
-msgstr ""
-
-#: src/managers/base_info_manager.vala:89
-#: src/managers/base_info_manager.vala:95
-msgid "No description available"
-msgstr ""
-
-#: src/managers/categories_manager.vala:44
-msgid "Sans Serif"
-msgstr ""
-
-#: src/managers/categories_manager.vala:45
-msgid "Serif"
-msgstr ""
-
-#: src/managers/categories_manager.vala:47
-msgid "Handwriting"
-msgstr ""
-
-#: src/managers/categories_manager.vala:48
-msgid "Monospace"
-msgstr ""
-
-#: src/managers/categories_manager.vala:49
-msgid "Icons"
-msgstr ""
-
-#: src/managers/font_manager.vala:98
-#, c-format
-msgid "Font '%s' is already installed"
-msgstr ""
-
-#: src/managers/font_manager.vala:141
-msgid "Installation cancelled"
-msgstr ""
-
-#: src/managers/font_manager.vala:162
-#, c-format
-msgid "Font '%s' is not installed"
-msgstr ""
-
-#: src/managers/font_manager.vala:175
-#, c-format
-msgid "Failed to save installed fonts database after uninstallation: %s"
-msgstr ""
-
-#: src/managers/font_manager.vala:236
-#, c-format
-msgid "Failed to download font file: HTTP %u"
-msgstr ""
-
-#: src/managers/font_manager.vala:243
-#, c-format
-msgid "Failed to download font file: %s"
-msgstr ""
-
-#: src/managers/font_manager.vala:314
-#, c-format
-msgid "Failed to save installed fonts database: %s"
 msgstr ""
 
 #: src/shortcuts-dialog.blp:7
@@ -551,34 +490,54 @@ msgstr ""
 msgid "About App"
 msgstr ""
 
-#: src/window.vala:208
+#: src/window.vala:199 src/window.vala:399
 msgid "Variable"
 msgstr ""
 
-#: src/window.vala:357
+#: src/window.vala:335
 #, c-format
 msgid "Font '%s' installed successfully"
 msgstr ""
 
-#: src/window.vala:364
+#: src/window.vala:342
 #, c-format
 msgid "Failed to install '%s': %s"
 msgstr ""
 
-#: src/window.vala:372
+#: src/window.vala:350
 #, c-format
 msgid "Font '%s' uninstalled successfully"
 msgstr ""
 
-#: src/window.vala:377
+#: src/window.vala:355
 #, c-format
 msgid "Failed to uninstall '%s': %s"
 msgstr ""
 
-#: src/window.vala:464
+#: src/window.vala:392
+msgid "Sans Serif"
+msgstr ""
+
+#: src/window.vala:393
+msgid "Serif"
+msgstr ""
+
+#: src/window.vala:395
+msgid "Handwriting"
+msgstr ""
+
+#: src/window.vala:396
+msgid "Monospace"
+msgstr ""
+
+#: src/window.vala:397
+msgid "Icons"
+msgstr ""
+
+#: src/window.vala:436
 msgid "No preview available"
 msgstr ""
 
-#: src/window.vala:496
+#: src/window.vala:469
 msgid " Extended"
 msgstr ""

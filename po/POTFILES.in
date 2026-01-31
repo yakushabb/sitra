@@ -8,9 +8,6 @@ src/data_translations.vala
 src/integration_dialog.blp
 src/integration_dialog.vala
 src/main.vala
-src/managers/base_info_manager.vala
-src/managers/categories_manager.vala
-src/managers/font_manager.vala
 src/shortcuts-dialog.blp
 src/window.blp
 src/window.vala

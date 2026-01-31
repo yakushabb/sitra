@@ -18,24 +18,30 @@
  * SPDX-License-Identifier: GPL-3.0-or-later
  */
 
-public class Sitra.Managers.LicensesManager : Sitra.Managers.BaseInfoManager {
+using Gee;
 
-    public LicensesManager () {}
+public class Sitra.Managers.Licenses : Object {
+    private KeyFile key_file;
 
-    public override string get_logo_path () {
-        return "/io/github/ronniedroid/sitra/licenses.svg";
+    public Licenses () {
+        key_file = new KeyFile ();
+        try {
+            var data = resources_lookup_data ("/io/github/ronniedroid/sitra/licenses", ResourceLookupFlags.NONE);
+            key_file.load_from_data ((string) data.get_data (), data.get_size (), KeyFileFlags.NONE);
+        } catch (Error e) {
+            critical ("Could not load categories: %s", e.message);
+        }
     }
 
-    public override string get_resource_path () {
-        return "/io/github/ronniedroid/sitra/licenses";
+    public string describe (Libsitra.Font font) {
+        try {
+            return key_file.get_string (font.license, "description");
+        } catch {
+            return "No description available";
+        }
     }
 
-    public override string get_group_name () {
-        return "licenses";
-    }
-
-    public override string get_id (Sitra.Models.FontInfo font) {
-        return font.license;
+    public string[] titles () {
+        return key_file.get_groups ();
     }
 }
-

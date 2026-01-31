@@ -9,7 +9,6 @@ namespace DataTranslations {
         _("Fonts that mimic handwritten or cursive styles; informal and expressive.");
         _("Fonts where all characters have equal width; commonly used for code and terminals.");
         _("Symbol-based fonts containing pictograms or UI icons instead of letters.");
-        _("Fonts that do not fit standard categories or are highly experimental or mixed-style.");
         _("Permissive licence allowing almost unrestricted use, modification, and distribution.");
         _("Free to use, modify, and distribute, with conditions: no selling and original licence must be included.");
         _("Permissive, requires attribution, notice of changes, and inclusion of NOTICE file. Modified code can use a different licence.");
@@ -47,5 +46,6 @@ namespace DataTranslations {
         _("thai");
         _("tibetan");
         _("vietnamese");
+        _("kayah-li");
     }
 }

@@ -380,9 +380,84 @@ menu window_menu {
 Popover license_popover {
   has-arrow: true;
   name: "plain_popover";
+
+  Adw.Clamp {
+    maximum-size: 180;
+
+    Box {
+      orientation: vertical;
+      spacing: 4;
+      margin-top: 12;
+      margin-start: 12;
+      margin-end: 12;
+      margin-bottom: 12;
+
+      Gtk.Image {
+        resource: "io/github/ronniedroid/sitra/license.svg";
+        accessible-role: presentation;
+        pixel-size: 64;
+      }
+
+      Box {
+        orientation: vertical;
+        spacing: 4;
+
+        Label license_title {
+          label: "title";
+
+          styles [
+            "heading",
+          ]
+        }
+
+        Label license_description {
+          label: "description";
+          halign: start;
+          wrap: true;
+        }
+      }
+    }
+  }
 }
 
 Popover category_popover {
   has-arrow: true;
   name: "plain_popover";
+
+  Adw.Clamp {
+  maximum-size: 180;
+    Box {
+      orientation: vertical;
+      spacing: 4;
+      margin-top: 12;
+      margin-start: 12;
+      margin-end: 12;
+      margin-bottom: 12;
+
+      Gtk.Image {
+        resource: "/io/github/ronniedroid/sitra/category.svg";
+        accessible-role: presentation;
+        pixel-size: 64;
+      }
+
+      Box {
+        orientation: vertical;
+        spacing: 4;
+
+        Label category_title {
+          label: "title";
+
+          styles [
+            "heading",
+          ]
+        }
+
+        Label category_description {
+          label: "description";
+          halign: start;
+          wrap: true;
+        }
+      }
+    }
+  }
 }

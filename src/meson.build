@@ -8,7 +8,6 @@ sitra_sources += files(
 # Subdirectories
 subdir('managers')
 subdir('helpers')
-subdir('models')
 
 sitra_deps = [
   config_dep,
@@ -20,7 +19,8 @@ sitra_deps = [
   dependency('webkitgtk-6.0'),
   dependency('gee-0.8'),
   dependency('libsoup-3.0'),
-  dependency('json-glib-1.0')
+  dependency('json-glib-1.0'),
+  dependency('libsitra-0.1')
 ]
 
 blueprints = custom_target('blueprints',

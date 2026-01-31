@@ -44,7 +44,7 @@ public class Sitra.IntegrationDialog : Adw.Dialog {
     [GtkChild] private unowned Adw.SwitchRow install_static_switch_row;
     [GtkChild] private unowned Adw.SwitchRow cdn_static_switch_row;
 
-    private Sitra.Models.FontInfo? current_font = null;
+    private Libsitra.Font? current_font = null;
     private string current_package_name = "";
 
     public IntegrationDialog () {
@@ -64,7 +64,7 @@ public class Sitra.IntegrationDialog : Adw.Dialog {
         setup_copy_buttons ();
     }
 
-    public void populate (Sitra.Models.FontInfo font) {
+    public void populate (Libsitra.Font font) {
         current_font = font;
         current_package_name = font.family.down ().replace (" ", "-");
 
@@ -131,7 +131,7 @@ public class Sitra.IntegrationDialog : Adw.Dialog {
         update_cdn_css_code ();
     }
 
-    private void populate_subset_dropdown (Sitra.Models.FontInfo font) {
+    private void populate_subset_dropdown (Libsitra.Font font) {
         var subsets = font.subsets;
         if (subsets == null || subsets.size == 0) {
             subsets = new ArrayList<string> ();
@@ -161,7 +161,7 @@ public class Sitra.IntegrationDialog : Adw.Dialog {
         }
     }
 
-    private void populate_weight_dropdown (Sitra.Models.FontInfo font) {
+    private void populate_weight_dropdown (Libsitra.Font font) {
         var weights = font.weights;
         if (weights == null || weights.size == 0) {
             weights = new ArrayList<int> ();
@@ -177,7 +177,7 @@ public class Sitra.IntegrationDialog : Adw.Dialog {
         cdn_weight_row.selected = 0; // Select first weight by default
     }
 
-    private void update_style_availability (Sitra.Models.FontInfo font) {
+    private void update_style_availability (Libsitra.Font font) {
         bool has_italic = font.styles != null && font.styles.contains ("italic");
 
         // If no italic, force selection to normal and disable the row
@@ -221,7 +221,7 @@ public class Sitra.IntegrationDialog : Adw.Dialog {
         cdn_css_code_label.label = css;
     }
 
-    private string generate_font_face_css (Sitra.Models.FontInfo font,
+    private string generate_font_face_css (Libsitra.Font font,
                                            string package_name,
                                            string subset,
                                            string weight,
