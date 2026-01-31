@@ -1,4 +1,4 @@
-![icon](/data/icons/io.github.sitraorg.sitra.svg)
+![icon](/src/assets/io.github.sitraorg.sitra.svg)
 
 # Sitra
 Get fonts from online sources
