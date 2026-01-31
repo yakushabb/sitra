@@ -59,8 +59,8 @@
         {
           "type" : "git",
           "url" : "https://github.com/ronniedroid/libsitra.git",
-          "branch": "main",
-          "commit": "a030a20f677cf46135052be4e3efbf179a31e2af"
+          "tag": "v0.1.1",
+          "commit": "17b7ec4cce5962263fb1f3afac5f2b6ced5c5984"
         }
       ]
     },

@@ -128,7 +128,6 @@ template $SitraWindow: Adw.ApplicationWindow {
                 button-label: _("Reload");
                 title: _("You are not connected to the internet, font preview won't work");
                 revealed: false;
-                margin-bottom: 12;
               }
 
               [bottom]
@@ -217,6 +216,7 @@ template $SitraWindow: Adw.ApplicationWindow {
                   margin-bottom: 12;
                   margin-end: 12;
                   margin-start: 24;
+                  margin-top: 12;
                   orientation: vertical;
 
                   Box {
@@ -393,7 +393,7 @@ Popover license_popover {
       margin-bottom: 12;
 
       Gtk.Image {
-        resource: "io/github/ronniedroid/sitra/license.svg";
+        resource: "/io/github/ronniedroid/sitra/license.svg";
         accessible-role: presentation;
         pixel-size: 64;
       }
